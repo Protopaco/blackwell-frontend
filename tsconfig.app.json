@@ -28,5 +28,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/api/generated"],
+  "references": [{ "path": "./src/api/generated/tsconfig.json" }]
 }

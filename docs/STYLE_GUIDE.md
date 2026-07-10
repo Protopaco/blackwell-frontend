@@ -81,6 +81,8 @@ Spartan, but not broken — every control that triggers an async/API action must
 
 This applies everywhere a button calls the API: Create Pay Period, Generate Timesheets, Write Allocation Report, Generate Payroll Report, generate/regenerate Allocation Report, Close Pay Period, and any expense-field save. Minimal is fine; leaving the user unsure whether their click registered is not.
 
+**Unsaved in-progress input gets a navigation blocker, not friction on the things that cause navigation.** Decided 2026-07-09, discussing whether the client selector needed a confirm-select step to avoid accidental client switches losing in-progress data entry. Rejected in favor of: pages with unsaved input (typed-but-not-saved form fields) use React Router's `useBlocker` to prompt before leaving — covers *every* exit path (client switch, back button, other nav links), not just one. Everywhere else, navigation stays instant. Don't add confirm-before-navigate steps to navigation controls themselves (selectors, links, drawer items) — that punishes every use to guard a risk that only exists on specific pages.
+
 ## 9. Theming
 
 - **Build the theming *architecture* now, even though there's only one theme today.** Mirror Babeonym's structure: `src/themes/{types.theme.ts, themeRegistry.ts, themes/<name>.theme.ts, ...}`, a `themeRegistry` map, `ThemeProvider` fed from the registry — not a bare inline `createTheme()` call like the current template stub has.

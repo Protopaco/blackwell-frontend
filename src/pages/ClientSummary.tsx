@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { clientApi } from "@/api/client";
 import type { ClientSummary as ClientSummaryData } from "@/api/generated/models/ClientSummary";
 import useSelectedClient from "@/state/client/useSelectedClient";
+import ClientInformationCard from "@/components/ClientSummary/ClientInformationCard/ClientInformationCard";
 
 type SummaryFetchResult = {
   clientId: string;
@@ -78,7 +79,10 @@ const ClientSummary = () => {
     <Container sx={{ py: 4 }}>
       {fetchResult.summary && (
         <Grid container spacing={2} id="client-summary-cards">
-          {/* Cards (tickets 5.2–5.8) slot in here, each fed its slice of the summary as props */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <ClientInformationCard clientName={selectedClient.clientName ?? ""} clientCode={selectedClient.clientCode ?? ""} />
+          </Grid>
+          {/* Remaining cards (tickets 5.3–5.8) slot in here, each fed its slice of the summary as props */}
         </Grid>
       )}
     </Container>

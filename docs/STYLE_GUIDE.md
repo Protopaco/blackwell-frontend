@@ -86,6 +86,35 @@ This applies everywhere a button calls the API: Create Pay Period, Generate Time
 
 - Prettier config matches Babeonym exactly (`.prettierrc`): `singleQuote: true, semi: true, trailingComma: "es5", printWidth: 150`.
 
+## 11. Testing
+
+- **Tests are co-located**, not in a separate mirrored folder — `ComponentName.test.tsx` next to `ComponentName.tsx`. This matches the component-folder convention (§1: everything about a component lives together) and standard React/Vite practice. This is a deliberate difference from the *backend's* `tests/unit/` + `tests/integration/` split — that split exists there because integration tests hit a live, rate-limited API and must run separately/sequentially; the frontend has no equivalent live-API tier (everything talks to a mocked API client in tests), so there's nothing to physically separate.
+- **Shared test infrastructure lives in `src/test/`**: `src/test/setup.ts` (existing, global RTL/jsdom setup), `src/test/fixtures/<name>.ts` (reusable fake API response data, one file per resource, default-exported), `src/test/renderWithProviders.tsx` (wraps RTL's `render` in the full app provider tree — `ThemeProvider` + `CssBaseline` + every state domain's Provider, nested the same way `main.tsx` nests them). Use `renderWithProviders` instead of RTL's bare `render` for anything that needs those contexts — and when a new state domain's Provider is added to `main.tsx`, add it to `renderWithProviders` too, in the same position.
+- **Mocking API calls**: any code path under test that goes through `src/api/client.ts` (directly, or indirectly via a state provider's boot-time fetch) must have that call mocked — tests never hit a real backend. Mock only the specific API instance(s) actually used, via `vi.mock`:
+
+  ```ts
+  vi.mock("@/api/client", () => ({
+    clientApi: {
+      v1GetClients: vi.fn(),
+    },
+  }));
+  ```
+
+  **Keep the mock factory free of outside references.** `vi.mock()` calls are hoisted above regular `import` statements, so referencing an imported fixture (or any other top-level `const`) *inside the factory* throws a "Cannot access before initialization" error — the factory runs before those imports are linked. Instead, leave the factory bare (`vi.fn()` with no preset return value) and configure the return value inside the test body, using `vi.mocked()`, where imports are already resolved:
+
+  ```ts
+  import mockClients from "@/test/fixtures/clients";
+  import { clientApi } from "@/api/client";
+
+  test("...", async () => {
+    vi.mocked(clientApi.v1GetClients).mockResolvedValue(mockClients);
+    // render + assert
+  });
+  ```
+
+  (The backend's equivalent convention documents `vi.hoisted()` as the fix for this same hoisting problem — that works too, but only for data declared inline in the same file. Since our fixtures live in their own reusable files under `src/test/fixtures/`, configuring the mock in the test body is the simpler option here.)
+- Use `screen.findBy...` (async) rather than `getBy...` when the component's initial render depends on a boot-time fetch resolving, to avoid `act()` warnings from the state update landing after the test's synchronous assertions.
+
 ---
 
 ## Flagged, not yet decided

@@ -8,7 +8,6 @@ import { clientApi } from "@/api/client";
 
 const initialState: ClientState = {
   clients: [],
-  selectedClient: null,
   loading: true,
 };
 

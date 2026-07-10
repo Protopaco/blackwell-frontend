@@ -5,8 +5,6 @@ export const clientReducer = (state: ClientState, action: ClientAction): ClientS
   switch (action.type) {
     case ClientActionType.SET_CLIENTS:
       return { ...state, clients: action.payload, loading: false };
-    case ClientActionType.SELECT_CLIENT:
-      return { ...state, selectedClient: action.payload };
     default:
       return state;
   }

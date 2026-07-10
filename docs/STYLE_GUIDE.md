@@ -31,6 +31,8 @@ No Redux/Zustand/TanStack Query — confirmed decision, see `docs/TICKETS.md`. E
 
 Providers are composed by nesting in `main.tsx`, outermost-to-innermost in dependency order (a provider that depends on another domain's state nests inside it).
 
+**Context domains are for cross-page state only** (e.g. `selectedClient` — read by the whole app). Data a single page displays lives in **local page state** (`useState` + `useEffect` in the page component), and each page/use case fetches its own purpose-fit data from its own endpoint — even when that means some redundancy with data another page already fetched. Decided 2026-07-09 (Client Summary, ticket 5.1): prefer per-use-case fetches over storing one large response object (like `ClientSummary`) globally and having every consumer parse slices out of it.
+
 **Action types are a controlled-vocab `const`, not a TS `enum` and not bare string literals.** A real TS `enum` is non-erasable syntax and will fail under `erasableSyntaxOnly: true` in `tsconfig.app.json` (the same flag we relaxed only for the generated API client — hand-written app code keeps it on). Instead, `<domain>.types.ts` exports a `const` object with `as const`, and the `<Domain>Action` union references it via `typeof`:
 
 ```ts
@@ -58,6 +60,8 @@ The reducer's `switch` and every `dispatch(...)` call site reference `ClientActi
 - `src/router.tsx` owns the full route tree (`createBrowserRouter`), kept separate from `App.tsx`.
 - `src/AppLayout.tsx` (+ co-located `AppLayout.css`) is the one persistent shell component (app bar/drawer + `<Outlet/>`) — lives at `src/` root, not nested inside `components/`.
 - Route-level page components live flat under `src/pages/<PageName>.tsx` — no further nesting, no folder-per-page (contrast with rule 1, which is for `components/`, not `pages/`).
+- **The URL is the source of truth for navigation state — not React state** (decided 2026-07-09). What you're looking at (which client, which pay period) lives in the route path, so refresh, back/forward, and bookmarking all work. Routes are resource-scoped and nested accordingly: `/` (no client / landing), `/client/:clientId` (that client's summary), and later `/client/:clientId/pay-periods`, `/client/:clientId/pay-periods/:payPeriodId`, etc.
+- **Don't store the selected resource in a reducer and mutate it on navigation.** The `:clientId` param is the selection; derive the full object from it by looking the id up in the already-fetched list (see `state/client/useSelectedClient.ts` — reads `useParams()`, resolves against the client list in context). A selector like this returns `null` both when there's no param (landing) and when the id matches nothing; expose a separate `loading` flag so callers can tell "list still loading" from "no such resource" and redirect (`<Navigate to="/" replace />`) only in the latter case. Context/reducer state is still fine for things that genuinely aren't navigation (the fetched *list* of clients, cross-cutting UI state) — just not for "which one is selected."
 
 ## 6. Imports
 

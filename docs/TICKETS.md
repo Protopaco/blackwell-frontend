@@ -23,17 +23,26 @@ Google Sign-In is in the UI spec's app bar, but auth isn't built on the backend 
 | # | Ticket | Status | Depends on | Backend endpoint(s) | Notes |
 |---|---|---|---|---|---|
 | 1 | Generate typed API client | Done | — | N/A (uses full `openapi.json`) | Point `api:gen` at the **live running backend** (`http://localhost:3000/openapi.json`, matching Babeonym's convention) rather than a static local file — confirmed backend already serves this at `GET /openapi.json` (`src/app.ts:34`). No copy-pasting the spec file; regenerating always reflects whatever the running backend currently returns. URL will need to become environment-configurable later (dev/prod servers), not just hardcoded localhost. Base URL for the actual API client (`src/api/client.ts`) must use a `VITE_`-prefixed env var per `STYLE_GUIDE.md` §4. |
-| 2 | App shell — AppBar + mocked auth + routing skeleton | Ready | — | N/A | Persistent AppBar (`src/App.tsx` currently has just one stub route). Client-selector slot is a placeholder here, wired for real in #3. Top-right: mocked signed-in state (hardcoded first name + no-op Sign Out button) — see "Known open item" above. Add top-level route structure distinguishing "no client selected" vs "client selected" layouts. |
-| 3 | Client selection state | Backlog | #1, #2 | `GET /api/v1/client` | Dropdown/selector wired into the AppBar slot from #2. Holds selected client in context/hook. Drives switch between "No Client Selected" landing page (no drawer) and "Client Selected" layout (drawer + Client Summary). |
-| 4 | Left drawer (client nav) | Backlog | #3 | N/A | Nav items: Pay Periods (active, links to Phase 2), Employees/Supervisors/Funding Sources/Activities/Holidays/Settings (visibly greyed out, non-functional — future work per `docs/UI.md`). Only renders when a client is selected. |
+| 2 | App shell — AppBar + mocked auth + routing skeleton | Done | — | N/A | Persistent AppBar (`src/App.tsx` currently has just one stub route). Client-selector slot is a placeholder here, wired for real in #3. Top-right: mocked signed-in state (hardcoded first name + no-op Sign Out button) — see "Known open item" above. Add top-level route structure distinguishing "no client selected" vs "client selected" layouts. |
+| 3 | Client selection state | Done | #1, #2 | `GET /api/v1/client` | Dropdown/selector wired into the AppBar slot from #2. Holds selected client in context/hook. Drives switch between "No Client Selected" landing page (no drawer) and "Client Selected" layout (drawer + Client Summary). |
+| 4 | Left drawer (client nav) | Deferred (2026-07-09) | #5.x | N/A | Navigation decision postponed until the Client Summary page (#5.1–5.8) is built and can be looked at. Options on the table: make the summary cards themselves the links into each config area (no drawer), keep the drawer as spec'd in `docs/UI.md`, or both. Context for the eventual decision: config pages (Employees, Holidays, etc.) are coming later as trivial get/set forms — build for tomorrow's state; a drawer today would be one live link (Pay Periods) plus six greyed-out stubs. |
 
 ---
 
 ## Phase 1 — Client Summary
 
+Split from one ticket into a page shell + one ticket per card (approved 2026-07-09). Data flow: the page fetches `GET /client/{clientId}/summary` **once**; cards are presentational and receive their slice as props — no per-card fetching. Cards are **display-only for now** — whether they become links into each config area (vs. a drawer, vs. both) is deliberately undecided until the page can be looked at (see #4). Each card's exact design (count vs. list, which fields) is decided per-card at build time — not pre-designed here.
+
 | # | Ticket | Status | Depends on | Backend endpoint(s) | Notes |
 |---|---|---|---|---|---|
-| 5 | Client Summary page | Backlog | #3 | `GET /api/v1/client/{clientId}/summary` | Default page shown when a client is selected. `docs/UI.md` only says "displays basic client information" — exact fields/layout from the `ClientSummary` schema (employees, supervisors, activities, fundingSources, holidays, settings) is a FE call to make at build time. |
+| 5.1 | Client Summary page + route (shell) | In Progress | #3 | `GET /api/v1/client/{clientId}/summary` | Page component, route wiring, the single summary fetch, layout the cards slot into. Approved: summary data lives in local page state, not a context domain (see `STYLE_GUIDE.md` §3). **URL is now source of truth for client selection** (approved 2026-07-09): route is `/client/:clientId`, `selectedClient` removed from reducer, derived from the URL via `state/client/useSelectedClient.ts` — survives refresh/bookmarking (see `STYLE_GUIDE.md` §5). |
+| 5.2 | Client Information card | Backlog | #5.1 | (data from #5.1's fetch) | ClientName, ClientCode. |
+| 5.3 | Employees card | Backlog | #5.1 | (data from #5.1's fetch) | Likely a count of active employees — confirm at build time. |
+| 5.4 | Supervisors card | Backlog | #5.1 | (data from #5.1's fetch) | Supervisors — count vs. list decided at build time. |
+| 5.5 | Activities card | Backlog | #5.1 | (data from #5.1's fetch) | Activities — count vs. list decided at build time. |
+| 5.6 | Funding Sources card | Backlog | #5.1 | (data from #5.1's fetch) | Funding sources — count vs. list decided at build time. |
+| 5.7 | Holidays card | Backlog | #5.1 | (data from #5.1's fetch) | Holidays — likely name + date list, confirm at build time. |
+| 5.8 | Settings card | Backlog | #5.1 | (data from #5.1's fetch) | The three settings values: time input method, pay period interval, pay period start date. |
 
 ---
 
@@ -41,7 +50,7 @@ Google Sign-In is in the UI spec's app bar, but auth isn't built on the backend 
 
 | # | Ticket | Status | Depends on | Backend endpoint(s) | Notes |
 |---|---|---|---|---|---|
-| 6 | Pay Periods Index page | Backlog | #3, #4 | `GET /api/v1/payPeriod/{clientId}` | Reverse-chronological list, each row shows Pay Period Name + Status. Row click navigates to the Dashboard route (route can point at a stub until #8 exists). |
+| 6 | Pay Periods Index page | Backlog | #3 | `GET /api/v1/payPeriod/{clientId}` | Reverse-chronological list, each row shows Pay Period Name + Status. Row click navigates to the Dashboard route (route can point at a stub until #8 exists). **Dependency updated (2026-07-09): no longer depends on #4** (drawer deferred — see #4). Reached via its own route; how users navigate here (drawer link vs. a card/button on Client Summary) is part of the deferred #4 decision. |
 | 7 | Create Pay Period modal | Backlog | #6 | `GET /api/v1/payPeriod/{clientId}/next`, `POST /api/v1/payPeriod/{clientId}` | Confirmation modal only — no user-configurable fields. Shows Name/Start/End from the `next`-suggested pay period, Create button posts it, then refreshes the index list. |
 
 ---

@@ -83,10 +83,14 @@ const ClientSummary = () => {
         <Grid container spacing={2} id="client-summary-cards">
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientInformationCard clientName={selectedClient.clientName ?? ""} clientCode={selectedClient.clientCode ?? ""} />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientEmployeesCard employees={fetchResult.summary.employees ?? []} />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientSupervisorsCard supervisors={fetchResult.summary.supervisors ?? []} />
           </Grid>
-          {/* Remaining cards (tickets 5.3–5.8) slot in here, each fed its slice of the summary as props */}
+          {/* Remaining cards (tickets 5.5–5.8) slot in here, each fed its slice of the summary as props */}
         </Grid>
       )}
     </Container>

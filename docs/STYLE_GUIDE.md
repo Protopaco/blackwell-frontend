@@ -97,6 +97,18 @@ This applies everywhere a button calls the API: Create Pay Period, Generate Time
 
 ## 11. Testing
 
+- **Not every component gets a test — test what earns it, not everything uniformly.** Same "test what earns its keep" judgment the backend already applies (`ARCHITECTURE.md` explicitly skips one cache-invalidation test as disproportionate to its mocking cost) — applied here to components instead of services. Core principle (Testing Library's own stated philosophy): test *behavior* (what renders, what happens on interaction), not *implementation* (internal state, whether some function got called).
+
+  **Worth testing:**
+  - Anything with **branching** — multiple distinct render outcomes depending on props/state (e.g. `ClientSummary.tsx`: loading / error / redirect-on-invalid-id / loaded are four independently-breakable behaviors).
+  - Anything with **computation** — filtering, deriving, transforming data (e.g. `ClientEmployeesCard`'s active-employee filter has a real failure mode: wrong enum value, off-by-one).
+  - **Shared/reused primitives** — a bug in `Shared/DashboardCard` potentially breaks every card wrapping it; higher leverage to test once than hope every consumer catches it.
+  - **Pure functions, especially reducers** — cheapest, highest-value tests possible: no DOM, no mocking, just inputs → outputs.
+  - **Anything async** — loading/error states are exactly what silently breaks (unhandled rejection, wrong condition) and are hard to catch just by eyeballing the running app.
+
+  **Not worth testing (or barely):**
+  - Pure prop-passthrough components with zero logic (e.g. `ClientInformationCard` — just renders what it's given, no branching). A test would just restate the implementation, and a break is visible in two seconds of looking at the page.
+
 - **Tests are co-located**, not in a separate mirrored folder — `ComponentName.test.tsx` next to `ComponentName.tsx`. This matches the component-folder convention (§1: everything about a component lives together) and standard React/Vite practice. This is a deliberate difference from the *backend's* `tests/unit/` + `tests/integration/` split — that split exists there because integration tests hit a live, rate-limited API and must run separately/sequentially; the frontend has no equivalent live-API tier (everything talks to a mocked API client in tests), so there's nothing to physically separate.
 - **Shared test infrastructure lives in `src/test/`**: `src/test/setup.ts` (existing, global RTL/jsdom setup), `src/test/fixtures/<name>.ts` (reusable fake API response data, one file per resource, default-exported), `src/test/renderWithProviders.tsx` (wraps RTL's `render` in the full app provider tree — `ThemeProvider` + `CssBaseline` + every state domain's Provider, nested the same way `main.tsx` nests them). Use `renderWithProviders` instead of RTL's bare `render` for anything that needs those contexts — and when a new state domain's Provider is added to `main.tsx`, add it to `renderWithProviders` too, in the same position.
 - **Mocking API calls**: any code path under test that goes through `src/api/client.ts` (directly, or indirectly via a state provider's boot-time fetch) must have that call mocked — tests never hit a real backend. Mock only the specific API instance(s) actually used, via `vi.mock`:

@@ -30,19 +30,19 @@ export interface Supervisor {
      * @type {string}
      * @memberof Supervisor
      */
-    supervisorFirstName?: string;
+    firstName?: string;
     /**
      * 
      * @type {string}
      * @memberof Supervisor
      */
-    supervisorLastName?: string;
+    lastName?: string;
     /**
      * 
      * @type {string}
      * @memberof Supervisor
      */
-    supervisorEmail?: string;
+    email?: string;
 }
 
 /**
@@ -63,9 +63,9 @@ export function SupervisorFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     return {
         
         'supervisorId': json['supervisorId'] == null ? undefined : json['supervisorId'],
-        'supervisorFirstName': json['supervisorFirstName'] == null ? undefined : json['supervisorFirstName'],
-        'supervisorLastName': json['supervisorLastName'] == null ? undefined : json['supervisorLastName'],
-        'supervisorEmail': json['supervisorEmail'] == null ? undefined : json['supervisorEmail'],
+        'firstName': json['firstName'] == null ? undefined : json['firstName'],
+        'lastName': json['lastName'] == null ? undefined : json['lastName'],
+        'email': json['email'] == null ? undefined : json['email'],
     };
 }
 
@@ -81,9 +81,9 @@ export function SupervisorToJSONTyped(value?: Supervisor | null, ignoreDiscrimin
     return {
         
         'supervisorId': value['supervisorId'],
-        'supervisorFirstName': value['supervisorFirstName'],
-        'supervisorLastName': value['supervisorLastName'],
-        'supervisorEmail': value['supervisorEmail'],
+        'firstName': value['firstName'],
+        'lastName': value['lastName'],
+        'email': value['email'],
     };
 }
 

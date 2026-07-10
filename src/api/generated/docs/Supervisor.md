@@ -7,9 +7,9 @@
 Name | Type
 ------------ | -------------
 `supervisorId` | string
-`supervisorFirstName` | string
-`supervisorLastName` | string
-`supervisorEmail` | string
+`firstName` | string
+`lastName` | string
+`email` | string
 
 ## Example
 
@@ -19,9 +19,9 @@ import type { Supervisor } from ''
 // TODO: Update the object below with actual values
 const example = {
   "supervisorId": null,
-  "supervisorFirstName": Alex,
-  "supervisorLastName": Rivera,
-  "supervisorEmail": alex.rivera@example.org,
+  "firstName": Alex,
+  "lastName": Rivera,
+  "email": alex.rivera@example.org,
 } satisfies Supervisor
 
 console.log(example)

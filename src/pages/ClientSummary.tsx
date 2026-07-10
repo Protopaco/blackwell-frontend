@@ -12,6 +12,7 @@ import ClientInformationCard from '@/components/ClientSummary/ClientInformationC
 import ClientEmployeesCard from '@/components/ClientSummary/ClientEmployeesCard/ClientEmployeesCard';
 import ClientSupervisorsCard from '@/components/ClientSummary/ClientSupervisorsCard/ClientSupervisorsCard';
 import ClientActivitiesCard from '@/components/ClientSummary/ClientActivitiesCard/ClientActivitiesCard';
+import ClientFundingSourcesCard from '@/components/ClientSummary/ClientFundingSourcesCard/ClientFundingSourcesCard';
 
 type SummaryFetchResult = {
   clientId: string;
@@ -94,7 +95,10 @@ const ClientSummary = () => {
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientActivitiesCard activities={fetchResult.summary.activities ?? []} />
           </Grid>
-          {/* Remaining cards (tickets 5.6–5.8) slot in here, each fed its slice of the summary as props */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <ClientFundingSourcesCard fundingSources={fetchResult.summary.fundingSources ?? []} />
+          </Grid>
+          {/* Remaining cards (tickets 5.7–5.8) slot in here, each fed its slice of the summary as props */}
         </Grid>
       )}
     </Container>

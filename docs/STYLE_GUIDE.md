@@ -95,7 +95,7 @@ This applies everywhere a button calls the API: Create Pay Period, Generate Time
 ## 10. Formatting
 
 - Prettier config matches Babeonym exactly (`.prettierrc`): `singleQuote: true, semi: true, trailingComma: "es5", printWidth: 150`. `.prettierignore` excludes `dist` and `src/api/generated` (vendored, never hand-edited, regenerated wholesale anyway).
-- **Verification must include `npm run format:check` (or `npm run format` to fix), not just `npm run lint`.** `eslint-config-prettier` (already in `eslint.config.js`) only *disables* ESLint rules that would conflict with Prettier — it does not run Prettier or enforce its formatting. A clean `eslint .` says nothing about whether Prettier's formatting is actually being followed. Discovered 2026-07-09 after a full session of writing double-quoted strings despite `singleQuote: true` in `.prettierrc`, with `eslint .` passing the whole time. `package.json` has `lint`, `format`, and `format:check` scripts now — use them; don't reconstruct an ad hoc check list from memory each session.
+- **Verification must include `npm run format:check` (or `npm run format` to fix), not just `npm run lint`.** `eslint-config-prettier` (already in `eslint.config.js`) only _disables_ ESLint rules that would conflict with Prettier — it does not run Prettier or enforce its formatting. A clean `eslint .` says nothing about whether Prettier's formatting is actually being followed. Discovered 2026-07-09 after a full session of writing double-quoted strings despite `singleQuote: true` in `.prettierrc`, with `eslint .` passing the whole time. `package.json` has `lint`, `format`, and `format:check` scripts now — use them; don't reconstruct an ad hoc check list from memory each session.
 
 ## 11. Testing
 

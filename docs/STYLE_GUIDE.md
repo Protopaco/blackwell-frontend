@@ -31,6 +31,21 @@ No Redux/Zustand/TanStack Query — confirmed decision, see `docs/TICKETS.md`. E
 
 Providers are composed by nesting in `main.tsx`, outermost-to-innermost in dependency order (a provider that depends on another domain's state nests inside it).
 
+**Action types are a controlled-vocab `const`, not a TS `enum` and not bare string literals.** A real TS `enum` is non-erasable syntax and will fail under `erasableSyntaxOnly: true` in `tsconfig.app.json` (the same flag we relaxed only for the generated API client — hand-written app code keeps it on). Instead, `<domain>.types.ts` exports a `const` object with `as const`, and the `<Domain>Action` union references it via `typeof`:
+
+```ts
+export const ClientActionType = {
+  SET_CLIENTS: "SET_CLIENTS",
+  SELECT_CLIENT: "SELECT_CLIENT",
+} as const;
+
+export type ClientAction =
+  | { type: typeof ClientActionType.SET_CLIENTS; payload: Client[] }
+  | { type: typeof ClientActionType.SELECT_CLIENT; payload: Client | null };
+```
+
+The reducer's `switch` and every `dispatch(...)` call site reference `ClientActionType.X`, never the bare string — this also matches the backend's own "controlled-vocab const" convention for enums (`docs/ARCHITECTURE.md`). It's not primarily about type safety (the discriminated union already catches a typo'd literal at compile time) — it's about not retyping the same string across 3+ files and getting real rename/refactor support.
+
 ## 4. API client
 
 - Generated client lives in `src/api/generated/` — never hand-edited, regenerated via `npm run api:gen`.

@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/theme";
+import ClientProvider from "@/state/client/client.provider";
 import "./index.css";
 import App from "./App.tsx";
 
@@ -11,9 +12,11 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ClientProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ClientProvider>
     </ThemeProvider>
   </StrictMode>,
 );

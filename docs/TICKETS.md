@@ -76,6 +76,14 @@ Each card is independent of the others (no live/reactive data-sharing between ca
 
 ---
 
+## Future / not yet scheduled
+
+| Ticket | Notes |
+|---|---|
+| Per-client accent color | Idea (2026-07-09): give each client a distinct color, applied as the accent/primary color once that client is selected (app bar, possibly card accents) — an instant visual cue for which client you're on, catches "wrong client" mistakes. **Approach not yet decided**, two options on the table: (1) stored field on `Client` (`clientColor` added to the `Clients` sheet/schema, backend + FE change, curatable but needs manual data entry per client and someone remembering to set it) — user has confirmed the schema change itself is low-effort if this path is chosen; (2) derived deterministically from `clientId` (hash → HSL color, constrained saturation/lightness band for legible contrast, zero backend change, automatic for every client including existing ones, but not hand-curatable). Leaning #2 in discussion but not settled — user wants to understand the hashing approach better before deciding. No urgency — option 2 has no schema dependency so there's no cost to deciding late; only option 1 would benefit from earlier commitment. Low-cost prep in the meantime: style new components (e.g. `DashboardCard`) using `theme.palette.primary.main` rather than hardcoded colors, so either approach slots in later with no rework. |
+
+---
+
 ## Decisions already made (so we don't re-litigate them)
 
 - **State management**: no new library. Plain React state/hooks (`useState`/`useContext`) — the app is button-triggered throughout, not live/reactive, so there's no need for TanStack Query/Redux/etc.

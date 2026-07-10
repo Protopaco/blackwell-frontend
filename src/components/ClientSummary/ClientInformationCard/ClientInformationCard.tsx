@@ -1,8 +1,5 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
-import "@/components/ClientSummary/ClientInformationCard/ClientInformationCard.css";
+import DashboardCard from "@/components/Shared/DashboardCard/DashboardCard";
 
 type Props = {
   clientName: string;
@@ -11,15 +8,12 @@ type Props = {
 
 const ClientInformationCard = ({ clientName, clientCode }: Props) => {
   return (
-    <Card id="client-information-card">
-      <CardHeader title="Client Information" />
-      <CardContent>
-        <Typography variant="h6">{clientName}</Typography>
-        <Typography variant="body2" color="text.secondary">
-          {clientCode}
-        </Typography>
-      </CardContent>
-    </Card>
+    <DashboardCard id="client-information-card" header="Client Information" configPath={null}>
+      <Typography variant="h6">{clientName}</Typography>
+      <Typography variant="body2" color="text.secondary">
+        {clientCode}
+      </Typography>
+    </DashboardCard>
   );
 };
 

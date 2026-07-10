@@ -9,6 +9,7 @@ import { clientApi } from "@/api/client";
 import type { ClientSummary as ClientSummaryData } from "@/api/generated/models/ClientSummary";
 import useSelectedClient from "@/state/client/useSelectedClient";
 import ClientInformationCard from "@/components/ClientSummary/ClientInformationCard/ClientInformationCard";
+import ClientEmployeesCard from "@/components/ClientSummary/ClientEmployeesCard/ClientEmployeesCard";
 
 type SummaryFetchResult = {
   clientId: string;
@@ -81,6 +82,7 @@ const ClientSummary = () => {
         <Grid container spacing={2} id="client-summary-cards">
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientInformationCard clientName={selectedClient.clientName ?? ""} clientCode={selectedClient.clientCode ?? ""} />
+            <ClientEmployeesCard employees={fetchResult.summary.employees ?? []} />
           </Grid>
           {/* Remaining cards (tickets 5.3–5.8) slot in here, each fed its slice of the summary as props */}
         </Grid>

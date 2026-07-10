@@ -1,5 +1,5 @@
-import { Configuration } from "@/api/generated/runtime";
-import { AdminApi, ClientApi, HealthApi, PayPeriodApi, PayrollReportApi, TimesheetApi } from "@/api/generated/apis";
+import { Configuration } from '@/api/generated/runtime';
+import { AdminApi, ClientApi, HealthApi, PayPeriodApi, PayrollReportApi, TimesheetApi } from '@/api/generated/apis';
 
 const config = new Configuration({
   basePath: import.meta.env.VITE_API_BASE_URL,

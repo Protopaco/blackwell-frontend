@@ -1,7 +1,7 @@
-import type { Client } from "@/api/generated/models/Client";
+import type { Client } from '@/api/generated/models/Client';
 
 export const ClientActionType = {
-  SET_CLIENTS: "SET_CLIENTS",
+  SET_CLIENTS: 'SET_CLIENTS',
 } as const;
 
 export type ClientState = {

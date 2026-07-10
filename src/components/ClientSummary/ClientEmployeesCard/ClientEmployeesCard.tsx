@@ -1,6 +1,6 @@
-import Typography from "@mui/material/Typography";
-import DashboardCard from "@/components/Shared/DashboardCard/DashboardCard";
-import type { Employee } from "@/api/generated/models/Employee";
+import Typography from '@mui/material/Typography';
+import DashboardCard from '@/components/Shared/DashboardCard/DashboardCard';
+import type { Employee } from '@/api/generated/models/Employee';
 
 type Props = {
   employees: Employee[];

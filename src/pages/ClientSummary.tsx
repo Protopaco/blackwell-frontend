@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import { clientApi } from "@/api/client";
-import type { ClientSummary as ClientSummaryData } from "@/api/generated/models/ClientSummary";
-import useSelectedClient from "@/state/client/useSelectedClient";
-import ClientInformationCard from "@/components/ClientSummary/ClientInformationCard/ClientInformationCard";
-import ClientEmployeesCard from "@/components/ClientSummary/ClientEmployeesCard/ClientEmployeesCard";
-import ClientSupervisorsCard from "@/components/ClientSummary/ClientSupervisorsCard/ClientSupervisorsCard";
+import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { clientApi } from '@/api/client';
+import type { ClientSummary as ClientSummaryData } from '@/api/generated/models/ClientSummary';
+import useSelectedClient from '@/state/client/useSelectedClient';
+import ClientInformationCard from '@/components/ClientSummary/ClientInformationCard/ClientInformationCard';
+import ClientEmployeesCard from '@/components/ClientSummary/ClientEmployeesCard/ClientEmployeesCard';
+import ClientSupervisorsCard from '@/components/ClientSummary/ClientSupervisorsCard/ClientSupervisorsCard';
+import ClientActivitiesCard from '@/components/ClientSummary/ClientActivitiesCard/ClientActivitiesCard';
 
 type SummaryFetchResult = {
   clientId: string;
@@ -36,9 +37,9 @@ const ClientSummary = () => {
         setFetchResult({ clientId, summary: clientSummary, errorMessage: null });
       })
       .catch((error) => {
-        console.error("Failed to load client summary", error);
+        console.error('Failed to load client summary', error);
         if (cancelled) return;
-        setFetchResult({ clientId, summary: null, errorMessage: "Failed to load client summary." });
+        setFetchResult({ clientId, summary: null, errorMessage: 'Failed to load client summary.' });
       });
 
     return () => {
@@ -49,7 +50,7 @@ const ClientSummary = () => {
   // Client list still loading — can't resolve the URL's clientId yet.
   if (clientsLoading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
         <CircularProgress />
       </Box>
     );
@@ -71,7 +72,7 @@ const ClientSummary = () => {
   // Summary fetch for the current client hasn't resolved yet.
   if (!fetchResult || fetchResult.clientId !== clientId) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
         <CircularProgress />
       </Box>
     );
@@ -82,7 +83,7 @@ const ClientSummary = () => {
       {fetchResult.summary && (
         <Grid container spacing={2} id="client-summary-cards">
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-            <ClientInformationCard clientName={selectedClient.clientName ?? ""} clientCode={selectedClient.clientCode ?? ""} />
+            <ClientInformationCard clientName={selectedClient.clientName ?? ''} clientCode={selectedClient.clientCode ?? ''} />
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientEmployeesCard employees={fetchResult.summary.employees ?? []} />
@@ -90,7 +91,10 @@ const ClientSummary = () => {
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientSupervisorsCard supervisors={fetchResult.summary.supervisors ?? []} />
           </Grid>
-          {/* Remaining cards (tickets 5.5–5.8) slot in here, each fed its slice of the summary as props */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <ClientActivitiesCard activities={fetchResult.summary.activities ?? []} />
+          </Grid>
+          {/* Remaining cards (tickets 5.6–5.8) slot in here, each fed its slice of the summary as props */}
         </Grid>
       )}
     </Container>

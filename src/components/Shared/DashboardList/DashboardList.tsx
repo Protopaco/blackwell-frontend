@@ -1,7 +1,7 @@
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 export type DashboardListItem = {
   key: string;
@@ -21,7 +21,7 @@ const DashboardList = ({ items }: Props) => {
             <Typography variant="body2">{item.labels[0]}</Typography>
             {item.labels.length > 1 && (
               <Typography variant="body2" color="text.secondary">
-                {item.labels.slice(1).join(" · ")}
+                {item.labels.slice(1).join(' · ')}
               </Typography>
             )}
           </Stack>

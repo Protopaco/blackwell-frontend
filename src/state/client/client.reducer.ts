@@ -1,5 +1,5 @@
-import { ClientActionType } from "@/state/client/client.types";
-import type { ClientState, ClientAction } from "@/state/client/client.types";
+import { ClientActionType } from '@/state/client/client.types';
+import type { ClientState, ClientAction } from '@/state/client/client.types';
 
 export const clientReducer = (state: ClientState, action: ClientAction): ClientState => {
   switch (action.type) {

@@ -1,5 +1,5 @@
-import Typography from "@mui/material/Typography";
-import DashboardCard from "@/components/Shared/DashboardCard/DashboardCard";
+import Typography from '@mui/material/Typography';
+import DashboardCard from '@/components/Shared/DashboardCard/DashboardCard';
 
 type Props = {
   clientName: string;

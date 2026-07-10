@@ -1,15 +1,15 @@
-import { createBrowserRouter } from "react-router-dom";
-import AppLayout from "@/AppLayout";
-import Landing from "@/pages/Landing";
-import ClientSummary from "@/pages/ClientSummary";
+import { createBrowserRouter } from 'react-router-dom';
+import AppLayout from '@/AppLayout';
+import Landing from '@/pages/Landing';
+import ClientSummary from '@/pages/ClientSummary';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <AppLayout />,
     children: [
       { index: true, element: <Landing /> },
-      { path: "client/:clientId", element: <ClientSummary /> },
+      { path: 'client/:clientId', element: <ClientSummary /> },
     ],
   },
 ]);

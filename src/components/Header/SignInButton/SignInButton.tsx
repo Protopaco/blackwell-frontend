@@ -1,5 +1,5 @@
-import Button from "@mui/material/Button";
-import "@/components/Header/SignInButton/SignInButton.css";
+import Button from '@mui/material/Button';
+import '@/components/Header/SignInButton/SignInButton.css';
 
 const SignInButton = () => {
   return (

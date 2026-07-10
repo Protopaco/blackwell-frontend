@@ -1,6 +1,6 @@
-import { useParams } from "react-router-dom";
-import { useClient } from "@/state/client/client.context";
-import type { Client } from "@/api/generated/models/Client";
+import { useParams } from 'react-router-dom';
+import { useClient } from '@/state/client/client.context';
+import type { Client } from '@/api/generated/models/Client';
 
 type SelectedClient = {
   selectedClient: Client | null;

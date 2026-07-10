@@ -1,10 +1,10 @@
-import { useReducer, useMemo, useEffect, useRef } from "react";
-import type { ReactNode } from "react";
-import { clientReducer } from "@/state/client/client.reducer";
-import { ClientContext } from "@/state/client/client.context";
-import { ClientActionType } from "@/state/client/client.types";
-import type { ClientState } from "@/state/client/client.types";
-import { clientApi } from "@/api/client";
+import { useReducer, useMemo, useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
+import { clientReducer } from '@/state/client/client.reducer';
+import { ClientContext } from '@/state/client/client.context';
+import { ClientActionType } from '@/state/client/client.types';
+import type { ClientState } from '@/state/client/client.types';
+import { clientApi } from '@/api/client';
 
 const initialState: ClientState = {
   clients: [],

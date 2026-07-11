@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/AdminApi.ts
 apis/ClientApi.ts
 apis/HealthApi.ts

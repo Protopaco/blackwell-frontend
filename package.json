@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "api:gen": "openapi-generator-cli generate -i openapi/openapi.json -g typescript-fetch -o src/api/generated --additional-properties=supportsES6=true"
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "api:gen": "openapi-generator-cli generate -i http://localhost:3000/openapi.json -g typescript-fetch -o src/api/generated --additional-properties=supportsES6=true"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

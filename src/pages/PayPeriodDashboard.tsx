@@ -3,10 +3,11 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { payPeriodApi } from '@/api/client';
+import { payPeriodApi, timesheetApi } from '@/api/client';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useSelectedClient from '@/state/client/useSelectedClient';
 import PayPeriodInfoCard from '@/components/PayPeriodDashboard/PayPeriodInfoCard/PayPeriodInfoCard';
+import EmployeeTimesheetStatusCard from '@/components/PayPeriodDashboard/EmployeeTimesheetStatusCard/EmployeeTimesheetStatusCard';
 
 const PayPeriodDashboard = () => {
   const { selectedClient, clientsLoading } = useSelectedClient();
@@ -17,9 +18,19 @@ const PayPeriodDashboard = () => {
 
   const {
     data: payPeriod,
-    errorMessage,
-    loading,
+    errorMessage: payPeriodErrorMessage,
+    loading: payPeriodLoading,
   } = useFetchByKey(key, () => payPeriodApi.v1GetPayPeriodById({ clientId: clientId!, payPeriodId: payPeriodId! }), 'Failed to load pay period.');
+
+  const {
+    data: employees,
+    errorMessage: employeesErrorMessage,
+    loading: employeesLoading,
+  } = useFetchByKey(
+    key,
+    () => timesheetApi.v1GetTimesheetStatus({ clientId: clientId!, payPeriodId: payPeriodId! }),
+    'Failed to load employee timesheet status.'
+  );
 
   // Client list still loading — can't resolve the URL's clientId yet.
   if (clientsLoading) {
@@ -35,6 +46,7 @@ const PayPeriodDashboard = () => {
     return <Navigate to="/" replace />;
   }
 
+  const errorMessage = payPeriodErrorMessage ?? employeesErrorMessage;
   if (errorMessage) {
     return (
       <Container sx={{ py: 4 }}>
@@ -43,8 +55,8 @@ const PayPeriodDashboard = () => {
     );
   }
 
-  // Pay period fetch for the current id hasn't resolved yet.
-  if (loading || !payPeriod) {
+  // Either fetch for the current id hasn't resolved yet.
+  if (payPeriodLoading || employeesLoading || !payPeriod || !employees) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
         <CircularProgress />
@@ -55,6 +67,7 @@ const PayPeriodDashboard = () => {
   return (
     <Container sx={{ py: 4 }} id="pay-period-dashboard-cards">
       <PayPeriodInfoCard payPeriod={payPeriod} />
+      <EmployeeTimesheetStatusCard employees={employees} />
     </Container>
   );
 };

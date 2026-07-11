@@ -1,11 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 export type DashboardListItem = {
   key: string;
   labels: string[];
+  path?: string | null;
 };
 
 type Props = {
@@ -13,10 +16,12 @@ type Props = {
 };
 
 const DashboardList = ({ items }: Props) => {
+  const navigate = useNavigate();
+
   return (
     <List dense disablePadding>
-      {items.map((item) => (
-        <ListItem key={item.key} disableGutters>
+      {items.map((item) => {
+        const content = (
           <Stack direction="row" spacing={1}>
             <Typography variant="body2">{item.labels[0]}</Typography>
             {item.labels.length > 1 && (
@@ -25,8 +30,22 @@ const DashboardList = ({ items }: Props) => {
               </Typography>
             )}
           </Stack>
-        </ListItem>
-      ))}
+        );
+
+        if (item.path) {
+          return (
+            <ListItemButton key={item.key} disableGutters onClick={() => navigate(item.path!)}>
+              {content}
+            </ListItemButton>
+          );
+        }
+
+        return (
+          <ListItem key={item.key} disableGutters>
+            {content}
+          </ListItem>
+        );
+      })}
     </List>
   );
 };

@@ -14,6 +14,7 @@ import ClientSupervisorsCard from '@/components/ClientSummary/ClientSupervisorsC
 import ClientActivitiesCard from '@/components/ClientSummary/ClientActivitiesCard/ClientActivitiesCard';
 import ClientFundingSourcesCard from '@/components/ClientSummary/ClientFundingSourcesCard/ClientFundingSourcesCard';
 import ClientHolidaysCard from '@/components/ClientSummary/ClientHolidaysCard/ClientHolidaysCard';
+import ClientSettingsCard from '@/components/ClientSummary/ClientSettingsCard/ClientSettingsCard';
 
 type SummaryFetchResult = {
   clientId: string;
@@ -102,7 +103,9 @@ const ClientSummary = () => {
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientHolidaysCard holidays={fetchResult.summary.holidays ?? []} />
           </Grid>
-          {/* Remaining card (ticket 5.8) slots in here, fed its slice of the summary as props */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <ClientSettingsCard settings={fetchResult.summary.settings ?? {}} />
+          </Grid>
         </Grid>
       )}
     </Container>

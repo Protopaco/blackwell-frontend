@@ -12,6 +12,7 @@ Name | Type
 `fundingSources` | [Array&lt;FundingSource&gt;](FundingSource.md)
 `holidays` | [Array&lt;Holiday&gt;](Holiday.md)
 `settings` | [Settings](Settings.md)
+`payPeriods` | [Array&lt;PayPeriod&gt;](PayPeriod.md)
 
 ## Example
 
@@ -26,6 +27,7 @@ const example = {
   "fundingSources": null,
   "holidays": null,
   "settings": null,
+  "payPeriods": null,
 } satisfies ClientSummary
 
 console.log(example)

@@ -34,6 +34,13 @@ import {
     HolidayToJSON,
     HolidayToJSONTyped,
 } from './Holiday';
+import type { PayPeriod } from './PayPeriod';
+import {
+    PayPeriodFromJSON,
+    PayPeriodFromJSONTyped,
+    PayPeriodToJSON,
+    PayPeriodToJSONTyped,
+} from './PayPeriod';
 import type { Activity } from './Activity';
 import {
     ActivityFromJSON,
@@ -98,6 +105,12 @@ export interface ClientSummary {
      * @memberof ClientSummary
      */
     settings?: Settings;
+    /**
+     * 
+     * @type {Array<PayPeriod>}
+     * @memberof ClientSummary
+     */
+    payPeriods?: Array<PayPeriod>;
 }
 
 /**
@@ -123,6 +136,7 @@ export function ClientSummaryFromJSONTyped(json: any, ignoreDiscriminator: boole
         'fundingSources': json['fundingSources'] == null ? undefined : ((json['fundingSources'] as Array<any>).map(FundingSourceFromJSON)),
         'holidays': json['holidays'] == null ? undefined : ((json['holidays'] as Array<any>).map(HolidayFromJSON)),
         'settings': json['settings'] == null ? undefined : SettingsFromJSON(json['settings']),
+        'payPeriods': json['payPeriods'] == null ? undefined : ((json['payPeriods'] as Array<any>).map(PayPeriodFromJSON)),
     };
 }
 
@@ -143,6 +157,7 @@ export function ClientSummaryToJSONTyped(value?: ClientSummary | null, ignoreDis
         'fundingSources': value['fundingSources'] == null ? undefined : ((value['fundingSources'] as Array<any>).map(FundingSourceToJSON)),
         'holidays': value['holidays'] == null ? undefined : ((value['holidays'] as Array<any>).map(HolidayToJSON)),
         'settings': SettingsToJSON(value['settings']),
+        'payPeriods': value['payPeriods'] == null ? undefined : ((value['payPeriods'] as Array<any>).map(PayPeriodToJSON)),
     };
 }
 

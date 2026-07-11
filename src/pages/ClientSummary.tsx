@@ -15,6 +15,7 @@ import ClientActivitiesCard from '@/components/ClientSummary/ClientActivitiesCar
 import ClientFundingSourcesCard from '@/components/ClientSummary/ClientFundingSourcesCard/ClientFundingSourcesCard';
 import ClientHolidaysCard from '@/components/ClientSummary/ClientHolidaysCard/ClientHolidaysCard';
 import ClientSettingsCard from '@/components/ClientSummary/ClientSettingsCard/ClientSettingsCard';
+import ClientPayPeriodCard from '@/components/ClientSummary/ClientPayPeriodCard/ClientPayPeriodCard';
 
 type SummaryFetchResult = {
   clientId: string;
@@ -105,6 +106,9 @@ const ClientSummary = () => {
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <ClientSettingsCard settings={fetchResult.summary.settings ?? {}} />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <ClientPayPeriodCard payPeriods={fetchResult.summary.payPeriods ?? []} />
           </Grid>
         </Grid>
       )}

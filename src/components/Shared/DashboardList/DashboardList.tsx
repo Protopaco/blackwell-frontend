@@ -10,6 +10,7 @@ export type DashboardListItem = {
   key: string;
   labels: string[];
   path?: string | null;
+  startAdornment?: ReactNode;
   endAdornment?: ReactNode;
 };
 
@@ -26,6 +27,7 @@ const DashboardList = ({ items }: Props) => {
         const content = (
           <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" width="100%">
             <Stack direction="row" spacing={1}>
+              {item.startAdornment}
               <Typography variant="body2">{item.labels[0]}</Typography>
               {item.labels.length > 1 && (
                 <Typography variant="body2" color="text.secondary">

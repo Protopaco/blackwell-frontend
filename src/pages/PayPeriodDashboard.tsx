@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { payPeriodApi } from '@/api/client';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useSelectedClient from '@/state/client/useSelectedClient';
+import PayPeriodInfoCard from '@/components/PayPeriodDashboard/PayPeriodInfoCard/PayPeriodInfoCard';
 
 const PayPeriodDashboard = () => {
   const { selectedClient, clientsLoading } = useSelectedClient();
@@ -51,7 +52,11 @@ const PayPeriodDashboard = () => {
     );
   }
 
-  return <Container sx={{ py: 4 }} id="pay-period-dashboard-cards" />;
+  return (
+    <Container sx={{ py: 4 }} id="pay-period-dashboard-cards">
+      <PayPeriodInfoCard payPeriod={payPeriod} />
+    </Container>
+  );
 };
 
 export default PayPeriodDashboard;

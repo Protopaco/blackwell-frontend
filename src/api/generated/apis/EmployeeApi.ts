@@ -83,7 +83,7 @@ export class EmployeeApi extends runtime.BaseAPI {
     }
 
     /**
-     * employeeId is server-generated — ignored if present in the request body. Exactly one of timesheetFileId (existing file, used as-is) or timesheetFolderId (must be an Active TimesheetFolder configured for this client — a new timesheet workbook is provisioned there) must be provided. 
+     * employeeId is server-generated — ignored if present in the request body. Exactly one of timesheetFileLink (existing Google Sheets/Drive file URL — parsed, verified, and stored as Employee.timesheetFileId) or timesheetFolderId (must be an Active TimesheetFolder configured for this client — a new timesheet workbook is provisioned there) must be provided. 
      * Create a new employee
      */
     async v1CreateEmployeeRaw(requestParameters: V1CreateEmployeeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -94,7 +94,7 @@ export class EmployeeApi extends runtime.BaseAPI {
     }
 
     /**
-     * employeeId is server-generated — ignored if present in the request body. Exactly one of timesheetFileId (existing file, used as-is) or timesheetFolderId (must be an Active TimesheetFolder configured for this client — a new timesheet workbook is provisioned there) must be provided. 
+     * employeeId is server-generated — ignored if present in the request body. Exactly one of timesheetFileLink (existing Google Sheets/Drive file URL — parsed, verified, and stored as Employee.timesheetFileId) or timesheetFolderId (must be an Active TimesheetFolder configured for this client — a new timesheet workbook is provisioned there) must be provided. 
      * Create a new employee
      */
     async v1CreateEmployee(requestParameters: V1CreateEmployeeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {

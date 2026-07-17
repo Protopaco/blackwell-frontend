@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { employeeApi, timesheetFolderApi } from '@/api/client';
-import { TimesheetFolderStatusEnum } from '@/api/generated/models/TimesheetFolder';
-import type { TimesheetFolder } from '@/api/generated/models/TimesheetFolder';
+import { employeeApi } from '@/api/client';
+import type { Employee } from '@/api/generated/models/Employee';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
+import currencyToString from '@/utils/currencyToString';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
-
-type TimesheetSetupMode = 'newWorkbook' | 'existingWorkbook';
 
 type Input = {
   clientId: string;
+  employee: Employee | null;
   open: boolean;
   onClose: () => void;
-  onCreated: () => void;
+  onSaved: () => void;
 };
 
-const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) => {
+const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Input) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [position, setPosition] = useState('');
@@ -25,48 +24,26 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
   const [hourlyPayRate1, setHourlyPayRate1] = useState('');
   const [hourlyPayRate2, setHourlyPayRate2] = useState('');
   const [holidayPayRate, setHolidayPayRate] = useState('');
-  const [timesheetSetupMode, setTimesheetSetupMode] = useState<TimesheetSetupMode>('newWorkbook');
-  const [timesheetFolderId, setTimesheetFolderId] = useState('');
   const [timesheetFileId, setTimesheetFileId] = useState('');
-  const [timesheetFolders, setTimesheetFolders] = useState<TimesheetFolder[]>([]);
-  const [loadingTimesheetFolders, setLoadingTimesheetFolders] = useState(false);
-  const [timesheetFolderErrorMessage, setTimesheetFolderErrorMessage] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !employee) return;
 
-    let cancelled = false;
-    setLoadingTimesheetFolders(true);
-    setTimesheetFolderErrorMessage(null);
-
-    timesheetFolderApi
-      .v1GetTimesheetFolders({ clientId })
-      .then((folders) => {
-        if (cancelled) return;
-
-        const activeFolders = folders.filter((folder) => folder.status === TimesheetFolderStatusEnum.Active);
-        setTimesheetFolders(activeFolders);
-        setTimesheetFolderId(activeFolders[0]?.timesheetFolderId ?? '');
-      })
-      .catch(async (error) => {
-        console.error('Failed to load timesheet folders.', error);
-        if (cancelled) return;
-        setTimesheetFolders([]);
-        setTimesheetFolderId('');
-        setTimesheetFolderErrorMessage(await resolveErrorMessage(error, 'Failed to load timesheet folders.'));
-      })
-      .finally(() => {
-        if (cancelled) return;
-        setLoadingTimesheetFolders(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [clientId, open]);
+    setFirstName(employee.firstName ?? '');
+    setLastName(employee.lastName ?? '');
+    setPosition(employee.position ?? '');
+    setEmail(employee.email ?? '');
+    setStatus(employee.status ?? EmployeeStatusValue.Active);
+    setHourlyPayRate1(currencyToString(employee.hourlyPayRate1));
+    setHourlyPayRate2(currencyToString(employee.hourlyPayRate2));
+    setHolidayPayRate(currencyToString(employee.holidayPayRate));
+    setTimesheetFileId(employee.timesheetFileId ?? '');
+    setSubmitted(false);
+    setErrorMessage(null);
+  }, [employee, open]);
 
   const resetForm = () => {
     setFirstName('');
@@ -77,12 +54,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     setHourlyPayRate1('');
     setHourlyPayRate2('');
     setHolidayPayRate('');
-    setTimesheetSetupMode('newWorkbook');
-    setTimesheetFolderId('');
     setTimesheetFileId('');
-    setTimesheetFolders([]);
-    setLoadingTimesheetFolders(false);
-    setTimesheetFolderErrorMessage(null);
     setSubmitted(false);
     setErrorMessage(null);
   };
@@ -93,9 +65,9 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     onClose();
   };
 
-  const createEmployee = async (event: FormEvent<HTMLFormElement>) => {
+  const saveEmployee = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (saving) return;
+    if (saving || !employee?.employeeId) return;
 
     setSubmitted(true);
     setErrorMessage(null);
@@ -104,11 +76,9 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     const trimmedLastName = lastName.trim();
     const trimmedPosition = position.trim();
     const trimmedEmail = email.trim();
-    const trimmedTimesheetFileId = timesheetFileId.trim();
     const parsedHourlyPayRate1 = Number(hourlyPayRate1);
     const parsedHourlyPayRate2 = Number(hourlyPayRate2);
     const parsedHolidayPayRate = Number(holidayPayRate);
-    const usingNewWorkbook = timesheetSetupMode === 'newWorkbook';
 
     if (
       !trimmedFirstName ||
@@ -120,9 +90,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
       !holidayPayRate ||
       Number.isNaN(parsedHourlyPayRate1) ||
       Number.isNaN(parsedHourlyPayRate2) ||
-      Number.isNaN(parsedHolidayPayRate) ||
-      (usingNewWorkbook && !timesheetFolderId) ||
-      (!usingNewWorkbook && !trimmedTimesheetFileId)
+      Number.isNaN(parsedHolidayPayRate)
     ) {
       return;
     }
@@ -130,9 +98,11 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     setSaving(true);
 
     try {
-      await employeeApi.v1CreateEmployee({
+      await employeeApi.v1UpdateEmployee({
         clientId,
-        employeeCreateRequest: {
+        employeeId: employee.employeeId,
+        employee: {
+          employeeId: employee.employeeId,
           firstName: trimmedFirstName,
           lastName: trimmedLastName,
           position: trimmedPosition,
@@ -141,27 +111,22 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
           hourlyPayRate1: parsedHourlyPayRate1,
           hourlyPayRate2: parsedHourlyPayRate2,
           holidayPayRate: parsedHolidayPayRate,
-          timesheetFolderId: usingNewWorkbook ? timesheetFolderId : undefined,
-          timesheetFileId: usingNewWorkbook ? undefined : trimmedTimesheetFileId,
+          timesheetFileId,
         },
       });
       resetForm();
       onClose();
-      onCreated();
+      onSaved();
     } catch (error) {
-      console.error('Failed to create employee.', error);
-      setErrorMessage(await resolveErrorMessage(error, 'Failed to create employee.'));
+      console.error('Failed to update employee.', error);
+      setErrorMessage(await resolveErrorMessage(error, 'Failed to update employee.'));
     } finally {
       setSaving(false);
     }
   };
 
-  const noActiveTimesheetFolders =
-    timesheetSetupMode === 'newWorkbook' && !loadingTimesheetFolders && !timesheetFolderErrorMessage && timesheetFolders.length === 0;
-
   return {
     closeDialog,
-    createEmployee,
     email,
     emailRequired: submitted && !email.trim(),
     errorMessage,
@@ -175,10 +140,9 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     hourlyPayRate2Invalid: submitted && (!hourlyPayRate2 || Number.isNaN(Number(hourlyPayRate2))),
     lastName,
     lastNameRequired: submitted && !lastName.trim(),
-    loadingTimesheetFolders,
-    noActiveTimesheetFolders,
     position,
     positionRequired: submitted && !position.trim(),
+    saveEmployee,
     saving,
     setEmail,
     setFirstName,
@@ -188,18 +152,9 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     setLastName,
     setPosition,
     setStatus,
-    setTimesheetFileId,
-    setTimesheetFolderId,
-    setTimesheetSetupMode,
     status,
     timesheetFileId,
-    timesheetFileRequired: submitted && timesheetSetupMode === 'existingWorkbook' && !timesheetFileId.trim(),
-    timesheetFolderErrorMessage,
-    timesheetFolderId,
-    timesheetFolderRequired: submitted && timesheetSetupMode === 'newWorkbook' && !timesheetFolderId,
-    timesheetFolders,
-    timesheetSetupMode,
   };
 };
 
-export default useCreateEmployeeForm;
+export default useEditEmployeeForm;

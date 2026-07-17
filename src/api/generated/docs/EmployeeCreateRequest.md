@@ -1,7 +1,7 @@
 
 # EmployeeCreateRequest
 
-Exactly one of timesheetFileId or timesheetFolderId must be provided.
+Exactly one of timesheetFileLink or timesheetFolderId must be provided.
 
 ## Properties
 
@@ -15,7 +15,7 @@ Name | Type
 `holidayPayRate` | number
 `email` | string
 `status` | string
-`timesheetFileId` | string
+`timesheetFileLink` | string
 `timesheetFolderId` | string
 
 ## Example
@@ -33,7 +33,7 @@ const example = {
   "holidayPayRate": 38.94,
   "email": jane.smith@example.org,
   "status": null,
-  "timesheetFileId": 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms,
+  "timesheetFileLink": https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms/edit,
   "timesheetFolderId": null,
 } satisfies EmployeeCreateRequest
 

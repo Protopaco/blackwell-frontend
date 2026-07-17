@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
@@ -7,17 +8,18 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import type { Employee } from '@/api/generated/models/Employee';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
-import formatCurrency from '@/utils/formatCurrency';
+import currencyToString from '@/utils/currencyToString';
 
 type Props = {
   employees: Employee[];
+  onEdit: (employee: Employee) => void;
 };
 
 type SortKey = 'name' | 'position' | 'email' | 'status' | 'payRates';
 
 type SortDirection = 'asc' | 'desc';
 
-const EmployeesTable = ({ employees }: Props) => {
+const EmployeesTable = ({ employees, onEdit }: Props) => {
   const [sortKey, setSortKey] = useState<SortKey>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -61,7 +63,7 @@ const EmployeesTable = ({ employees }: Props) => {
         { label: 'Email', sortDirection: sortKey === 'email' ? sortDirection : undefined, onSort: () => updateSort('email') },
         { label: 'Status', sortDirection: sortKey === 'status' ? sortDirection : undefined, onSort: () => updateSort('status') },
         { label: 'Pay Rates', sortDirection: sortKey === 'payRates' ? sortDirection : undefined, onSort: () => updateSort('payRates') },
-        { label: 'Timesheet', align: 'right' },
+        { label: 'Actions', align: 'right' },
       ]}
     >
       {sortedEmployees.map((employee) => {
@@ -77,17 +79,20 @@ const EmployeesTable = ({ employees }: Props) => {
             <TableCell>
               <Stack spacing={0.25}>
                 <Typography variant="body2">
-                  Rate 1: {employee.hourlyPayRate1 === undefined ? 'Not set' : formatCurrency(employee.hourlyPayRate1)}
+                  Rate 1: {employee.hourlyPayRate1 === undefined ? 'Not set' : currencyToString(employee.hourlyPayRate1, { decorated: true })}
                 </Typography>
                 <Typography variant="body2">
-                  Rate 2: {employee.hourlyPayRate2 === undefined ? 'Not set' : formatCurrency(employee.hourlyPayRate2)}
+                  Rate 2: {employee.hourlyPayRate2 === undefined ? 'Not set' : currencyToString(employee.hourlyPayRate2, { decorated: true })}
                 </Typography>
                 <Typography variant="body2">
-                  Holiday: {employee.holidayPayRate === undefined ? 'Not set' : formatCurrency(employee.holidayPayRate)}
+                  Holiday: {employee.holidayPayRate === undefined ? 'Not set' : currencyToString(employee.holidayPayRate, { decorated: true })}
                 </Typography>
               </Stack>
             </TableCell>
             <TableCell align="right">
+              <IconButton aria-label={`Edit ${employeeName}`} onClick={() => onEdit(employee)} size="small">
+                <EditIcon fontSize="small" />
+              </IconButton>
               {timesheetUrl ? (
                 <IconButton
                   aria-label={`Open ${employeeName} timesheet`}

@@ -4,7 +4,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { EmployeeCreateRequestStatusEnum } from '@/api/generated/models/EmployeeCreateRequest';
+import EmployeeStatusValue from '@/models/EmployeeStatusValue';
+import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
 
 type Props = {
   disabled: boolean;
@@ -18,10 +19,10 @@ type Props = {
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
   onPositionChange: (value: string) => void;
-  onStatusChange: (value: EmployeeCreateRequestStatusEnum) => void;
+  onStatusChange: (value: EmployeeStatusValueType) => void;
   position: string;
   positionRequired: boolean;
-  status: EmployeeCreateRequestStatusEnum;
+  status: EmployeeStatusValueType;
 };
 
 const EmployeeIdentityFields = ({
@@ -97,10 +98,10 @@ const EmployeeIdentityFields = ({
           labelId="employee-status-label"
           label="Status"
           value={status}
-          onChange={(event) => onStatusChange(event.target.value as EmployeeCreateRequestStatusEnum)}
+          onChange={(event) => onStatusChange(event.target.value as EmployeeStatusValueType)}
         >
-          <MenuItem value={EmployeeCreateRequestStatusEnum.Active}>Active</MenuItem>
-          <MenuItem value={EmployeeCreateRequestStatusEnum.Inactive}>Inactive</MenuItem>
+          <MenuItem value={EmployeeStatusValue.Active}>Active</MenuItem>
+          <MenuItem value={EmployeeStatusValue.Inactive}>Inactive</MenuItem>
         </Select>
       </FormControl>
     </>

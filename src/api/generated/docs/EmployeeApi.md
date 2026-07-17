@@ -16,7 +16,7 @@ All URIs are relative to *http://localhost:3000*
 
 Create a new employee
 
-employeeId is server-generated — ignored if present in the request body. Exactly one of timesheetFileId (existing file, used as-is) or timesheetFolderId (must be an Active TimesheetFolder configured for this client — a new timesheet workbook is provisioned there) must be provided. 
+employeeId is server-generated — ignored if present in the request body. Exactly one of timesheetFileLink (existing Google Sheets/Drive file URL — parsed, verified, and stored as Employee.timesheetFileId) or timesheetFolderId (must be an Active TimesheetFolder configured for this client — a new timesheet workbook is provisioned there) must be provided. 
 
 ### Example
 
@@ -76,8 +76,8 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | Employee created |  -  |
-| **404** | Client not found, or timesheetFolderId doesn\&#39;t match an Active TimesheetFolder |  -  |
-| **422** | Neither timesheetFileId nor timesheetFolderId was provided |  -  |
+| **404** | Client not found, inaccessible workbook, or timesheetFolderId doesn\&#39;t match an Active TimesheetFolder |  -  |
+| **422** | Malformed timesheetFileLink, both fields provided, or neither field provided |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

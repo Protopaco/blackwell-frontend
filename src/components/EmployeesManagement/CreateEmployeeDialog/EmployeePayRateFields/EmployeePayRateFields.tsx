@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import normalizeCurrencyInput from '@/utils/normalizeCurrencyInput';
+import currencyToString from '@/utils/currencyToString';
 
 type Props = {
   disabled: boolean;
@@ -37,7 +37,7 @@ const EmployeePayRateFields = ({
           fullWidth
           helperText={hourlyPayRate1Invalid ? 'Enter a pay rate.' : undefined}
           label="Hourly pay rate 1"
-          onBlur={() => onHourlyPayRate1Change(normalizeCurrencyInput(hourlyPayRate1))}
+          onBlur={() => onHourlyPayRate1Change(currencyToString(hourlyPayRate1))}
           onChange={(event) => onHourlyPayRate1Change(event.target.value)}
           required
           slotProps={{ input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } }}
@@ -52,7 +52,7 @@ const EmployeePayRateFields = ({
           fullWidth
           helperText={hourlyPayRate2Invalid ? 'Enter a pay rate.' : undefined}
           label="Hourly pay rate 2"
-          onBlur={() => onHourlyPayRate2Change(normalizeCurrencyInput(hourlyPayRate2))}
+          onBlur={() => onHourlyPayRate2Change(currencyToString(hourlyPayRate2))}
           onChange={(event) => onHourlyPayRate2Change(event.target.value)}
           required
           slotProps={{ input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } }}
@@ -67,7 +67,7 @@ const EmployeePayRateFields = ({
           fullWidth
           helperText={holidayPayRateInvalid ? 'Enter a pay rate.' : undefined}
           label="Holiday pay rate"
-          onBlur={() => onHolidayPayRateChange(normalizeCurrencyInput(holidayPayRate))}
+          onBlur={() => onHolidayPayRateChange(currencyToString(holidayPayRate))}
           onChange={(event) => onHolidayPayRateChange(event.target.value)}
           required
           slotProps={{ input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } }}

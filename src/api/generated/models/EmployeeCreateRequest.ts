@@ -14,7 +14,7 @@
 
 import { mapValues } from '../runtime';
 /**
- * Exactly one of timesheetFileId or timesheetFolderId must be provided.
+ * Exactly one of timesheetFileLink or timesheetFolderId must be provided.
  * @export
  * @interface EmployeeCreateRequest
  */
@@ -72,7 +72,7 @@ export interface EmployeeCreateRequest {
      * @type {string}
      * @memberof EmployeeCreateRequest
      */
-    timesheetFileId?: string;
+    timesheetFileLink?: string;
     /**
      * 
      * @type {string}
@@ -125,7 +125,7 @@ export function EmployeeCreateRequestFromJSONTyped(json: any, ignoreDiscriminato
         'holidayPayRate': json['holidayPayRate'],
         'email': json['email'],
         'status': json['status'],
-        'timesheetFileId': json['timesheetFileId'] == null ? undefined : json['timesheetFileId'],
+        'timesheetFileLink': json['timesheetFileLink'] == null ? undefined : json['timesheetFileLink'],
         'timesheetFolderId': json['timesheetFolderId'] == null ? undefined : json['timesheetFolderId'],
     };
 }
@@ -149,7 +149,7 @@ export function EmployeeCreateRequestToJSONTyped(value?: EmployeeCreateRequest |
         'holidayPayRate': value['holidayPayRate'],
         'email': value['email'],
         'status': value['status'],
-        'timesheetFileId': value['timesheetFileId'],
+        'timesheetFileLink': value['timesheetFileLink'],
         'timesheetFolderId': value['timesheetFolderId'],
     };
 }

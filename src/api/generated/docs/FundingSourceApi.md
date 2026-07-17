@@ -1,47 +1,46 @@
-# PayPeriodApi
+# FundingSourceApi
 
 All URIs are relative to *http://localhost:3000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**v1ClosePayPeriod**](PayPeriodApi.md#v1closepayperiod) | **PATCH** /api/v1/payPeriod/{clientId}/{payPeriodId}/close | Close a pay period |
-| [**v1CreatePayPeriod**](PayPeriodApi.md#v1createpayperiod) | **POST** /api/v1/payPeriod/{clientId} | Create a new pay period |
-| [**v1GetNextPayPeriod**](PayPeriodApi.md#v1getnextpayperiod) | **GET** /api/v1/payPeriod/{clientId}/next | Get suggested next pay period for a client |
-| [**v1GetPayPeriodById**](PayPeriodApi.md#v1getpayperiodbyid) | **GET** /api/v1/payPeriod/{clientId}/{payPeriodId} | Get a single pay period by ID |
-| [**v1GetPayPeriods**](PayPeriodApi.md#v1getpayperiods) | **GET** /api/v1/payPeriod/{clientId} | Get all pay periods for a client |
+| [**v1CreateFundingSource**](FundingSourceApi.md#v1createfundingsource) | **POST** /api/v1/fundingSource/{clientId} | Create a new funding source |
+| [**v1DeleteFundingSource**](FundingSourceApi.md#v1deletefundingsource) | **DELETE** /api/v1/fundingSource/{clientId}/{fundingSourceId} | Delete a funding source |
+| [**v1GetFundingSources**](FundingSourceApi.md#v1getfundingsources) | **GET** /api/v1/fundingSource/{clientId} | Get all funding sources for a client |
+| [**v1UpdateFundingSource**](FundingSourceApi.md#v1updatefundingsource) | **PUT** /api/v1/fundingSource/{clientId}/{fundingSourceId} | Update an existing funding source |
 
 
 
-## v1ClosePayPeriod
+## v1CreateFundingSource
 
-> v1ClosePayPeriod(clientId, payPeriodId)
+> v1CreateFundingSource(clientId, fundingSource)
 
-Close a pay period
+Create a new funding source
 
-Sets the pay period status to Closed. No-op if already Closed.
+fundingSourceId is server-generated — ignored if present in the request body.
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  FundingSourceApi,
 } from '';
-import type { V1ClosePayPeriodRequest } from '';
+import type { V1CreateFundingSourceRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new FundingSourceApi();
 
   const body = {
     // string
     clientId: clientId_example,
-    // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1ClosePayPeriodRequest;
+    // FundingSource
+    fundingSource: ...,
+  } satisfies V1CreateFundingSourceRequest;
 
   try {
-    const data = await api.v1ClosePayPeriod(body);
+    const data = await api.v1CreateFundingSource(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -58,7 +57,7 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **fundingSource** | [FundingSource](FundingSource.md) |  | |
 
 ### Return type
 
@@ -70,177 +69,47 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: `application/json`
 - **Accept**: Not defined
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Pay period closed |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1CreatePayPeriod
-
-> v1CreatePayPeriod(clientId)
-
-Create a new pay period
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1CreatePayPeriodRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-  } satisfies V1CreatePayPeriodRequest;
-
-  try {
-    const data = await api.v1CreatePayPeriod(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **201** | Pay period created |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1GetNextPayPeriod
-
-> PayPeriod v1GetNextPayPeriod(clientId)
-
-Get suggested next pay period for a client
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1GetNextPayPeriodRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-  } satisfies V1GetNextPayPeriodRequest;
-
-  try {
-    const data = await api.v1GetNextPayPeriod(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-[**PayPeriod**](PayPeriod.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Suggested next pay period |  -  |
+| **201** | Funding source created |  -  |
 | **404** | Client not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## v1GetPayPeriodById
+## v1DeleteFundingSource
 
-> PayPeriod v1GetPayPeriodById(clientId, payPeriodId)
+> v1DeleteFundingSource(clientId, fundingSourceId)
 
-Get a single pay period by ID
+Delete a funding source
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  FundingSourceApi,
 } from '';
-import type { V1GetPayPeriodByIdRequest } from '';
+import type { V1DeleteFundingSourceRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new FundingSourceApi();
 
   const body = {
     // string
     clientId: clientId_example,
     // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1GetPayPeriodByIdRequest;
+    fundingSourceId: fundingSourceId_example,
+  } satisfies V1DeleteFundingSourceRequest;
 
   try {
-    const data = await api.v1GetPayPeriodById(body);
+    const data = await api.v1DeleteFundingSource(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -257,11 +126,11 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **fundingSourceId** | `string` |  | [Defaults to `undefined`] |
 
 ### Return type
 
-[**PayPeriod**](PayPeriod.md)
+`void` (Empty response body)
 
 ### Authorization
 
@@ -270,44 +139,45 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: Not defined
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Pay period |  -  |
-| **404** | Client or pay period not found |  -  |
+| **200** | Funding source deleted |  -  |
+| **404** | Client or funding source not found |  -  |
+| **422** | Funding source is still referenced by one or more activities |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## v1GetPayPeriods
+## v1GetFundingSources
 
-> Array&lt;PayPeriod&gt; v1GetPayPeriods(clientId)
+> Array&lt;FundingSource&gt; v1GetFundingSources(clientId)
 
-Get all pay periods for a client
+Get all funding sources for a client
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  FundingSourceApi,
 } from '';
-import type { V1GetPayPeriodsRequest } from '';
+import type { V1GetFundingSourcesRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new FundingSourceApi();
 
   const body = {
     // string
     clientId: clientId_example,
-  } satisfies V1GetPayPeriodsRequest;
+  } satisfies V1GetFundingSourcesRequest;
 
   try {
-    const data = await api.v1GetPayPeriods(body);
+    const data = await api.v1GetFundingSources(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -327,7 +197,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Array&lt;PayPeriod&gt;**](PayPeriod.md)
+[**Array&lt;FundingSource&gt;**](FundingSource.md)
 
 ### Authorization
 
@@ -342,7 +212,82 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | List of pay periods |  -  |
+| **200** | List of funding sources |  -  |
+| **404** | Client not found |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## v1UpdateFundingSource
+
+> v1UpdateFundingSource(clientId, fundingSourceId, fundingSource)
+
+Update an existing funding source
+
+fundingSourceId is taken from the path — ignored if present in the request body.
+
+### Example
+
+```ts
+import {
+  Configuration,
+  FundingSourceApi,
+} from '';
+import type { V1UpdateFundingSourceRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new FundingSourceApi();
+
+  const body = {
+    // string
+    clientId: clientId_example,
+    // string
+    fundingSourceId: fundingSourceId_example,
+    // FundingSource
+    fundingSource: ...,
+  } satisfies V1UpdateFundingSourceRequest;
+
+  try {
+    const data = await api.v1UpdateFundingSource(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **clientId** | `string` |  | [Defaults to `undefined`] |
+| **fundingSourceId** | `string` |  | [Defaults to `undefined`] |
+| **fundingSource** | [FundingSource](FundingSource.md) |  | |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Funding source updated |  -  |
+| **404** | Client or funding source not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

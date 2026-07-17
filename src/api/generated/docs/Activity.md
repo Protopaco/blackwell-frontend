@@ -12,6 +12,7 @@ Name | Type
 `payrollCategory` | string
 `fundingSources` | [Array&lt;ActivityFundingSourcesInner&gt;](ActivityFundingSourcesInner.md)
 `payRate` | string
+`flatRateAmount` | number
 
 ## Example
 
@@ -26,6 +27,7 @@ const example = {
   "payrollCategory": null,
   "fundingSources": null,
   "payRate": null,
+  "flatRateAmount": 25,
 } satisfies Activity
 
 console.log(example)

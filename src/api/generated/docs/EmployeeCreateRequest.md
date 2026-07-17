@@ -1,12 +1,12 @@
 
-# Employee
+# EmployeeCreateRequest
 
+Exactly one of timesheetFileId or timesheetFolderId must be provided.
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`employeeId` | string
 `firstName` | string
 `lastName` | string
 `position` | string
@@ -16,15 +16,15 @@ Name | Type
 `email` | string
 `status` | string
 `timesheetFileId` | string
+`timesheetFolderId` | string
 
 ## Example
 
 ```typescript
-import type { Employee } from ''
+import type { EmployeeCreateRequest } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "employeeId": null,
   "firstName": Jane,
   "lastName": Smith,
   "position": Program Director,
@@ -34,7 +34,8 @@ const example = {
   "email": jane.smith@example.org,
   "status": null,
   "timesheetFileId": 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms,
-} satisfies Employee
+  "timesheetFolderId": null,
+} satisfies EmployeeCreateRequest
 
 console.log(example)
 
@@ -43,7 +44,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as Employee
+const exampleParsed = JSON.parse(exampleJSON) as EmployeeCreateRequest
 console.log(exampleParsed)
 ```
 

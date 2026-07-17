@@ -1,47 +1,46 @@
-# PayPeriodApi
+# ActivityApi
 
 All URIs are relative to *http://localhost:3000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**v1ClosePayPeriod**](PayPeriodApi.md#v1closepayperiod) | **PATCH** /api/v1/payPeriod/{clientId}/{payPeriodId}/close | Close a pay period |
-| [**v1CreatePayPeriod**](PayPeriodApi.md#v1createpayperiod) | **POST** /api/v1/payPeriod/{clientId} | Create a new pay period |
-| [**v1GetNextPayPeriod**](PayPeriodApi.md#v1getnextpayperiod) | **GET** /api/v1/payPeriod/{clientId}/next | Get suggested next pay period for a client |
-| [**v1GetPayPeriodById**](PayPeriodApi.md#v1getpayperiodbyid) | **GET** /api/v1/payPeriod/{clientId}/{payPeriodId} | Get a single pay period by ID |
-| [**v1GetPayPeriods**](PayPeriodApi.md#v1getpayperiods) | **GET** /api/v1/payPeriod/{clientId} | Get all pay periods for a client |
+| [**v1CreateActivity**](ActivityApi.md#v1createactivity) | **POST** /api/v1/activity/{clientId} | Create a new activity |
+| [**v1DeleteActivity**](ActivityApi.md#v1deleteactivity) | **DELETE** /api/v1/activity/{clientId}/{activityId} | Delete an activity |
+| [**v1GetActivities**](ActivityApi.md#v1getactivities) | **GET** /api/v1/activity/{clientId} | Get all activities for a client |
+| [**v1UpdateActivity**](ActivityApi.md#v1updateactivity) | **PUT** /api/v1/activity/{clientId}/{activityId} | Update an existing activity |
 
 
 
-## v1ClosePayPeriod
+## v1CreateActivity
 
-> v1ClosePayPeriod(clientId, payPeriodId)
+> v1CreateActivity(clientId, activity)
 
-Close a pay period
+Create a new activity
 
-Sets the pay period status to Closed. No-op if already Closed.
+activityId is server-generated — ignored if present in the request body. fundingSources cannot have more than 3 entries, and the last entry\&#39;s percentage is always overwritten with the remainder needed to make the total exactly 100.
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  ActivityApi,
 } from '';
-import type { V1ClosePayPeriodRequest } from '';
+import type { V1CreateActivityRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new ActivityApi();
 
   const body = {
     // string
     clientId: clientId_example,
-    // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1ClosePayPeriodRequest;
+    // Activity
+    activity: ...,
+  } satisfies V1CreateActivityRequest;
 
   try {
-    const data = await api.v1ClosePayPeriod(body);
+    const data = await api.v1CreateActivity(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -58,7 +57,77 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **activity** | [Activity](Activity.md) |  | |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **201** | Activity created |  -  |
+| **404** | Client not found |  -  |
+| **422** | More than 3 funding sources were provided, or a referenced funding source does not exist |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## v1DeleteActivity
+
+> v1DeleteActivity(clientId, activityId)
+
+Delete an activity
+
+### Example
+
+```ts
+import {
+  Configuration,
+  ActivityApi,
+} from '';
+import type { V1DeleteActivityRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new ActivityApi();
+
+  const body = {
+    // string
+    clientId: clientId_example,
+    // string
+    activityId: activityId_example,
+  } satisfies V1DeleteActivityRequest;
+
+  try {
+    const data = await api.v1DeleteActivity(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **clientId** | `string` |  | [Defaults to `undefined`] |
+| **activityId** | `string` |  | [Defaults to `undefined`] |
 
 ### Return type
 
@@ -77,37 +146,38 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Pay period closed |  -  |
+| **200** | Activity deleted |  -  |
+| **404** | Client or activity not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## v1CreatePayPeriod
+## v1GetActivities
 
-> v1CreatePayPeriod(clientId)
+> Array&lt;Activity&gt; v1GetActivities(clientId)
 
-Create a new pay period
+Get all activities for a client
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  ActivityApi,
 } from '';
-import type { V1CreatePayPeriodRequest } from '';
+import type { V1GetActivitiesRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new ActivityApi();
 
   const body = {
     // string
     clientId: clientId_example,
-  } satisfies V1CreatePayPeriodRequest;
+  } satisfies V1GetActivitiesRequest;
 
   try {
-    const data = await api.v1CreatePayPeriod(body);
+    const data = await api.v1GetActivities(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -127,72 +197,7 @@ example().catch(console.error);
 
 ### Return type
 
-`void` (Empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **201** | Pay period created |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1GetNextPayPeriod
-
-> PayPeriod v1GetNextPayPeriod(clientId)
-
-Get suggested next pay period for a client
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1GetNextPayPeriodRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-  } satisfies V1GetNextPayPeriodRequest;
-
-  try {
-    const data = await api.v1GetNextPayPeriod(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-[**PayPeriod**](PayPeriod.md)
+[**Array&lt;Activity&gt;**](Activity.md)
 
 ### Authorization
 
@@ -207,40 +212,44 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Suggested next pay period |  -  |
+| **200** | List of activities |  -  |
 | **404** | Client not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## v1GetPayPeriodById
+## v1UpdateActivity
 
-> PayPeriod v1GetPayPeriodById(clientId, payPeriodId)
+> v1UpdateActivity(clientId, activityId, activity)
 
-Get a single pay period by ID
+Update an existing activity
+
+activityId is taken from the path — ignored if present in the request body. fundingSources cannot have more than 3 entries, and the last entry\&#39;s percentage is always overwritten with the remainder needed to make the total exactly 100.
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  ActivityApi,
 } from '';
-import type { V1GetPayPeriodByIdRequest } from '';
+import type { V1UpdateActivityRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new ActivityApi();
 
   const body = {
     // string
     clientId: clientId_example,
     // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1GetPayPeriodByIdRequest;
+    activityId: activityId_example,
+    // Activity
+    activity: ...,
+  } satisfies V1UpdateActivityRequest;
 
   try {
-    const data = await api.v1GetPayPeriodById(body);
+    const data = await api.v1UpdateActivity(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -257,11 +266,12 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **activityId** | `string` |  | [Defaults to `undefined`] |
+| **activity** | [Activity](Activity.md) |  | |
 
 ### Return type
 
-[**PayPeriod**](PayPeriod.md)
+`void` (Empty response body)
 
 ### Authorization
 
@@ -269,80 +279,16 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Content-Type**: `application/json`
+- **Accept**: Not defined
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Pay period |  -  |
-| **404** | Client or pay period not found |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1GetPayPeriods
-
-> Array&lt;PayPeriod&gt; v1GetPayPeriods(clientId)
-
-Get all pay periods for a client
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1GetPayPeriodsRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-  } satisfies V1GetPayPeriodsRequest;
-
-  try {
-    const data = await api.v1GetPayPeriods(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-[**Array&lt;PayPeriod&gt;**](PayPeriod.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | List of pay periods |  -  |
+| **200** | Activity updated |  -  |
+| **404** | Client or activity not found |  -  |
+| **422** | More than 3 funding sources were provided, or a referenced funding source does not exist |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

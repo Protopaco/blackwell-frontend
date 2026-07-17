@@ -1,47 +1,46 @@
-# PayPeriodApi
+# SupervisorApi
 
 All URIs are relative to *http://localhost:3000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**v1ClosePayPeriod**](PayPeriodApi.md#v1closepayperiod) | **PATCH** /api/v1/payPeriod/{clientId}/{payPeriodId}/close | Close a pay period |
-| [**v1CreatePayPeriod**](PayPeriodApi.md#v1createpayperiod) | **POST** /api/v1/payPeriod/{clientId} | Create a new pay period |
-| [**v1GetNextPayPeriod**](PayPeriodApi.md#v1getnextpayperiod) | **GET** /api/v1/payPeriod/{clientId}/next | Get suggested next pay period for a client |
-| [**v1GetPayPeriodById**](PayPeriodApi.md#v1getpayperiodbyid) | **GET** /api/v1/payPeriod/{clientId}/{payPeriodId} | Get a single pay period by ID |
-| [**v1GetPayPeriods**](PayPeriodApi.md#v1getpayperiods) | **GET** /api/v1/payPeriod/{clientId} | Get all pay periods for a client |
+| [**v1CreateSupervisor**](SupervisorApi.md#v1createsupervisor) | **POST** /api/v1/supervisor/{clientId} | Create a new supervisor |
+| [**v1DeleteSupervisor**](SupervisorApi.md#v1deletesupervisor) | **DELETE** /api/v1/supervisor/{clientId}/{supervisorId} | Delete a supervisor |
+| [**v1GetSupervisors**](SupervisorApi.md#v1getsupervisors) | **GET** /api/v1/supervisor/{clientId} | Get all supervisors for a client |
+| [**v1UpdateSupervisor**](SupervisorApi.md#v1updatesupervisor) | **PUT** /api/v1/supervisor/{clientId}/{supervisorId} | Update an existing supervisor |
 
 
 
-## v1ClosePayPeriod
+## v1CreateSupervisor
 
-> v1ClosePayPeriod(clientId, payPeriodId)
+> v1CreateSupervisor(clientId, supervisor)
 
-Close a pay period
+Create a new supervisor
 
-Sets the pay period status to Closed. No-op if already Closed.
+supervisorId is server-generated — ignored if present in the request body.
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  SupervisorApi,
 } from '';
-import type { V1ClosePayPeriodRequest } from '';
+import type { V1CreateSupervisorRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new SupervisorApi();
 
   const body = {
     // string
     clientId: clientId_example,
-    // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1ClosePayPeriodRequest;
+    // Supervisor
+    supervisor: ...,
+  } satisfies V1CreateSupervisorRequest;
 
   try {
-    const data = await api.v1ClosePayPeriod(body);
+    const data = await api.v1CreateSupervisor(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -58,7 +57,7 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **supervisor** | [Supervisor](Supervisor.md) |  | |
 
 ### Return type
 
@@ -70,177 +69,47 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: `application/json`
 - **Accept**: Not defined
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Pay period closed |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1CreatePayPeriod
-
-> v1CreatePayPeriod(clientId)
-
-Create a new pay period
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1CreatePayPeriodRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-  } satisfies V1CreatePayPeriodRequest;
-
-  try {
-    const data = await api.v1CreatePayPeriod(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **201** | Pay period created |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1GetNextPayPeriod
-
-> PayPeriod v1GetNextPayPeriod(clientId)
-
-Get suggested next pay period for a client
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1GetNextPayPeriodRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-  } satisfies V1GetNextPayPeriodRequest;
-
-  try {
-    const data = await api.v1GetNextPayPeriod(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-[**PayPeriod**](PayPeriod.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Suggested next pay period |  -  |
+| **201** | Supervisor created |  -  |
 | **404** | Client not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## v1GetPayPeriodById
+## v1DeleteSupervisor
 
-> PayPeriod v1GetPayPeriodById(clientId, payPeriodId)
+> v1DeleteSupervisor(clientId, supervisorId)
 
-Get a single pay period by ID
+Delete a supervisor
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  SupervisorApi,
 } from '';
-import type { V1GetPayPeriodByIdRequest } from '';
+import type { V1DeleteSupervisorRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new SupervisorApi();
 
   const body = {
     // string
     clientId: clientId_example,
     // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1GetPayPeriodByIdRequest;
+    supervisorId: supervisorId_example,
+  } satisfies V1DeleteSupervisorRequest;
 
   try {
-    const data = await api.v1GetPayPeriodById(body);
+    const data = await api.v1DeleteSupervisor(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -257,11 +126,11 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **supervisorId** | `string` |  | [Defaults to `undefined`] |
 
 ### Return type
 
-[**PayPeriod**](PayPeriod.md)
+`void` (Empty response body)
 
 ### Authorization
 
@@ -270,44 +139,44 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: Not defined
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Pay period |  -  |
-| **404** | Client or pay period not found |  -  |
+| **200** | Supervisor deleted |  -  |
+| **404** | Client or supervisor not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## v1GetPayPeriods
+## v1GetSupervisors
 
-> Array&lt;PayPeriod&gt; v1GetPayPeriods(clientId)
+> Array&lt;Supervisor&gt; v1GetSupervisors(clientId)
 
-Get all pay periods for a client
+Get all supervisors for a client
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  SupervisorApi,
 } from '';
-import type { V1GetPayPeriodsRequest } from '';
+import type { V1GetSupervisorsRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new SupervisorApi();
 
   const body = {
     // string
     clientId: clientId_example,
-  } satisfies V1GetPayPeriodsRequest;
+  } satisfies V1GetSupervisorsRequest;
 
   try {
-    const data = await api.v1GetPayPeriods(body);
+    const data = await api.v1GetSupervisors(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -327,7 +196,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Array&lt;PayPeriod&gt;**](PayPeriod.md)
+[**Array&lt;Supervisor&gt;**](Supervisor.md)
 
 ### Authorization
 
@@ -342,7 +211,82 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | List of pay periods |  -  |
+| **200** | List of supervisors |  -  |
+| **404** | Client not found |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## v1UpdateSupervisor
+
+> v1UpdateSupervisor(clientId, supervisorId, supervisor)
+
+Update an existing supervisor
+
+supervisorId is taken from the path — ignored if present in the request body.
+
+### Example
+
+```ts
+import {
+  Configuration,
+  SupervisorApi,
+} from '';
+import type { V1UpdateSupervisorRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new SupervisorApi();
+
+  const body = {
+    // string
+    clientId: clientId_example,
+    // string
+    supervisorId: supervisorId_example,
+    // Supervisor
+    supervisor: ...,
+  } satisfies V1UpdateSupervisorRequest;
+
+  try {
+    const data = await api.v1UpdateSupervisor(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **clientId** | `string` |  | [Defaults to `undefined`] |
+| **supervisorId** | `string` |  | [Defaults to `undefined`] |
+| **supervisor** | [Supervisor](Supervisor.md) |  | |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Supervisor updated |  -  |
+| **404** | Client or supervisor not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

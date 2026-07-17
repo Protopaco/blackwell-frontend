@@ -1,36 +1,28 @@
 
-# EmployeeTimesheetStatus
+# TimesheetFolder
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`employeeId` | string
-`employeeName` | string
-`timesheetFileId` | string
-`totalHours` | number
-`flatRateQuantity` | number
-`employeeSigned` | boolean
-`supervisorSigned` | boolean
+`timesheetFolderId` | string
+`timesheetFolderName` | string
+`driveFolderId` | string
 `status` | string
 
 ## Example
 
 ```typescript
-import type { EmployeeTimesheetStatus } from ''
+import type { TimesheetFolder } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "employeeId": null,
-  "employeeName": Morgan Haynes,
-  "timesheetFileId": null,
-  "totalHours": 72.5,
-  "flatRateQuantity": 2,
-  "employeeSigned": null,
-  "supervisorSigned": null,
+  "timesheetFolderId": null,
+  "timesheetFolderName": Main Office,
+  "driveFolderId": 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms,
   "status": null,
-} satisfies EmployeeTimesheetStatus
+} satisfies TimesheetFolder
 
 console.log(example)
 
@@ -39,7 +31,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as EmployeeTimesheetStatus
+const exampleParsed = JSON.parse(exampleJSON) as TimesheetFolder
 console.log(exampleParsed)
 ```
 

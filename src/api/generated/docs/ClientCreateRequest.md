@@ -1,38 +1,32 @@
 
-# Client
+# ClientCreateRequest
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`clientId` | string
 `clientName` | string
 `clientCode` | string
-`status` | string
-`employeePayrollFolderId` | string
-`payrollConfigFolderId` | string
-`payrollReportFolderId` | string
-`payrollConfigFileId` | string
-`payPeriodRegistryFileId` | string
+`employeePayrollFolder` | [ClientCreateRequestEmployeePayrollFolder](ClientCreateRequestEmployeePayrollFolder.md)
+`payrollConfigFolder` | [FolderInput](FolderInput.md)
+`payrollReportFolder` | [FolderInput](FolderInput.md)
+`settings` | [Settings](Settings.md)
 
 ## Example
 
 ```typescript
-import type { Client } from ''
+import type { ClientCreateRequest } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "clientId": null,
   "clientName": null,
   "clientCode": null,
-  "status": null,
-  "employeePayrollFolderId": null,
-  "payrollConfigFolderId": null,
-  "payrollReportFolderId": null,
-  "payrollConfigFileId": null,
-  "payPeriodRegistryFileId": null,
-} satisfies Client
+  "employeePayrollFolder": null,
+  "payrollConfigFolder": null,
+  "payrollReportFolder": null,
+  "settings": null,
+} satisfies ClientCreateRequest
 
 console.log(example)
 
@@ -41,7 +35,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as Client
+const exampleParsed = JSON.parse(exampleJSON) as ClientCreateRequest
 console.log(exampleParsed)
 ```
 

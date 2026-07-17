@@ -11,6 +11,7 @@ Name | Type
 `activities` | [Array&lt;Activity&gt;](Activity.md)
 `fundingSources` | [Array&lt;FundingSource&gt;](FundingSource.md)
 `holidays` | [Array&lt;Holiday&gt;](Holiday.md)
+`timesheetFolders` | [Array&lt;TimesheetFolder&gt;](TimesheetFolder.md)
 `settings` | [Settings](Settings.md)
 `payPeriods` | [Array&lt;PayPeriod&gt;](PayPeriod.md)
 
@@ -26,6 +27,7 @@ const example = {
   "activities": null,
   "fundingSources": null,
   "holidays": null,
+  "timesheetFolders": null,
   "settings": null,
   "payPeriods": null,
 } satisfies ClientSummary

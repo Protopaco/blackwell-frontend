@@ -1,5 +1,5 @@
 
-# EmployeeTimesheetStatus
+# EmployeeExpenseUpdate
 
 
 ## Properties
@@ -7,30 +7,18 @@
 Name | Type
 ------------ | -------------
 `employeeId` | string
-`employeeName` | string
-`timesheetFileId` | string
-`totalHours` | number
-`flatRateQuantity` | number
-`employeeSigned` | boolean
-`supervisorSigned` | boolean
-`status` | string
+`totalExpense` | number
 
 ## Example
 
 ```typescript
-import type { EmployeeTimesheetStatus } from ''
+import type { EmployeeExpenseUpdate } from ''
 
 // TODO: Update the object below with actual values
 const example = {
   "employeeId": null,
-  "employeeName": Morgan Haynes,
-  "timesheetFileId": null,
-  "totalHours": 72.5,
-  "flatRateQuantity": 2,
-  "employeeSigned": null,
-  "supervisorSigned": null,
-  "status": null,
-} satisfies EmployeeTimesheetStatus
+  "totalExpense": 2326.92,
+} satisfies EmployeeExpenseUpdate
 
 console.log(example)
 
@@ -39,7 +27,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as EmployeeTimesheetStatus
+const exampleParsed = JSON.parse(exampleJSON) as EmployeeExpenseUpdate
 console.log(exampleParsed)
 ```
 

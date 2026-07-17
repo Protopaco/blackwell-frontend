@@ -1,47 +1,46 @@
-# PayPeriodApi
+# HolidayApi
 
 All URIs are relative to *http://localhost:3000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**v1ClosePayPeriod**](PayPeriodApi.md#v1closepayperiod) | **PATCH** /api/v1/payPeriod/{clientId}/{payPeriodId}/close | Close a pay period |
-| [**v1CreatePayPeriod**](PayPeriodApi.md#v1createpayperiod) | **POST** /api/v1/payPeriod/{clientId} | Create a new pay period |
-| [**v1GetNextPayPeriod**](PayPeriodApi.md#v1getnextpayperiod) | **GET** /api/v1/payPeriod/{clientId}/next | Get suggested next pay period for a client |
-| [**v1GetPayPeriodById**](PayPeriodApi.md#v1getpayperiodbyid) | **GET** /api/v1/payPeriod/{clientId}/{payPeriodId} | Get a single pay period by ID |
-| [**v1GetPayPeriods**](PayPeriodApi.md#v1getpayperiods) | **GET** /api/v1/payPeriod/{clientId} | Get all pay periods for a client |
+| [**v1CreateHoliday**](HolidayApi.md#v1createholiday) | **POST** /api/v1/holiday/{clientId} | Create a new holiday |
+| [**v1DeleteHoliday**](HolidayApi.md#v1deleteholiday) | **DELETE** /api/v1/holiday/{clientId}/{holidayId} | Delete a holiday |
+| [**v1GetHolidays**](HolidayApi.md#v1getholidays) | **GET** /api/v1/holiday/{clientId} | Get all holidays for a client |
+| [**v1UpdateHoliday**](HolidayApi.md#v1updateholiday) | **PUT** /api/v1/holiday/{clientId}/{holidayId} | Update an existing holiday |
 
 
 
-## v1ClosePayPeriod
+## v1CreateHoliday
 
-> v1ClosePayPeriod(clientId, payPeriodId)
+> v1CreateHoliday(clientId, holiday)
 
-Close a pay period
+Create a new holiday
 
-Sets the pay period status to Closed. No-op if already Closed.
+holidayId is server-generated — ignored if present in the request body.
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  HolidayApi,
 } from '';
-import type { V1ClosePayPeriodRequest } from '';
+import type { V1CreateHolidayRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new HolidayApi();
 
   const body = {
     // string
     clientId: clientId_example,
-    // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1ClosePayPeriodRequest;
+    // Holiday
+    holiday: ...,
+  } satisfies V1CreateHolidayRequest;
 
   try {
-    const data = await api.v1ClosePayPeriod(body);
+    const data = await api.v1CreateHoliday(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -58,7 +57,77 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **holiday** | [Holiday](Holiday.md) |  | |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **201** | Holiday created |  -  |
+| **404** | Client not found |  -  |
+| **422** | holidayDate is not a valid YYYY-MM-DD date |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## v1DeleteHoliday
+
+> v1DeleteHoliday(clientId, holidayId)
+
+Delete a holiday
+
+### Example
+
+```ts
+import {
+  Configuration,
+  HolidayApi,
+} from '';
+import type { V1DeleteHolidayRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new HolidayApi();
+
+  const body = {
+    // string
+    clientId: clientId_example,
+    // string
+    holidayId: holidayId_example,
+  } satisfies V1DeleteHolidayRequest;
+
+  try {
+    const data = await api.v1DeleteHoliday(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **clientId** | `string` |  | [Defaults to `undefined`] |
+| **holidayId** | `string` |  | [Defaults to `undefined`] |
 
 ### Return type
 
@@ -77,37 +146,38 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Pay period closed |  -  |
+| **200** | Holiday deleted |  -  |
+| **404** | Client or holiday not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## v1CreatePayPeriod
+## v1GetHolidays
 
-> v1CreatePayPeriod(clientId)
+> Array&lt;Holiday&gt; v1GetHolidays(clientId)
 
-Create a new pay period
+Get all holidays for a client
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  HolidayApi,
 } from '';
-import type { V1CreatePayPeriodRequest } from '';
+import type { V1GetHolidaysRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new HolidayApi();
 
   const body = {
     // string
     clientId: clientId_example,
-  } satisfies V1CreatePayPeriodRequest;
+  } satisfies V1GetHolidaysRequest;
 
   try {
-    const data = await api.v1CreatePayPeriod(body);
+    const data = await api.v1GetHolidays(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -127,72 +197,7 @@ example().catch(console.error);
 
 ### Return type
 
-`void` (Empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **201** | Pay period created |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1GetNextPayPeriod
-
-> PayPeriod v1GetNextPayPeriod(clientId)
-
-Get suggested next pay period for a client
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1GetNextPayPeriodRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-  } satisfies V1GetNextPayPeriodRequest;
-
-  try {
-    const data = await api.v1GetNextPayPeriod(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-[**PayPeriod**](PayPeriod.md)
+[**Array&lt;Holiday&gt;**](Holiday.md)
 
 ### Authorization
 
@@ -207,40 +212,44 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Suggested next pay period |  -  |
+| **200** | List of holidays |  -  |
 | **404** | Client not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## v1GetPayPeriodById
+## v1UpdateHoliday
 
-> PayPeriod v1GetPayPeriodById(clientId, payPeriodId)
+> v1UpdateHoliday(clientId, holidayId, holiday)
 
-Get a single pay period by ID
+Update an existing holiday
+
+holidayId is taken from the path — ignored if present in the request body.
 
 ### Example
 
 ```ts
 import {
   Configuration,
-  PayPeriodApi,
+  HolidayApi,
 } from '';
-import type { V1GetPayPeriodByIdRequest } from '';
+import type { V1UpdateHolidayRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
+  const api = new HolidayApi();
 
   const body = {
     // string
     clientId: clientId_example,
     // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1GetPayPeriodByIdRequest;
+    holidayId: holidayId_example,
+    // Holiday
+    holiday: ...,
+  } satisfies V1UpdateHolidayRequest;
 
   try {
-    const data = await api.v1GetPayPeriodById(body);
+    const data = await api.v1UpdateHoliday(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -257,11 +266,12 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **holidayId** | `string` |  | [Defaults to `undefined`] |
+| **holiday** | [Holiday](Holiday.md) |  | |
 
 ### Return type
 
-[**PayPeriod**](PayPeriod.md)
+`void` (Empty response body)
 
 ### Authorization
 
@@ -269,80 +279,16 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Content-Type**: `application/json`
+- **Accept**: Not defined
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Pay period |  -  |
-| **404** | Client or pay period not found |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1GetPayPeriods
-
-> Array&lt;PayPeriod&gt; v1GetPayPeriods(clientId)
-
-Get all pay periods for a client
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1GetPayPeriodsRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-  } satisfies V1GetPayPeriodsRequest;
-
-  try {
-    const data = await api.v1GetPayPeriods(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-[**Array&lt;PayPeriod&gt;**](PayPeriod.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | List of pay periods |  -  |
+| **200** | Holiday updated |  -  |
+| **404** | Client or holiday not found |  -  |
+| **422** | holidayDate is not a valid YYYY-MM-DD date |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

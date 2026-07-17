@@ -39,22 +39,10 @@ export interface Client {
     clientCode?: string;
     /**
      * 
-     * @type {boolean}
+     * @type {ClientStatusEnum}
      * @memberof Client
      */
-    trackFundingSource?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof Client
-     */
-    clientFolderLink?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Client
-     */
-    clientFolderId?: string;
+    status?: ClientStatusEnum;
     /**
      * 
      * @type {string}
@@ -72,19 +60,7 @@ export interface Client {
      * @type {string}
      * @memberof Client
      */
-    reportsFolderId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Client
-     */
     payrollReportFolderId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Client
-     */
-    timesheetsFolderId?: string;
     /**
      * 
      * @type {string}
@@ -98,6 +74,17 @@ export interface Client {
      */
     payPeriodRegistryFileId?: string;
 }
+
+
+/**
+ * @export
+ */
+export const ClientStatusEnum = {
+    Active: 'Active',
+    Inactive: 'Inactive'
+} as const;
+export type ClientStatusEnum = typeof ClientStatusEnum[keyof typeof ClientStatusEnum];
+
 
 /**
  * Check if a given object implements the Client interface.
@@ -119,14 +106,10 @@ export function ClientFromJSONTyped(json: any, ignoreDiscriminator: boolean): Cl
         'clientId': json['clientId'] == null ? undefined : json['clientId'],
         'clientName': json['clientName'] == null ? undefined : json['clientName'],
         'clientCode': json['clientCode'] == null ? undefined : json['clientCode'],
-        'trackFundingSource': json['trackFundingSource'] == null ? undefined : json['trackFundingSource'],
-        'clientFolderLink': json['clientFolderLink'] == null ? undefined : json['clientFolderLink'],
-        'clientFolderId': json['clientFolderId'] == null ? undefined : json['clientFolderId'],
+        'status': json['status'] == null ? undefined : json['status'],
         'employeePayrollFolderId': json['employeePayrollFolderId'] == null ? undefined : json['employeePayrollFolderId'],
         'payrollConfigFolderId': json['payrollConfigFolderId'] == null ? undefined : json['payrollConfigFolderId'],
-        'reportsFolderId': json['reportsFolderId'] == null ? undefined : json['reportsFolderId'],
         'payrollReportFolderId': json['payrollReportFolderId'] == null ? undefined : json['payrollReportFolderId'],
-        'timesheetsFolderId': json['timesheetsFolderId'] == null ? undefined : json['timesheetsFolderId'],
         'payrollConfigFileId': json['payrollConfigFileId'] == null ? undefined : json['payrollConfigFileId'],
         'payPeriodRegistryFileId': json['payPeriodRegistryFileId'] == null ? undefined : json['payPeriodRegistryFileId'],
     };
@@ -146,14 +129,10 @@ export function ClientToJSONTyped(value?: Client | null, ignoreDiscriminator: bo
         'clientId': value['clientId'],
         'clientName': value['clientName'],
         'clientCode': value['clientCode'],
-        'trackFundingSource': value['trackFundingSource'],
-        'clientFolderLink': value['clientFolderLink'],
-        'clientFolderId': value['clientFolderId'],
+        'status': value['status'],
         'employeePayrollFolderId': value['employeePayrollFolderId'],
         'payrollConfigFolderId': value['payrollConfigFolderId'],
-        'reportsFolderId': value['reportsFolderId'],
         'payrollReportFolderId': value['payrollReportFolderId'],
-        'timesheetsFolderId': value['timesheetsFolderId'],
         'payrollConfigFileId': value['payrollConfigFileId'],
         'payPeriodRegistryFileId': value['payPeriodRegistryFileId'],
     };

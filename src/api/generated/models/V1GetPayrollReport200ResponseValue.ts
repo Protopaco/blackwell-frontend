@@ -42,6 +42,18 @@ export interface V1GetPayrollReport200ResponseValue {
     employeeName?: string;
     /**
      * 
+     * @type {number}
+     * @memberof V1GetPayrollReport200ResponseValue
+     */
+    totalHours?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof V1GetPayrollReport200ResponseValue
+     */
+    totalFlatRate?: number;
+    /**
+     * 
      * @type {Array<V1GetPayrollReport200ResponseValueHourlyInner>}
      * @memberof V1GetPayrollReport200ResponseValue
      */
@@ -72,6 +84,8 @@ export function V1GetPayrollReport200ResponseValueFromJSONTyped(json: any, ignor
     return {
         
         'employeeName': json['employeeName'] == null ? undefined : json['employeeName'],
+        'totalHours': json['totalHours'] == null ? undefined : json['totalHours'],
+        'totalFlatRate': json['totalFlatRate'] == null ? undefined : json['totalFlatRate'],
         'hourly': json['hourly'] == null ? undefined : ((json['hourly'] as Array<any>).map(V1GetPayrollReport200ResponseValueHourlyInnerFromJSON)),
         'flatRate': json['flatRate'] == null ? undefined : ((json['flatRate'] as Array<any>).map(V1GetPayrollReport200ResponseValueFlatRateInnerFromJSON)),
     };
@@ -89,6 +103,8 @@ export function V1GetPayrollReport200ResponseValueToJSONTyped(value?: V1GetPayro
     return {
         
         'employeeName': value['employeeName'],
+        'totalHours': value['totalHours'],
+        'totalFlatRate': value['totalFlatRate'],
         'hourly': value['hourly'] == null ? undefined : ((value['hourly'] as Array<any>).map(V1GetPayrollReport200ResponseValueHourlyInnerToJSON)),
         'flatRate': value['flatRate'] == null ? undefined : ((value['flatRate'] as Array<any>).map(V1GetPayrollReport200ResponseValueFlatRateInnerToJSON)),
     };

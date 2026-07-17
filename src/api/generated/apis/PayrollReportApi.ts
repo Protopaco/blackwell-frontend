@@ -18,6 +18,7 @@ import type {
   AdditionalExpense,
   AllocationReportRow,
   EmployeeExpense,
+  EmployeeExpenseUpdate,
   V1GetPayrollReport200ResponseValue,
 } from '../models/index';
 import {
@@ -27,6 +28,8 @@ import {
     AllocationReportRowToJSON,
     EmployeeExpenseFromJSON,
     EmployeeExpenseToJSON,
+    EmployeeExpenseUpdateFromJSON,
+    EmployeeExpenseUpdateToJSON,
     V1GetPayrollReport200ResponseValueFromJSON,
     V1GetPayrollReport200ResponseValueToJSON,
 } from '../models/index';
@@ -73,6 +76,12 @@ export interface V1UpdateEmployeeExpensesRequest {
     employeeExpense: EmployeeExpense;
 }
 
+export interface V1UpdateEmployeeExpensesBatchRequest {
+    clientId: string;
+    payPeriodId: string;
+    employeeExpenseUpdate: Array<EmployeeExpenseUpdate>;
+}
+
 /**
  * 
  */
@@ -101,7 +110,7 @@ export class PayrollReportApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
 
-        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/allocation-report`;
+        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/allocationReport`;
         urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
         urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
 
@@ -210,7 +219,7 @@ export class PayrollReportApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
 
-        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/additional-expenses`;
+        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/additionalExpenses`;
         urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
         urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
 
@@ -263,7 +272,7 @@ export class PayrollReportApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
 
-        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/allocation-report`;
+        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/allocationReport`;
         urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
         urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
 
@@ -316,7 +325,7 @@ export class PayrollReportApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
 
-        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/employee-expenses`;
+        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses`;
         urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
         urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
 
@@ -431,7 +440,7 @@ export class PayrollReportApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
 
-        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/additional-expenses`;
+        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/additionalExpenses`;
         urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
         urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
 
@@ -493,7 +502,7 @@ export class PayrollReportApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
 
-        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/employee-expenses`;
+        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses`;
         urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
         urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
 
@@ -521,6 +530,70 @@ export class PayrollReportApi extends runtime.BaseAPI {
      */
     async v1UpdateEmployeeExpenses(requestParameters: V1UpdateEmployeeExpensesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.v1UpdateEmployeeExpensesRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for v1UpdateEmployeeExpensesBatch without sending the request
+     */
+    async v1UpdateEmployeeExpensesBatchRequestOpts(requestParameters: V1UpdateEmployeeExpensesBatchRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1UpdateEmployeeExpensesBatch().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1UpdateEmployeeExpensesBatch().'
+            );
+        }
+
+        if (requestParameters['employeeExpenseUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'employeeExpenseUpdate',
+                'Required parameter "employeeExpenseUpdate" was null or undefined when calling v1UpdateEmployeeExpensesBatch().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses/batch`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+
+        return {
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['employeeExpenseUpdate']!.map(EmployeeExpenseUpdateToJSON),
+        };
+    }
+
+    /**
+     * For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig, activeThisPayPeriod defaulted to true). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
+     * Upsert totalExpense for multiple employees in a pay period at once
+     */
+    async v1UpdateEmployeeExpensesBatchRaw(requestParameters: V1UpdateEmployeeExpensesBatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1UpdateEmployeeExpensesBatchRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig, activeThisPayPeriod defaulted to true). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
+     * Upsert totalExpense for multiple employees in a pay period at once
+     */
+    async v1UpdateEmployeeExpensesBatch(requestParameters: V1UpdateEmployeeExpensesBatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1UpdateEmployeeExpensesBatchRaw(requestParameters, initOverrides);
     }
 
 }

@@ -1,38 +1,27 @@
 
-# Client
+# ClientUpdateRequest
 
+All fields optional — only send what is actually changing.
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`clientId` | string
+`status` | string
 `clientName` | string
 `clientCode` | string
-`status` | string
-`employeePayrollFolderId` | string
-`payrollConfigFolderId` | string
-`payrollReportFolderId` | string
-`payrollConfigFileId` | string
-`payPeriodRegistryFileId` | string
 
 ## Example
 
 ```typescript
-import type { Client } from ''
+import type { ClientUpdateRequest } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "clientId": null,
+  "status": null,
   "clientName": null,
   "clientCode": null,
-  "status": null,
-  "employeePayrollFolderId": null,
-  "payrollConfigFolderId": null,
-  "payrollReportFolderId": null,
-  "payrollConfigFileId": null,
-  "payPeriodRegistryFileId": null,
-} satisfies Client
+} satisfies ClientUpdateRequest
 
 console.log(example)
 
@@ -41,7 +30,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as Client
+const exampleParsed = JSON.parse(exampleJSON) as ClientUpdateRequest
 console.log(exampleParsed)
 ```
 

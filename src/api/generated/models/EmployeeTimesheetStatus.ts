@@ -39,16 +39,16 @@ export interface EmployeeTimesheetStatus {
     timesheetFileId?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof EmployeeTimesheetStatus
      */
-    timesheetFileLink?: string;
+    totalHours?: number | null;
     /**
      * 
      * @type {number}
      * @memberof EmployeeTimesheetStatus
      */
-    totalHours?: number | null;
+    flatRateQuantity?: number | null;
     /**
      * 
      * @type {boolean}
@@ -103,8 +103,8 @@ export function EmployeeTimesheetStatusFromJSONTyped(json: any, ignoreDiscrimina
         'employeeId': json['employeeId'] == null ? undefined : json['employeeId'],
         'employeeName': json['employeeName'] == null ? undefined : json['employeeName'],
         'timesheetFileId': json['timesheetFileId'] == null ? undefined : json['timesheetFileId'],
-        'timesheetFileLink': json['timesheetFileLink'] == null ? undefined : json['timesheetFileLink'],
         'totalHours': json['totalHours'] == null ? undefined : json['totalHours'],
+        'flatRateQuantity': json['flatRateQuantity'] == null ? undefined : json['flatRateQuantity'],
         'employeeSigned': json['employeeSigned'] == null ? undefined : json['employeeSigned'],
         'supervisorSigned': json['supervisorSigned'] == null ? undefined : json['supervisorSigned'],
         'status': json['status'] == null ? undefined : json['status'],
@@ -125,8 +125,8 @@ export function EmployeeTimesheetStatusToJSONTyped(value?: EmployeeTimesheetStat
         'employeeId': value['employeeId'],
         'employeeName': value['employeeName'],
         'timesheetFileId': value['timesheetFileId'],
-        'timesheetFileLink': value['timesheetFileLink'],
         'totalHours': value['totalHours'],
+        'flatRateQuantity': value['flatRateQuantity'],
         'employeeSigned': value['employeeSigned'],
         'supervisorSigned': value['supervisorSigned'],
         'status': value['status'],

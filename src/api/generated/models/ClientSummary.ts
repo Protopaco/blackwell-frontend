@@ -27,6 +27,13 @@ import {
     EmployeeToJSON,
     EmployeeToJSONTyped,
 } from './Employee';
+import type { TimesheetFolder } from './TimesheetFolder';
+import {
+    TimesheetFolderFromJSON,
+    TimesheetFolderFromJSONTyped,
+    TimesheetFolderToJSON,
+    TimesheetFolderToJSONTyped,
+} from './TimesheetFolder';
 import type { Holiday } from './Holiday';
 import {
     HolidayFromJSON,
@@ -101,6 +108,12 @@ export interface ClientSummary {
     holidays?: Array<Holiday>;
     /**
      * 
+     * @type {Array<TimesheetFolder>}
+     * @memberof ClientSummary
+     */
+    timesheetFolders?: Array<TimesheetFolder>;
+    /**
+     * 
      * @type {Settings}
      * @memberof ClientSummary
      */
@@ -135,6 +148,7 @@ export function ClientSummaryFromJSONTyped(json: any, ignoreDiscriminator: boole
         'activities': json['activities'] == null ? undefined : ((json['activities'] as Array<any>).map(ActivityFromJSON)),
         'fundingSources': json['fundingSources'] == null ? undefined : ((json['fundingSources'] as Array<any>).map(FundingSourceFromJSON)),
         'holidays': json['holidays'] == null ? undefined : ((json['holidays'] as Array<any>).map(HolidayFromJSON)),
+        'timesheetFolders': json['timesheetFolders'] == null ? undefined : ((json['timesheetFolders'] as Array<any>).map(TimesheetFolderFromJSON)),
         'settings': json['settings'] == null ? undefined : SettingsFromJSON(json['settings']),
         'payPeriods': json['payPeriods'] == null ? undefined : ((json['payPeriods'] as Array<any>).map(PayPeriodFromJSON)),
     };
@@ -156,6 +170,7 @@ export function ClientSummaryToJSONTyped(value?: ClientSummary | null, ignoreDis
         'activities': value['activities'] == null ? undefined : ((value['activities'] as Array<any>).map(ActivityToJSON)),
         'fundingSources': value['fundingSources'] == null ? undefined : ((value['fundingSources'] as Array<any>).map(FundingSourceToJSON)),
         'holidays': value['holidays'] == null ? undefined : ((value['holidays'] as Array<any>).map(HolidayToJSON)),
+        'timesheetFolders': value['timesheetFolders'] == null ? undefined : ((value['timesheetFolders'] as Array<any>).map(TimesheetFolderToJSON)),
         'settings': SettingsToJSON(value['settings']),
         'payPeriods': value['payPeriods'] == null ? undefined : ((value['payPeriods'] as Array<any>).map(PayPeriodToJSON)),
     };

@@ -3,15 +3,17 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { employeeApi } from '@/api/client';
 import { EmployeeStatusEnum } from '@/api/generated/models/Employee';
+import CreateEmployeeDialog from '@/components/EmployeesManagement/CreateEmployeeDialog/CreateEmployeeDialog';
+import EmployeesTable from '@/components/EmployeesManagement/EmployeesTable/EmployeesTable';
 import ClientManagementPage from '@/components/Shared/ClientManagementPage/ClientManagementPage';
 import ManagementListPanel from '@/components/Shared/ManagementListPanel/ManagementListPanel';
 import ManagementToolbar from '@/components/Shared/ManagementToolbar/ManagementToolbar';
-import EmployeesTable from '@/components/EmployeesManagement/EmployeesTable/EmployeesTable';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useSelectedClient from '@/state/client/useSelectedClient';
 
 const EmployeesManagement = () => {
   const [showInactive, setShowInactive] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const { selectedClient } = useSelectedClient();
   const clientId = selectedClient?.clientId;
 
@@ -19,6 +21,7 @@ const EmployeesManagement = () => {
     data: employees,
     errorMessage,
     loading,
+    refetch,
   } = useFetchByKey(clientId, (clientId) => employeeApi.v1GetEmployees({ clientId }), 'Failed to load employees.');
 
   const visibleEmployees = employees?.filter((employee) => showInactive || employee.status === EmployeeStatusEnum.Active) ?? [];
@@ -27,7 +30,7 @@ const EmployeesManagement = () => {
     <ClientManagementPage title="Employees">
       <ManagementListPanel
         controls={
-          <ManagementToolbar>
+          <ManagementToolbar primaryActionLabel="Create" onPrimaryAction={() => setCreateDialogOpen(true)}>
             <Switch checked={showInactive} onChange={(event) => setShowInactive(event.target.checked)} size="small" />
             <Typography>Show inactive</Typography>
           </ManagementToolbar>
@@ -39,6 +42,9 @@ const EmployeesManagement = () => {
       >
         <EmployeesTable employees={visibleEmployees} />
       </ManagementListPanel>
+      {clientId ? (
+        <CreateEmployeeDialog clientId={clientId} open={createDialogOpen} onClose={() => setCreateDialogOpen(false)} onCreated={refetch} />
+      ) : null}
     </ClientManagementPage>
   );
 };

@@ -2,6 +2,8 @@
 
 Hard organizational rules for `blackwell-frontend`, derived from `/Users/paulstevens/Developer/Babeonym/babeonym-frontend` — a sibling app built from the same base template, further along. These are rules, not suggestions: follow them unless a specific ticket discussion decides otherwise (see `docs/TICKETS.md`'s "discuss before building" note), in which case update this doc so the exception is recorded, not silently repeated or forgotten.
 
+For higher-level system shape and responsibility boundaries, see `docs/ARCHITECTURE.md`. This file is for concrete code conventions and mechanics.
+
 ---
 
 ## 1. Component structure

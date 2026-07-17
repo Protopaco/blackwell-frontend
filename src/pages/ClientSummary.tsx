@@ -15,6 +15,7 @@ import ClientFundingSourcesCard from '@/components/ClientSummary/ClientFundingSo
 import ClientHolidaysCard from '@/components/ClientSummary/ClientHolidaysCard/ClientHolidaysCard';
 import ClientSettingsCard from '@/components/ClientSummary/ClientSettingsCard/ClientSettingsCard';
 import ClientPayPeriodCard from '@/components/ClientSummary/ClientPayPeriodCard/ClientPayPeriodCard';
+import ClientTimesheetFoldersCard from '@/components/ClientSummary/ClientTimesheetFoldersCard/ClientTimesheetFoldersCard';
 
 const ClientSummary = () => {
   const { selectedClient, clientsLoading } = useSelectedClient();
@@ -78,6 +79,9 @@ const ClientSummary = () => {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ClientHolidaysCard holidays={summary.holidays ?? []} />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientTimesheetFoldersCard timesheetFolders={summary.timesheetFolders ?? []} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ClientSettingsCard settings={summary.settings ?? {}} />

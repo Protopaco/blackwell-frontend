@@ -3,9 +3,9 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
 type Props = {
-  children: ReactNode;
-  primaryActionLabel: string;
-  onPrimaryAction: () => void;
+  children?: ReactNode;
+  primaryActionLabel?: string;
+  onPrimaryAction?: () => void;
   primaryActionDisabled?: boolean;
 };
 
@@ -15,9 +15,11 @@ const ManagementToolbar = ({ children, primaryActionLabel, onPrimaryAction, prim
       <Stack direction="row" spacing={1} alignItems="center">
         {children}
       </Stack>
-      <Button variant="contained" onClick={onPrimaryAction} disabled={primaryActionDisabled}>
-        {primaryActionLabel}
-      </Button>
+      {primaryActionLabel && onPrimaryAction ? (
+        <Button variant="contained" onClick={onPrimaryAction} disabled={primaryActionDisabled}>
+          {primaryActionLabel}
+        </Button>
+      ) : null}
     </Stack>
   );
 };

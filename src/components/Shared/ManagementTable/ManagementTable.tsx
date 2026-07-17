@@ -5,10 +5,13 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
 
 type Header = {
   label: string;
   align?: 'inherit' | 'left' | 'center' | 'right' | 'justify';
+  sortDirection?: 'asc' | 'desc';
+  onSort?: () => void;
 };
 
 type Props = {
@@ -23,8 +26,14 @@ const ManagementTable = ({ headers, children }: Props) => {
         <TableHead>
           <TableRow>
             {headers.map((header) => (
-              <TableCell key={header.label} align={header.align}>
-                {header.label}
+              <TableCell key={header.label} align={header.align} sortDirection={header.sortDirection}>
+                {header.onSort ? (
+                  <TableSortLabel active={Boolean(header.sortDirection)} direction={header.sortDirection ?? 'asc'} onClick={header.onSort}>
+                    {header.label}
+                  </TableSortLabel>
+                ) : (
+                  header.label
+                )}
               </TableCell>
             ))}
           </TableRow>

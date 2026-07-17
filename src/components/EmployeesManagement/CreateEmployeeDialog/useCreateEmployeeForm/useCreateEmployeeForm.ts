@@ -27,7 +27,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
   const [holidayPayRate, setHolidayPayRate] = useState('');
   const [timesheetSetupMode, setTimesheetSetupMode] = useState<TimesheetSetupMode>('newWorkbook');
   const [timesheetFolderId, setTimesheetFolderId] = useState('');
-  const [timesheetFileId, setTimesheetFileId] = useState('');
+  const [timesheetFileLink, setTimesheetFileLink] = useState('');
   const [timesheetFolders, setTimesheetFolders] = useState<TimesheetFolder[]>([]);
   const [loadingTimesheetFolders, setLoadingTimesheetFolders] = useState(false);
   const [timesheetFolderErrorMessage, setTimesheetFolderErrorMessage] = useState<string | null>(null);
@@ -79,7 +79,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     setHolidayPayRate('');
     setTimesheetSetupMode('newWorkbook');
     setTimesheetFolderId('');
-    setTimesheetFileId('');
+    setTimesheetFileLink('');
     setTimesheetFolders([]);
     setLoadingTimesheetFolders(false);
     setTimesheetFolderErrorMessage(null);
@@ -104,7 +104,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     const trimmedLastName = lastName.trim();
     const trimmedPosition = position.trim();
     const trimmedEmail = email.trim();
-    const trimmedTimesheetFileId = timesheetFileId.trim();
+    const trimmedTimesheetFileLink = timesheetFileLink.trim();
     const parsedHourlyPayRate1 = Number(hourlyPayRate1);
     const parsedHourlyPayRate2 = Number(hourlyPayRate2);
     const parsedHolidayPayRate = Number(holidayPayRate);
@@ -122,7 +122,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
       Number.isNaN(parsedHourlyPayRate2) ||
       Number.isNaN(parsedHolidayPayRate) ||
       (usingNewWorkbook && !timesheetFolderId) ||
-      (!usingNewWorkbook && !trimmedTimesheetFileId)
+      (!usingNewWorkbook && !trimmedTimesheetFileLink)
     ) {
       return;
     }
@@ -142,7 +142,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
           hourlyPayRate2: parsedHourlyPayRate2,
           holidayPayRate: parsedHolidayPayRate,
           timesheetFolderId: usingNewWorkbook ? timesheetFolderId : undefined,
-          timesheetFileId: usingNewWorkbook ? undefined : trimmedTimesheetFileId,
+          timesheetFileLink: usingNewWorkbook ? undefined : trimmedTimesheetFileLink,
         },
       });
       resetForm();
@@ -188,12 +188,12 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     setLastName,
     setPosition,
     setStatus,
-    setTimesheetFileId,
+    setTimesheetFileLink,
     setTimesheetFolderId,
     setTimesheetSetupMode,
     status,
-    timesheetFileId,
-    timesheetFileRequired: submitted && timesheetSetupMode === 'existingWorkbook' && !timesheetFileId.trim(),
+    timesheetFileLink,
+    timesheetFileLinkRequired: submitted && timesheetSetupMode === 'existingWorkbook' && !timesheetFileLink.trim(),
     timesheetFolderErrorMessage,
     timesheetFolderId,
     timesheetFolderRequired: submitted && timesheetSetupMode === 'newWorkbook' && !timesheetFolderId,

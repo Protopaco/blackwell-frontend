@@ -16,11 +16,11 @@ type Props = {
   disabled: boolean;
   loadingTimesheetFolders: boolean;
   noActiveTimesheetFolders: boolean;
-  onTimesheetFileIdChange: (value: string) => void;
+  onTimesheetFileLinkChange: (value: string) => void;
   onTimesheetFolderIdChange: (value: string) => void;
   onTimesheetSetupModeChange: (value: TimesheetSetupMode) => void;
-  timesheetFileId: string;
-  timesheetFileRequired: boolean;
+  timesheetFileLink: string;
+  timesheetFileLinkRequired: boolean;
   timesheetFolderErrorMessage: string | null;
   timesheetFolderId: string;
   timesheetFolderRequired: boolean;
@@ -32,11 +32,11 @@ const EmployeeTimesheetSetupFields = ({
   disabled,
   loadingTimesheetFolders,
   noActiveTimesheetFolders,
-  onTimesheetFileIdChange,
+  onTimesheetFileLinkChange,
   onTimesheetFolderIdChange,
   onTimesheetSetupModeChange,
-  timesheetFileId,
-  timesheetFileRequired,
+  timesheetFileLink,
+  timesheetFileLinkRequired,
   timesheetFolderErrorMessage,
   timesheetFolderId,
   timesheetFolderRequired,
@@ -86,13 +86,14 @@ const EmployeeTimesheetSetupFields = ({
       ) : (
         <TextField
           disabled={disabled}
-          error={timesheetFileRequired}
+          error={timesheetFileLinkRequired}
           fullWidth
-          helperText={timesheetFileRequired ? 'Timesheet file ID is required.' : undefined}
-          label="Timesheet file ID"
-          onChange={(event) => onTimesheetFileIdChange(event.target.value)}
+          helperText={timesheetFileLinkRequired ? 'Timesheet URL is required.' : undefined}
+          label="Timesheet URL"
+          onChange={(event) => onTimesheetFileLinkChange(event.target.value)}
+          placeholder="https://docs.google.com/spreadsheets/d/..."
           required
-          value={timesheetFileId}
+          value={timesheetFileLink}
         />
       )}
     </>

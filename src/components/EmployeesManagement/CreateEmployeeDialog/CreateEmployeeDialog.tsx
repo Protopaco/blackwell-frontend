@@ -59,11 +59,11 @@ const CreateEmployeeDialog = ({ clientId, open, onClose, onCreated }: Props) => 
           disabled={form.saving}
           loadingTimesheetFolders={form.loadingTimesheetFolders}
           noActiveTimesheetFolders={form.noActiveTimesheetFolders}
-          onTimesheetFileIdChange={form.setTimesheetFileId}
+          onTimesheetFileLinkChange={form.setTimesheetFileLink}
           onTimesheetFolderIdChange={form.setTimesheetFolderId}
           onTimesheetSetupModeChange={form.setTimesheetSetupMode}
-          timesheetFileId={form.timesheetFileId}
-          timesheetFileRequired={form.timesheetFileRequired}
+          timesheetFileLink={form.timesheetFileLink}
+          timesheetFileLinkRequired={form.timesheetFileLinkRequired}
           timesheetFolderErrorMessage={form.timesheetFolderErrorMessage}
           timesheetFolderId={form.timesheetFolderId}
           timesheetFolderRequired={form.timesheetFolderRequired}

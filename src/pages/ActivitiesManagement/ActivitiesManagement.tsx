@@ -4,6 +4,7 @@ import type { Activity } from '@/api/generated/models/Activity';
 import ActivityDialog from '@/components/ActivitiesManagement/ActivityDialog/ActivityDialog';
 import ActivitiesTable from '@/components/ActivitiesManagement/ActivitiesTable/ActivitiesTable';
 import ClientManagementPage from '@/components/Shared/ClientManagementPage/ClientManagementPage';
+import DeleteConfirmationDialog from '@/components/Shared/DeleteConfirmationDialog/DeleteConfirmationDialog';
 import ManagementListPanel from '@/components/Shared/ManagementListPanel/ManagementListPanel';
 import ManagementToolbar from '@/components/Shared/ManagementToolbar/ManagementToolbar';
 import useFetchByKey from '@/hooks/useFetchByKey';
@@ -13,8 +14,11 @@ import resolveErrorMessage from '@/utils/resolveErrorMessage';
 const ActivitiesManagement = () => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
+  const [deletingActivity, setDeletingActivity] = useState<Activity | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveErrorMessage, setSaveErrorMessage] = useState<string | null>(null);
+  const [deleteSaving, setDeleteSaving] = useState(false);
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
   const { selectedClient } = useSelectedClient();
   const clientId = selectedClient?.clientId;
 
@@ -47,6 +51,13 @@ const ActivitiesManagement = () => {
 
     setEditingActivity(null);
     setSaveErrorMessage(null);
+  };
+
+  const closeDeleteDialog = () => {
+    if (deleteSaving) return;
+
+    setDeletingActivity(null);
+    setDeleteErrorMessage(null);
   };
 
   const createActivity = async (activity: Activity) => {
@@ -85,6 +96,24 @@ const ActivitiesManagement = () => {
     }
   };
 
+  const deleteActivity = async () => {
+    if (deleteSaving || !clientId || !deletingActivity?.activityId) return;
+
+    setDeleteSaving(true);
+    setDeleteErrorMessage(null);
+
+    try {
+      await activityApi.v1DeleteActivity({ clientId, activityId: deletingActivity.activityId });
+      setDeletingActivity(null);
+      refetch();
+    } catch (error) {
+      console.error('Failed to delete activity.', error);
+      setDeleteErrorMessage(await resolveErrorMessage(error, 'Failed to delete activity.'));
+    } finally {
+      setDeleteSaving(false);
+    }
+  };
+
   return (
     <ClientManagementPage title="Activities">
       <ManagementListPanel
@@ -94,7 +123,7 @@ const ActivitiesManagement = () => {
         errorMessage={pageErrorMessage}
         loading={pageLoading}
       >
-        <ActivitiesTable activities={visibleActivities} onEdit={setEditingActivity} />
+        <ActivitiesTable activities={visibleActivities} onDelete={setDeletingActivity} onEdit={setEditingActivity} />
       </ManagementListPanel>
       <ActivityDialog
         activity={null}
@@ -119,6 +148,15 @@ const ActivitiesManagement = () => {
         saving={saving}
         submitLabel="Save"
         title="Edit Activity"
+      />
+      <DeleteConfirmationDialog
+        body="This removes the activity from client configuration and can affect generated timesheets, payroll, and allocation reporting."
+        errorMessage={deleteErrorMessage}
+        onClose={closeDeleteDialog}
+        onConfirm={deleteActivity}
+        open={deletingActivity !== null}
+        saving={deleteSaving}
+        title="Delete activity?"
       />
     </ClientManagementPage>
   );

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
@@ -16,6 +17,7 @@ type SortDirection = 'asc' | 'desc';
 
 type Props = {
   activities: Activity[];
+  onDelete: (activity: Activity) => void;
   onEdit: (activity: Activity) => void;
 };
 
@@ -32,7 +34,7 @@ const formatFundingAllocations = (activity: Activity) => {
   );
 };
 
-const ActivitiesTable = ({ activities, onEdit }: Props) => {
+const ActivitiesTable = ({ activities, onDelete, onEdit }: Props) => {
   const [sortKey, setSortKey] = useState<SortKey>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -97,6 +99,9 @@ const ActivitiesTable = ({ activities, onEdit }: Props) => {
           <TableCell align="right">
             <IconButton aria-label={`Edit ${activity.activityName ?? 'activity'}`} onClick={() => onEdit(activity)} size="small">
               <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton aria-label={`Delete ${activity.activityName ?? 'activity'}`} onClick={() => onDelete(activity)} size="small">
+              <DeleteIcon fontSize="small" />
             </IconButton>
           </TableCell>
         </TableRow>

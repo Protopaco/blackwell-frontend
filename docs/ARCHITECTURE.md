@@ -82,6 +82,8 @@ Holiday Management owns the client's shared holiday dates: list, create, edit, a
 
 Funding Source Management owns the client's funding source names and optional external accounting codes: list, create, edit, and hard delete. The Client Summary Funding Sources card links to `/client/:clientId/fundingSources`; the management page lists funding sources sorted by name by default and supports name/code table sorting. Create/edit require a funding source name and keep funding source code optional plain text. Delete uses the shared confirmation dialog and warns that activity allocation setup and reporting may be affected. Activity Management consumes funding sources later; allocation behavior is not part of this UI.
 
+Activity Management owns the client's activity configuration: list, create, edit, and hard delete. The Client Summary Activities card links to `/client/:clientId/activities`; the management page lists activities sorted by activity name by default and supports activity/category/pay-rate table sorting. Activities depend on Funding Source Management because create/edit allocation rows choose from configured funding sources. The frontend gates allocation saves until the visible editable percentages total exactly 100, while the backend remains the authority for validation and final normalization. Delete uses the shared confirmation dialog and warns that generated timesheets, payroll, and allocation reporting may be affected. Pay Period and reporting workflows consume activity configuration later but are not part of the Activity Management UI.
+
 ## 8. Related Docs
 
 - `docs/STYLE_GUIDE.md`: concrete code conventions and mechanics.

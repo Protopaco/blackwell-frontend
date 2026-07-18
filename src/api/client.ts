@@ -1,5 +1,6 @@
 import { Configuration } from '@/api/generated/runtime';
 import {
+  ActivityApi,
   AdminApi,
   ClientApi,
   EmployeeApi,
@@ -17,6 +18,7 @@ const config = new Configuration({
 });
 
 export const adminApi = new AdminApi(config);
+export const activityApi = new ActivityApi(config);
 export const clientApi = new ClientApi(config);
 export const employeeApi = new EmployeeApi(config);
 export const fundingSourceApi = new FundingSourceApi(config);

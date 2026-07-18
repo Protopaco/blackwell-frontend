@@ -3,12 +3,13 @@ import DashboardList from '@/components/Shared/DashboardList/DashboardList';
 import type { Activity } from '@/api/generated/models/Activity';
 
 type Props = {
+  clientId: string;
   activities: Activity[];
 };
 
-const ClientActivitiesCard = ({ activities }: Props) => {
+const ClientActivitiesCard = ({ clientId, activities }: Props) => {
   return (
-    <DashboardCard id="client-activities-card" header="Activities" configPath={null}>
+    <DashboardCard id="client-activities-card" header="Activities" configPath={`/client/${clientId}/activities`}>
       <DashboardList
         items={activities.map((activity) => ({
           key: activity.activityId ?? activity.activityName ?? '',

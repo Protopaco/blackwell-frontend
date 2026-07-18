@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import type { Activity } from '@/api/generated/models/Activity';
+import { ActivityPayRateEnum } from '@/api/generated/models/Activity';
+import type { Activity, ActivityPayRateEnum as ActivityPayRate } from '@/api/generated/models/Activity';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
+import currencyToString from '@/utils/currencyToString';
 
 type Props = {
   activities: Activity[];
@@ -11,6 +13,28 @@ type Props = {
 type SortKey = 'name' | 'payrollCategory' | 'payRate';
 
 type SortDirection = 'asc' | 'desc';
+
+const payRateLabels: Record<ActivityPayRate, string> = {
+  [ActivityPayRateEnum.HourlyPayRate1]: 'Hourly 1',
+  [ActivityPayRateEnum.HourlyPayRate2]: 'Hourly 2',
+  [ActivityPayRateEnum.FlatPayRate1]: 'Flat 1',
+  [ActivityPayRateEnum.FlatPayRate2]: 'Flat 2',
+};
+
+const isFlatPayRate = (payRate: Activity['payRate']) => payRate === ActivityPayRateEnum.FlatPayRate1 || payRate === ActivityPayRateEnum.FlatPayRate2;
+
+const formatFundingAllocation = (activity: Activity) => {
+  return (
+    activity.fundingSources
+      ?.map((fundingSource) => {
+        if (!fundingSource.fundingSourceName) return '';
+        if (fundingSource.percentage === undefined) return fundingSource.fundingSourceName;
+        return `${fundingSource.fundingSourceName} ${fundingSource.percentage}%`;
+      })
+      .filter(Boolean)
+      .join(', ') ?? ''
+  );
+};
 
 const ActivitiesTable = ({ activities }: Props) => {
   const [sortKey, setSortKey] = useState<SortKey>('name');
@@ -52,6 +76,8 @@ const ActivitiesTable = ({ activities }: Props) => {
           onSort: () => updateSort('payrollCategory'),
         },
         { label: 'Pay Rate', sortDirection: sortKey === 'payRate' ? sortDirection : undefined, onSort: () => updateSort('payRate') },
+        { label: 'Flat Rate Amount' },
+        { label: 'Funding Allocation' },
         { label: 'Track Separately' },
       ]}
     >
@@ -59,7 +85,9 @@ const ActivitiesTable = ({ activities }: Props) => {
         <TableRow key={activity.activityId ?? activity.activityName ?? ''}>
           <TableCell>{activity.activityName}</TableCell>
           <TableCell>{activity.payrollCategory}</TableCell>
-          <TableCell>{activity.payRate}</TableCell>
+          <TableCell>{activity.payRate ? payRateLabels[activity.payRate] : ''}</TableCell>
+          <TableCell>{isFlatPayRate(activity.payRate) ? currencyToString(activity.flatRateAmount, { decorated: true }) : ''}</TableCell>
+          <TableCell>{formatFundingAllocation(activity)}</TableCell>
           <TableCell>{activity.trackSeparately ? 'Yes' : 'No'}</TableCell>
         </TableRow>
       ))}

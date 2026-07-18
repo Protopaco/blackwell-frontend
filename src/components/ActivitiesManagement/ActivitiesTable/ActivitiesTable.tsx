@@ -1,29 +1,25 @@
 import { useMemo, useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import { ActivityPayRateEnum } from '@/api/generated/models/Activity';
-import type { Activity, ActivityPayRateEnum as ActivityPayRate } from '@/api/generated/models/Activity';
+import Typography from '@mui/material/Typography';
+import type { Activity } from '@/api/generated/models/Activity';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
 import currencyToString from '@/utils/currencyToString';
-
-type Props = {
-  activities: Activity[];
-};
+import { isFlatPayRate, payRateLabels } from '../activityDisplay';
 
 type SortKey = 'name' | 'payrollCategory' | 'payRate';
 
 type SortDirection = 'asc' | 'desc';
 
-const payRateLabels: Record<ActivityPayRate, string> = {
-  [ActivityPayRateEnum.HourlyPayRate1]: 'Hourly 1',
-  [ActivityPayRateEnum.HourlyPayRate2]: 'Hourly 2',
-  [ActivityPayRateEnum.FlatPayRate1]: 'Flat 1',
-  [ActivityPayRateEnum.FlatPayRate2]: 'Flat 2',
+type Props = {
+  activities: Activity[];
+  onEdit: (activity: Activity) => void;
 };
 
-const isFlatPayRate = (payRate: Activity['payRate']) => payRate === ActivityPayRateEnum.FlatPayRate1 || payRate === ActivityPayRateEnum.FlatPayRate2;
-
-const formatFundingAllocation = (activity: Activity) => {
+const formatFundingAllocations = (activity: Activity) => {
   return (
     activity.fundingSources
       ?.map((fundingSource) => {
@@ -32,11 +28,11 @@ const formatFundingAllocation = (activity: Activity) => {
         return `${fundingSource.fundingSourceName} ${fundingSource.percentage}%`;
       })
       .filter(Boolean)
-      .join(', ') ?? ''
+      ?? []
   );
 };
 
-const ActivitiesTable = ({ activities }: Props) => {
+const ActivitiesTable = ({ activities, onEdit }: Props) => {
   const [sortKey, setSortKey] = useState<SortKey>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -79,6 +75,7 @@ const ActivitiesTable = ({ activities }: Props) => {
         { label: 'Flat Rate Amount' },
         { label: 'Funding Allocation' },
         { label: 'Track Separately' },
+        { label: 'Actions', align: 'right' },
       ]}
     >
       {sortedActivities.map((activity) => (
@@ -87,8 +84,21 @@ const ActivitiesTable = ({ activities }: Props) => {
           <TableCell>{activity.payrollCategory}</TableCell>
           <TableCell>{activity.payRate ? payRateLabels[activity.payRate] : ''}</TableCell>
           <TableCell>{isFlatPayRate(activity.payRate) ? currencyToString(activity.flatRateAmount, { decorated: true }) : ''}</TableCell>
-          <TableCell>{formatFundingAllocation(activity)}</TableCell>
+          <TableCell>
+            <Stack spacing={0.5}>
+              {formatFundingAllocations(activity).map((fundingAllocation) => (
+                <Typography key={fundingAllocation} variant="body2">
+                  {fundingAllocation}
+                </Typography>
+              ))}
+            </Stack>
+          </TableCell>
           <TableCell>{activity.trackSeparately ? 'Yes' : 'No'}</TableCell>
+          <TableCell align="right">
+            <IconButton aria-label={`Edit ${activity.activityName ?? 'activity'}`} onClick={() => onEdit(activity)} size="small">
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </TableCell>
         </TableRow>
       ))}
     </ManagementTable>

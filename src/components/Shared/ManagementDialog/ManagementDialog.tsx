@@ -14,11 +14,12 @@ type Props = {
   onClose: () => void;
   open: boolean;
   saving: boolean;
+  submitDisabled?: boolean;
   submitLabel: string;
   title: string;
 };
 
-const ManagementDialog = ({ children, errorMessage, formId, onClose, open, saving, submitLabel, title }: Props) => {
+const ManagementDialog = ({ children, errorMessage, formId, onClose, open, saving, submitDisabled = false, submitLabel, title }: Props) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>{title}</DialogTitle>
@@ -36,7 +37,7 @@ const ManagementDialog = ({ children, errorMessage, formId, onClose, open, savin
         <Button onClick={onClose} disabled={saving}>
           Cancel
         </Button>
-        <Button form={formId} type="submit" variant="contained" disabled={saving} loading={saving}>
+        <Button form={formId} type="submit" variant="contained" disabled={saving || submitDisabled} loading={saving}>
           {submitLabel}
         </Button>
       </DialogActions>

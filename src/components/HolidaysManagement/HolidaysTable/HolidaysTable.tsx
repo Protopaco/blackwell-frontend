@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import TableCell from '@mui/material/TableCell';
@@ -9,6 +10,7 @@ import formatUTCDateMedium from '@/utils/formatUTCDateMedium';
 
 type Props = {
   holidays: Holiday[];
+  onDelete: (holiday: Holiday) => void;
   onEdit: (holiday: Holiday) => void;
 };
 
@@ -16,7 +18,7 @@ type SortKey = 'name' | 'date';
 
 type SortDirection = 'asc' | 'desc';
 
-const HolidaysTable = ({ holidays, onEdit }: Props) => {
+const HolidaysTable = ({ holidays, onDelete, onEdit }: Props) => {
   const [sortKey, setSortKey] = useState<SortKey>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -59,6 +61,9 @@ const HolidaysTable = ({ holidays, onEdit }: Props) => {
           <TableCell align="right">
             <IconButton aria-label={`Edit ${holiday.holidayName ?? 'holiday'}`} onClick={() => onEdit(holiday)} size="small">
               <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton aria-label={`Delete ${holiday.holidayName ?? 'holiday'}`} onClick={() => onDelete(holiday)} size="small">
+              <DeleteIcon fontSize="small" />
             </IconButton>
           </TableCell>
         </TableRow>

@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import type { Holiday } from '@/api/generated/models/Holiday';
@@ -7,13 +9,14 @@ import formatUTCDateMedium from '@/utils/formatUTCDateMedium';
 
 type Props = {
   holidays: Holiday[];
+  onEdit: (holiday: Holiday) => void;
 };
 
 type SortKey = 'name' | 'date';
 
 type SortDirection = 'asc' | 'desc';
 
-const HolidaysTable = ({ holidays }: Props) => {
+const HolidaysTable = ({ holidays, onEdit }: Props) => {
   const [sortKey, setSortKey] = useState<SortKey>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -46,12 +49,18 @@ const HolidaysTable = ({ holidays }: Props) => {
       headers={[
         { label: 'Holiday', sortDirection: sortKey === 'name' ? sortDirection : undefined, onSort: () => updateSort('name') },
         { label: 'Date', sortDirection: sortKey === 'date' ? sortDirection : undefined, onSort: () => updateSort('date') },
+        { label: 'Actions', align: 'right' },
       ]}
     >
       {sortedHolidays.map((holiday) => (
         <TableRow key={holiday.holidayId ?? `${holiday.holidayName}-${holiday.holidayDate?.toISOString() ?? ''}`}>
           <TableCell>{holiday.holidayName}</TableCell>
           <TableCell>{formatUTCDateMedium(holiday.holidayDate)}</TableCell>
+          <TableCell align="right">
+            <IconButton aria-label={`Edit ${holiday.holidayName ?? 'holiday'}`} onClick={() => onEdit(holiday)} size="small">
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </TableCell>
         </TableRow>
       ))}
     </ManagementTable>

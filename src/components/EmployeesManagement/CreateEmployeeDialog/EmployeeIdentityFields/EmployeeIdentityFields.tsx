@@ -1,9 +1,6 @@
-import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import StatusSwitch from '@/components/Shared/StatusSwitch/StatusSwitch';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
 
@@ -92,18 +89,13 @@ const EmployeeIdentityFields = ({
         type="email"
         value={email}
       />
-      <FormControl fullWidth required disabled={disabled}>
-        <InputLabel id="employee-status-label">Status</InputLabel>
-        <Select
-          labelId="employee-status-label"
-          label="Status"
-          value={status}
-          onChange={(event) => onStatusChange(event.target.value as EmployeeStatusValueType)}
-        >
-          <MenuItem value={EmployeeStatusValue.Active}>Active</MenuItem>
-          <MenuItem value={EmployeeStatusValue.Inactive}>Inactive</MenuItem>
-        </Select>
-      </FormControl>
+      <StatusSwitch
+        activeValue={EmployeeStatusValue.Active}
+        disabled={disabled}
+        inactiveValue={EmployeeStatusValue.Inactive}
+        onChange={onStatusChange}
+        value={status}
+      />
     </>
   );
 };

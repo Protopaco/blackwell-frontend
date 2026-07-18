@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import type { SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { timesheetFolderApi } from '@/api/client';
 import { TimesheetFolderStatusEnum } from '@/api/generated/models/TimesheetFolder';
 import type { TimesheetFolder } from '@/api/generated/models/TimesheetFolder';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
+import StatusSwitch from '@/components/Shared/StatusSwitch/StatusSwitch';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type Props = {
@@ -27,7 +22,7 @@ type Props = {
 
 const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, onSaved }: Props) => {
   const [timesheetFolderName, setTimesheetFolderName] = useState('');
-  const [status, setStatus] = useState<TimesheetFolderStatusEnum | ''>('');
+  const [status, setStatus] = useState<TimesheetFolderStatusEnum>(TimesheetFolderStatusEnum.Active);
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -36,14 +31,14 @@ const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, o
     if (!open || !timesheetFolder) return;
 
     setTimesheetFolderName(timesheetFolder.timesheetFolderName ?? '');
-    setStatus(timesheetFolder.status ?? '');
+    setStatus(timesheetFolder.status ?? TimesheetFolderStatusEnum.Active);
     setSubmitted(false);
     setErrorMessage(null);
   }, [open, timesheetFolder]);
 
   const resetForm = () => {
     setTimesheetFolderName('');
-    setStatus('');
+    setStatus(TimesheetFolderStatusEnum.Active);
     setSubmitted(false);
     setErrorMessage(null);
   };
@@ -52,10 +47,6 @@ const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, o
     if (saving) return;
     resetForm();
     onClose();
-  };
-
-  const updateStatus = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as TimesheetFolderStatusEnum);
   };
 
   const updateTimesheetFolder = async (event: FormEvent<HTMLFormElement>) => {
@@ -67,7 +58,7 @@ const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, o
 
     const trimmedTimesheetFolderName = timesheetFolderName.trim();
 
-    if (!trimmedTimesheetFolderName || !status) return;
+    if (!trimmedTimesheetFolderName) return;
 
     setSaving(true);
 
@@ -92,7 +83,6 @@ const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, o
   };
 
   const nameRequired = submitted && !timesheetFolderName.trim();
-  const statusRequired = submitted && !status;
   const driveFolderUrl = timesheetFolder?.driveFolderId ? `https://drive.google.com/drive/folders/${timesheetFolder.driveFolderId}` : null;
 
   return (
@@ -117,14 +107,13 @@ const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, o
           required
           value={timesheetFolderName}
         />
-        <FormControl fullWidth required error={statusRequired} disabled={saving}>
-          <InputLabel id="timesheet-folder-status-label">Status</InputLabel>
-          <Select labelId="timesheet-folder-status-label" label="Status" value={status} onChange={updateStatus}>
-            <MenuItem value={TimesheetFolderStatusEnum.Active}>Active</MenuItem>
-            <MenuItem value={TimesheetFolderStatusEnum.Inactive}>Inactive</MenuItem>
-          </Select>
-          {statusRequired ? <FormHelperText>Status is required.</FormHelperText> : null}
-        </FormControl>
+        <StatusSwitch
+          activeValue={TimesheetFolderStatusEnum.Active}
+          disabled={saving}
+          inactiveValue={TimesheetFolderStatusEnum.Inactive}
+          onChange={setStatus}
+          value={status}
+        />
         <TextField
           fullWidth
           label="Drive folder ID"

@@ -80,6 +80,8 @@ Employee Management owns employee identity/contact fields, pay rates, active/ina
 
 Holiday Management owns the client's shared holiday dates: list, create, edit, and hard delete. The Client Summary Holidays card links to `/client/:clientId/holidays`; the management page lists holidays sorted by date by default, supports name/date table sorting, and uses UTC-safe medium date display. Create/edit require a holiday name and date; delete uses the shared confirmation dialog and warns that future generated timesheets and payroll calculations will no longer use the deleted holiday. Pay Period behavior consumes holiday configuration later but is not part of the Holiday Management UI.
 
+Funding Source Management owns the client's funding source names and optional external accounting codes: list, create, edit, and hard delete. The Client Summary Funding Sources card links to `/client/:clientId/fundingSources`; the management page lists funding sources sorted by name by default and supports name/code table sorting. Create/edit require a funding source name and keep funding source code optional plain text. Delete uses the shared confirmation dialog and warns that activity allocation setup and reporting may be affected. Activity Management consumes funding sources later; allocation behavior is not part of this UI.
+
 ## 8. Related Docs
 
 - `docs/STYLE_GUIDE.md`: concrete code conventions and mechanics.

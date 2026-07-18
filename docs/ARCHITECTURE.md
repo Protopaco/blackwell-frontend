@@ -66,6 +66,7 @@ Current shared management-page primitives:
 - `ManagementToolbar`: left-side controls plus right-side primary action.
 - `ManagementTable`: reusable MUI table shell.
 - `ManagementDialog`: reusable dialog chrome/actions/error/loading shell.
+- `DeleteConfirmationDialog`: reusable hard-delete confirmation chrome/actions/error/loading shell.
 
 Feature components should still own domain-specific rows, forms, request payloads, and validation copy. Extract shared components when the repetition is real and the boundary is clear.
 
@@ -76,6 +77,8 @@ Client management epics are separate by resource.
 Timesheet Folder Management owns the client's available timesheet folder locations: list, active/inactive visibility, Drive open action, create, and edit name/status. Drive folder ID/link is immutable after creation.
 
 Employee Management owns employee identity/contact fields, pay rates, active/inactive status, and the employee's stored `timesheetFileId`. During employee creation, the UI can either send a pasted existing timesheet link for backend validation/extraction or send an Active Timesheet Folder id as a provisioning destination for a new workbook. The folder is a creation-time destination only; the frontend does not model a durable employee-to-folder assignment. Pay Period workflows later consume the employee `timesheetFileId`.
+
+Holiday Management owns the client's shared holiday dates: list, create, edit, and hard delete. The Client Summary Holidays card links to `/client/:clientId/holidays`; the management page lists holidays sorted by date by default, supports name/date table sorting, and uses UTC-safe medium date display. Create/edit require a holiday name and date; delete uses the shared confirmation dialog and warns that future generated timesheets and payroll calculations will no longer use the deleted holiday. Pay Period behavior consumes holiday configuration later but is not part of the Holiday Management UI.
 
 ## 8. Related Docs
 

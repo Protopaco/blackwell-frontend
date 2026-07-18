@@ -75,7 +75,7 @@ Client management epics are separate by resource.
 
 Timesheet Folder Management owns the client's available timesheet folder locations: list, active/inactive visibility, Drive open action, create, and edit name/status. Drive folder ID/link is immutable after creation.
 
-Employee-to-timesheet-folder assignment belongs to Employee Management, not Timesheet Folder Management. Pay Period workflows later consume those employee assignments when generating timesheets.
+Employee Management owns employee identity/contact fields, pay rates, active/inactive status, and the employee's stored `timesheetFileId`. During employee creation, the UI can either send a pasted existing timesheet link for backend validation/extraction or send an Active Timesheet Folder id as a provisioning destination for a new workbook. The folder is a creation-time destination only; the frontend does not model a durable employee-to-folder assignment. Pay Period workflows later consume the employee `timesheetFileId`.
 
 ## 8. Related Docs
 

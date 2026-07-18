@@ -74,7 +74,7 @@ const ClientSummary = () => {
           <ClientFundingSourcesCard fundingSources={summary.fundingSources ?? []} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientHolidaysCard holidays={summary.holidays ?? []} />
+          <ClientHolidaysCard clientId={selectedClient.clientId ?? ''} holidays={summary.holidays ?? []} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ClientTimesheetFoldersCard clientId={selectedClient.clientId ?? ''} timesheetFolders={summary.timesheetFolders ?? []} />

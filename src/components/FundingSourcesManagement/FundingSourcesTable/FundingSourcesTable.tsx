@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import TableCell from '@mui/material/TableCell';
@@ -8,6 +9,7 @@ import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable
 
 type Props = {
   fundingSources: FundingSource[];
+  onDelete: (fundingSource: FundingSource) => void;
   onEdit: (fundingSource: FundingSource) => void;
 };
 
@@ -15,7 +17,7 @@ type SortKey = 'name' | 'code';
 
 type SortDirection = 'asc' | 'desc';
 
-const FundingSourcesTable = ({ fundingSources, onEdit }: Props) => {
+const FundingSourcesTable = ({ fundingSources, onDelete, onEdit }: Props) => {
   const [sortKey, setSortKey] = useState<SortKey>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -58,6 +60,9 @@ const FundingSourcesTable = ({ fundingSources, onEdit }: Props) => {
           <TableCell align="right">
             <IconButton aria-label={`Edit ${fundingSource.fundingSourceName ?? 'funding source'}`} onClick={() => onEdit(fundingSource)} size="small">
               <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton aria-label={`Delete ${fundingSource.fundingSourceName ?? 'funding source'}`} onClick={() => onDelete(fundingSource)} size="small">
+              <DeleteIcon fontSize="small" />
             </IconButton>
           </TableCell>
         </TableRow>

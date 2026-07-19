@@ -65,6 +65,12 @@ const ClientSummary = () => {
           <ClientInformationCard clientName={selectedClient.clientName ?? ''} clientCode={selectedClient.clientCode ?? ''} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientSettingsCard settings={summary.settings ?? {}} />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientTimesheetFoldersCard clientId={selectedClient.clientId ?? ''} timesheetFolders={summary.timesheetFolders ?? []} />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ClientEmployeesCard clientId={selectedClient.clientId ?? ''} employees={summary.employees ?? []} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -75,12 +81,6 @@ const ClientSummary = () => {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ClientHolidaysCard clientId={selectedClient.clientId ?? ''} holidays={summary.holidays ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientTimesheetFoldersCard clientId={selectedClient.clientId ?? ''} timesheetFolders={summary.timesheetFolders ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientSettingsCard settings={summary.settings ?? {}} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ClientPayPeriodCard payPeriods={summary.payPeriods ?? []} />

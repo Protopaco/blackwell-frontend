@@ -8,7 +8,6 @@ Name | Type
 ------------ | -------------
 `employeeId` | string
 `employeeName` | string
-`activeThisPayPeriod` | boolean
 `totalExpense` | number
 
 ## Example
@@ -20,7 +19,6 @@ import type { EmployeeExpense } from ''
 const example = {
   "employeeId": null,
   "employeeName": Jane Smith,
-  "activeThisPayPeriod": null,
   "totalExpense": 2326.92,
 } satisfies EmployeeExpense
 

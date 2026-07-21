@@ -7,7 +7,8 @@
 Name | Type
 ------------ | -------------
 `employeeId` | string
-`employeeName` | string
+`firstName` | string
+`lastName` | string
 `timesheetFileId` | string
 `totalHours` | number
 `flatRateQuantity` | number
@@ -24,7 +25,8 @@ import type { EmployeeTimesheetStatus } from ''
 // TODO: Update the object below with actual values
 const example = {
   "employeeId": null,
-  "employeeName": Morgan Haynes,
+  "firstName": Morgan,
+  "lastName": Haynes,
   "timesheetFileId": null,
   "totalHours": 72.5,
   "flatRateQuantity": 2,

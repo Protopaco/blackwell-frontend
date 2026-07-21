@@ -576,7 +576,6 @@ No authorization required
 |-------------|-------------|------------------|
 | **200** | Employee expense updated |  -  |
 | **404** | Client, pay period, or payroll report not found |  -  |
-| **422** | Employee has hours this pay period and cannot be marked inactive |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
@@ -587,7 +586,7 @@ No authorization required
 
 Upsert totalExpense for multiple employees in a pay period at once
 
-For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig, activeThisPayPeriod defaulted to true). If any employeeId doesn\&#39;t match a known employee in the client\&#39;s PayrollConfig, the entire batch is rejected and nothing is written. 
+For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\&#39;t match a known employee in the client\&#39;s PayrollConfig, the entire batch is rejected and nothing is written. 
 
 ### Example
 

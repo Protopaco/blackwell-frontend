@@ -30,7 +30,13 @@ export interface EmployeeTimesheetStatus {
      * @type {string}
      * @memberof EmployeeTimesheetStatus
      */
-    employeeName?: string;
+    firstName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EmployeeTimesheetStatus
+     */
+    lastName?: string;
     /**
      * 
      * @type {string}
@@ -107,7 +113,8 @@ export function EmployeeTimesheetStatusFromJSONTyped(json: any, ignoreDiscrimina
     return {
         
         'employeeId': json['employeeId'] == null ? undefined : json['employeeId'],
-        'employeeName': json['employeeName'] == null ? undefined : json['employeeName'],
+        'firstName': json['firstName'] == null ? undefined : json['firstName'],
+        'lastName': json['lastName'] == null ? undefined : json['lastName'],
         'timesheetFileId': json['timesheetFileId'] == null ? undefined : json['timesheetFileId'],
         'totalHours': json['totalHours'] == null ? undefined : json['totalHours'],
         'flatRateQuantity': json['flatRateQuantity'] == null ? undefined : json['flatRateQuantity'],
@@ -130,7 +137,8 @@ export function EmployeeTimesheetStatusToJSONTyped(value?: EmployeeTimesheetStat
     return {
         
         'employeeId': value['employeeId'],
-        'employeeName': value['employeeName'],
+        'firstName': value['firstName'],
+        'lastName': value['lastName'],
         'timesheetFileId': value['timesheetFileId'],
         'totalHours': value['totalHours'],
         'flatRateQuantity': value['flatRateQuantity'],

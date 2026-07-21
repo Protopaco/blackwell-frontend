@@ -578,7 +578,7 @@ export class PayrollReportApi extends runtime.BaseAPI {
     }
 
     /**
-     * For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig, activeThisPayPeriod defaulted to true). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
+     * For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
      * Upsert totalExpense for multiple employees in a pay period at once
      */
     async v1UpdateEmployeeExpensesBatchRaw(requestParameters: V1UpdateEmployeeExpensesBatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -589,7 +589,7 @@ export class PayrollReportApi extends runtime.BaseAPI {
     }
 
     /**
-     * For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig, activeThisPayPeriod defaulted to true). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
+     * For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
      * Upsert totalExpense for multiple employees in a pay period at once
      */
     async v1UpdateEmployeeExpensesBatch(requestParameters: V1UpdateEmployeeExpensesBatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {

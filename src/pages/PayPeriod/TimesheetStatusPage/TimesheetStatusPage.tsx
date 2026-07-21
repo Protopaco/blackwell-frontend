@@ -9,6 +9,7 @@ import EmployeeTimesheetStatusCard from '@/components/PayPeriodDashboard/Employe
 import useAsyncAction from '@/hooks/useAsyncAction';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import type { PayPeriodLayoutContext } from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
+import fetchPayrollReport from '@/utils/fetchPayrollReport';
 
 const TimesheetStatusPage = () => {
   const { clientId, payPeriodId } = useParams<{ clientId: string; payPeriodId: string }>();
@@ -26,6 +27,12 @@ const TimesheetStatusPage = () => {
     'Failed to load employee timesheet status.'
   );
 
+  const { data: payrollReport, refetch: refetchPayrollReport } = useFetchByKey(
+    key,
+    () => fetchPayrollReport(clientId!, payPeriodId!),
+    'Failed to load payroll report.'
+  );
+
   const {
     run: generatePayrollReport,
     loading: generatingPayrollReport,
@@ -33,6 +40,7 @@ const TimesheetStatusPage = () => {
   } = useAsyncAction(async () => {
     await payrollReportApi.v1GeneratePayrollReport({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
+    refetchPayrollReport();
   }, 'Failed to generate payroll report.');
 
   const {
@@ -69,7 +77,7 @@ const TimesheetStatusPage = () => {
       </Stack>
       {timesheetsErrorMessage && <Typography color="error">{timesheetsErrorMessage}</Typography>}
       {payrollReportErrorMessage && <Typography color="error">{payrollReportErrorMessage}</Typography>}
-      <EmployeeTimesheetStatusCard employees={employees} />
+      <EmployeeTimesheetStatusCard employees={employees} payrollReport={payrollReport} />
     </Stack>
   );
 };

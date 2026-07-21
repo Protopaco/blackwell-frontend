@@ -84,7 +84,15 @@ Funding Source Management owns the client's funding source names and optional ex
 
 Activity Management owns the client's activity configuration: list, create, edit, and hard delete. The Client Summary Activities card links to `/client/:clientId/activities`; the management page lists activities sorted by activity name by default and supports activity/category/pay-rate table sorting. Activities depend on Funding Source Management because create/edit allocation rows choose from configured funding sources. The frontend gates allocation saves until the visible editable percentages total exactly 100, while the backend remains the authority for validation and final normalization. Delete uses the shared confirmation dialog and warns that generated timesheets, payroll, and allocation reporting may be affected. Pay Period and reporting workflows consume activity configuration later but are not part of the Activity Management UI.
 
-## 8. Related Docs
+## 8. Pay Period Workflow Boundary
+
+The Pay Period pipeline (Timesheet Status → Payroll Report → Allocation Report → Close) is a strict linear sequence, not a set of independently-editable pages. Each stage's trigger action lives on the page *before* the artifact it produces — Generate Payroll Report is a Timesheet Status action, first-time Generate Allocation Report is a Payroll Report action, Close Pay Period is an Allocation Report action — rather than each report page owning its own generation control. Full detail in `docs/PAY_PERIOD_PAGES.md`.
+
+Once an artifact has been generated for the first time, later edits to its upstream inputs (Total Expense on Payroll Report, Additional Expenses on Allocation Report) trigger silent background regeneration instead of a second manual button; regeneration failures are logged, never surfaced as a UI error, and never roll back the edit that triggered them or leave the page's state dirty/disabled. Presence/stage gating (whether a report exists yet, whether the pay period is closed) is derived from `PayPeriod.status` via small predicate helpers (e.g. `allocationReportGenerated`), not from a speculative fetch of the artifact itself — the same status field also drives `PayPeriodLayout`'s tab-enablement.
+
+Pay Period reports are not archived or versioned — regenerating always overwrites, and the latest is the only one that's ever considered correct. Closing is the terminal state: it is a one-way gate the backend enforces, the frontend only requests it (with confirmation) and reflects the resulting status.
+
+## 9. Related Docs
 
 - `docs/STYLE_GUIDE.md`: concrete code conventions and mechanics.
 - `docs/TICKETS.md`: ticket board and epic status.

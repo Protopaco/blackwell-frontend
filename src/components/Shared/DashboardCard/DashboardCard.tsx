@@ -10,11 +10,12 @@ import '@/components/Shared/DashboardCard/DashboardCard.css';
 type Props = {
   id: string;
   header: string;
+  headerAction?: ReactNode;
   configPath: string | null;
   children: ReactNode;
 };
 
-const DashboardCard = ({ id, header, configPath, children }: Props) => {
+const DashboardCard = ({ id, header, headerAction, configPath, children }: Props) => {
   const navigate = useNavigate();
   const clickable = configPath !== null;
   const navigateToConfig = () => {
@@ -45,6 +46,11 @@ const DashboardCard = ({ id, header, configPath, children }: Props) => {
         <Typography className="dashboard-card-header" variant="subtitle1" color="primary">
           {header}
         </Typography>
+        {headerAction && (
+          <Box onClick={(event) => event.stopPropagation()} sx={{ display: 'flex' }}>
+            {headerAction}
+          </Box>
+        )}
         {clickable && <SettingsOutlinedIcon className="dashboard-card-action-icon" fontSize="small" aria-hidden="true" />}
       </Box>
       <CardContent>{children}</CardContent>

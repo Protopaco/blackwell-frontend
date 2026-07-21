@@ -16,9 +16,10 @@ export type DashboardListItem = {
 
 type Props = {
   items: DashboardListItem[];
+  onNavigate?: () => void;
 };
 
-const DashboardList = ({ items }: Props) => {
+const DashboardList = ({ items, onNavigate }: Props) => {
   const navigate = useNavigate();
 
   return (
@@ -41,7 +42,14 @@ const DashboardList = ({ items }: Props) => {
 
         if (item.path) {
           return (
-            <ListItemButton key={item.key} disableGutters onClick={() => navigate(item.path!)}>
+            <ListItemButton
+              key={item.key}
+              disableGutters
+              onClick={() => {
+                onNavigate?.();
+                navigate(item.path!);
+              }}
+            >
               {content}
             </ListItemButton>
           );

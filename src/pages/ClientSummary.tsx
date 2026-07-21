@@ -25,6 +25,7 @@ const ClientSummary = () => {
     data: summary,
     errorMessage,
     loading,
+    refetch,
   } = useFetchByKey(clientId, (clientId) => clientApi.v1GetClientSummary({ clientId }), 'Failed to load client summary.');
 
   // Client list still loading — can't resolve the URL's clientId yet.
@@ -83,7 +84,7 @@ const ClientSummary = () => {
           <ClientHolidaysCard clientId={selectedClient.clientId ?? ''} holidays={summary.holidays ?? []} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientPayPeriodCard payPeriods={summary.payPeriods ?? []} />
+          <ClientPayPeriodCard payPeriods={summary.payPeriods ?? []} onPayPeriodCreated={refetch} />
         </Grid>
       </Grid>
     </Container>

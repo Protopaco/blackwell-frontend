@@ -7,23 +7,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-
-type Header = {
-  label: string;
-  align?: 'inherit' | 'left' | 'center' | 'right' | 'justify';
-  sortDirection?: 'asc' | 'desc';
-  onSort?: () => void;
-};
+import type { ManagementTableHeader } from '@/models/ManagementTableHeader';
 
 type Props = {
-  headers: Header[];
+  headers: ManagementTableHeader[];
   children: ReactNode;
 };
 
 // TableSortLabel treats its label + sort arrow as one box, so centering that box shifts the visible
 // text off-center (the arrow is hidden until hover, but still reserves layout space). Centering on the
 // text alone requires taking the arrow out of the layout flow and centering what's left.
-const sortLabelJustifyContent: Record<NonNullable<Header['align']>, string> = {
+const sortLabelJustifyContent: Record<NonNullable<ManagementTableHeader['align']>, string> = {
   inherit: 'flex-start',
   left: 'flex-start',
   center: 'center',

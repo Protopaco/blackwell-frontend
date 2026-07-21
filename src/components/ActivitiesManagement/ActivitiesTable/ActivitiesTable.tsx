@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
@@ -9,11 +8,10 @@ import Typography from '@mui/material/Typography';
 import type { Activity } from '@/api/generated/models/Activity';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
 import currencyToString from '@/utils/currencyToString';
+import useTableSort from '@/hooks/useTableSort';
 import { isFlatPayRate, payRateLabels } from '../activityDisplay';
 
 type SortKey = 'name' | 'payrollCategory' | 'payRate';
-
-type SortDirection = 'asc' | 'desc';
 
 type Props = {
   activities: Activity[];
@@ -35,45 +33,22 @@ const formatFundingAllocations = (activity: Activity) => {
 };
 
 const ActivitiesTable = ({ activities, onDelete, onEdit }: Props) => {
-  const [sortKey, setSortKey] = useState<SortKey>('name');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-
-  const sortedActivities = useMemo(() => {
-    return [...activities].sort((left, right) => {
-      const directionMultiplier = sortDirection === 'asc' ? 1 : -1;
-
-      switch (sortKey) {
-        case 'payrollCategory':
-          return directionMultiplier * (left.payrollCategory ?? '').localeCompare(right.payrollCategory ?? '', undefined, { sensitivity: 'base' });
-        case 'payRate':
-          return directionMultiplier * (left.payRate ?? '').localeCompare(right.payRate ?? '', undefined, { sensitivity: 'base' });
-        case 'name':
-        default:
-          return directionMultiplier * (left.activityName ?? '').localeCompare(right.activityName ?? '', undefined, { sensitivity: 'base' });
-      }
-    });
-  }, [activities, sortDirection, sortKey]);
-
-  const updateSort = (nextSortKey: SortKey) => {
-    if (nextSortKey === sortKey) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-      return;
-    }
-
-    setSortKey(nextSortKey);
-    setSortDirection('asc');
-  };
+  const { sortedItems: sortedActivities, sortableHeader } = useTableSort<Activity, SortKey>(
+    activities,
+    {
+      name: (left, right) => (left.activityName ?? '').localeCompare(right.activityName ?? '', undefined, { sensitivity: 'base' }),
+      payrollCategory: (left, right) => (left.payrollCategory ?? '').localeCompare(right.payrollCategory ?? '', undefined, { sensitivity: 'base' }),
+      payRate: (left, right) => (left.payRate ?? '').localeCompare(right.payRate ?? '', undefined, { sensitivity: 'base' }),
+    },
+    'name',
+  );
 
   return (
     <ManagementTable
       headers={[
-        { label: 'Activity', sortDirection: sortKey === 'name' ? sortDirection : undefined, onSort: () => updateSort('name') },
-        {
-          label: 'Payroll Category',
-          sortDirection: sortKey === 'payrollCategory' ? sortDirection : undefined,
-          onSort: () => updateSort('payrollCategory'),
-        },
-        { label: 'Pay Rate', sortDirection: sortKey === 'payRate' ? sortDirection : undefined, onSort: () => updateSort('payRate') },
+        sortableHeader('name', 'Activity'),
+        sortableHeader('payrollCategory', 'Payroll Category'),
+        sortableHeader('payRate', 'Pay Rate'),
         { label: 'Flat Rate Amount' },
         { label: 'Funding Allocation' },
         { label: 'Track Separately' },

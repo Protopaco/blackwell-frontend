@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import IconButton from '@mui/material/IconButton';
@@ -9,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import type { Employee } from '@/api/generated/models/Employee';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
 import currencyToString from '@/utils/currencyToString';
+import useTableSort from '@/hooks/useTableSort';
 
 type Props = {
   employees: Employee[];
@@ -17,52 +17,29 @@ type Props = {
 
 type SortKey = 'name' | 'position' | 'email' | 'status' | 'payRates';
 
-type SortDirection = 'asc' | 'desc';
+const sortableEmployeeName = (employee: Employee) => `${employee.lastName ?? ''}, ${employee.firstName ?? ''}`;
 
 const EmployeesTable = ({ employees, onEdit }: Props) => {
-  const [sortKey, setSortKey] = useState<SortKey>('name');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-
-  const sortedEmployees = useMemo(() => {
-    return [...employees].sort((left, right) => {
-      const directionMultiplier = sortDirection === 'asc' ? 1 : -1;
-      const leftName = `${left.lastName ?? ''}, ${left.firstName ?? ''}`;
-      const rightName = `${right.lastName ?? ''}, ${right.firstName ?? ''}`;
-
-      switch (sortKey) {
-        case 'position':
-          return directionMultiplier * (left.position ?? '').localeCompare(right.position ?? '', undefined, { sensitivity: 'base' });
-        case 'email':
-          return directionMultiplier * (left.email ?? '').localeCompare(right.email ?? '', undefined, { sensitivity: 'base' });
-        case 'status':
-          return directionMultiplier * (left.status ?? '').localeCompare(right.status ?? '', undefined, { sensitivity: 'base' });
-        case 'payRates':
-          return directionMultiplier * ((left.hourlyPayRate1 ?? Number.POSITIVE_INFINITY) - (right.hourlyPayRate1 ?? Number.POSITIVE_INFINITY));
-        case 'name':
-        default:
-          return directionMultiplier * leftName.localeCompare(rightName, undefined, { sensitivity: 'base' });
-      }
-    });
-  }, [employees, sortDirection, sortKey]);
-
-  const updateSort = (nextSortKey: SortKey) => {
-    if (nextSortKey === sortKey) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-      return;
-    }
-
-    setSortKey(nextSortKey);
-    setSortDirection('asc');
-  };
+  const { sortedItems: sortedEmployees, sortableHeader } = useTableSort<Employee, SortKey>(
+    employees,
+    {
+      name: (left, right) => sortableEmployeeName(left).localeCompare(sortableEmployeeName(right), undefined, { sensitivity: 'base' }),
+      position: (left, right) => (left.position ?? '').localeCompare(right.position ?? '', undefined, { sensitivity: 'base' }),
+      email: (left, right) => (left.email ?? '').localeCompare(right.email ?? '', undefined, { sensitivity: 'base' }),
+      status: (left, right) => (left.status ?? '').localeCompare(right.status ?? '', undefined, { sensitivity: 'base' }),
+      payRates: (left, right) => (left.hourlyPayRate1 ?? Number.POSITIVE_INFINITY) - (right.hourlyPayRate1 ?? Number.POSITIVE_INFINITY),
+    },
+    'name',
+  );
 
   return (
     <ManagementTable
       headers={[
-        { label: 'Name', sortDirection: sortKey === 'name' ? sortDirection : undefined, onSort: () => updateSort('name') },
-        { label: 'Position', sortDirection: sortKey === 'position' ? sortDirection : undefined, onSort: () => updateSort('position') },
-        { label: 'Email', sortDirection: sortKey === 'email' ? sortDirection : undefined, onSort: () => updateSort('email') },
-        { label: 'Status', sortDirection: sortKey === 'status' ? sortDirection : undefined, onSort: () => updateSort('status') },
-        { label: 'Pay Rates', sortDirection: sortKey === 'payRates' ? sortDirection : undefined, onSort: () => updateSort('payRates') },
+        sortableHeader('name', 'Name'),
+        sortableHeader('position', 'Position'),
+        sortableHeader('email', 'Email'),
+        sortableHeader('status', 'Status'),
+        sortableHeader('payRates', 'Pay Rates'),
         { label: 'Actions', align: 'right' },
       ]}
     >

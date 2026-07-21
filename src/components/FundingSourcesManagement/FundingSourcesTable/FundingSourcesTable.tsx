@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
@@ -6,6 +5,7 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import type { FundingSource } from '@/api/generated/models/FundingSource';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
+import useTableSort from '@/hooks/useTableSort';
 
 type Props = {
   fundingSources: FundingSource[];
@@ -15,44 +15,18 @@ type Props = {
 
 type SortKey = 'name' | 'code';
 
-type SortDirection = 'asc' | 'desc';
-
 const FundingSourcesTable = ({ fundingSources, onDelete, onEdit }: Props) => {
-  const [sortKey, setSortKey] = useState<SortKey>('name');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-
-  const sortedFundingSources = useMemo(() => {
-    return [...fundingSources].sort((left, right) => {
-      const directionMultiplier = sortDirection === 'asc' ? 1 : -1;
-
-      switch (sortKey) {
-        case 'code':
-          return directionMultiplier * (left.fundingSourceCode ?? '').localeCompare(right.fundingSourceCode ?? '', undefined, { sensitivity: 'base' });
-        case 'name':
-        default:
-          return directionMultiplier * (left.fundingSourceName ?? '').localeCompare(right.fundingSourceName ?? '', undefined, { sensitivity: 'base' });
-      }
-    });
-  }, [fundingSources, sortDirection, sortKey]);
-
-  const updateSort = (nextSortKey: SortKey) => {
-    if (nextSortKey === sortKey) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-      return;
-    }
-
-    setSortKey(nextSortKey);
-    setSortDirection('asc');
-  };
+  const { sortedItems: sortedFundingSources, sortableHeader } = useTableSort<FundingSource, SortKey>(
+    fundingSources,
+    {
+      name: (left, right) => (left.fundingSourceName ?? '').localeCompare(right.fundingSourceName ?? '', undefined, { sensitivity: 'base' }),
+      code: (left, right) => (left.fundingSourceCode ?? '').localeCompare(right.fundingSourceCode ?? '', undefined, { sensitivity: 'base' }),
+    },
+    'name',
+  );
 
   return (
-    <ManagementTable
-      headers={[
-        { label: 'Funding Source', sortDirection: sortKey === 'name' ? sortDirection : undefined, onSort: () => updateSort('name') },
-        { label: 'Code', sortDirection: sortKey === 'code' ? sortDirection : undefined, onSort: () => updateSort('code') },
-        { label: 'Actions', align: 'right' },
-      ]}
-    >
+    <ManagementTable headers={[sortableHeader('name', 'Funding Source'), sortableHeader('code', 'Code'), { label: 'Actions', align: 'right' }]}>
       {sortedFundingSources.map((fundingSource) => (
         <TableRow key={fundingSource.fundingSourceId ?? fundingSource.fundingSourceName ?? ''}>
           <TableCell>{fundingSource.fundingSourceName}</TableCell>

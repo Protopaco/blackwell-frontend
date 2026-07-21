@@ -10,10 +10,14 @@ import { payPeriodApi } from '@/api/client';
 import PayPeriodInfoCard from '@/components/PayPeriodDashboard/PayPeriodInfoCard/PayPeriodInfoCard';
 import NavButton from '@/components/Shared/NavButton/NavButton';
 import useFetchByKey from '@/hooks/useFetchByKey';
+import allocationReportGenerated from '@/models/allocationReportGenerated';
 import NavIcon from '@/models/NavIcon';
+import payrollReportGenerated from '@/models/payrollReportGenerated';
+import type { PayPeriod } from '@/api/generated/models/PayPeriod';
 import useSelectedClient from '@/state/client/useSelectedClient';
 
 export type PayPeriodLayoutContext = {
+  payPeriod: PayPeriod;
   refetchPayPeriod: () => void;
 };
 
@@ -83,11 +87,11 @@ const PayPeriodLayout = () => {
             }}
           >
             <Tab label="Timesheet Status" value="timesheetStatus" />
-            <Tab label="Payroll Report" value="payrollReport" />
-            <Tab label="Allocation Report" value="allocationReport" />
+            <Tab label="Payroll Report" value="payrollReport" disabled={!payrollReportGenerated(payPeriod.status)} />
+            <Tab label="Allocation Report" value="allocationReport" disabled={!allocationReportGenerated(payPeriod.status)} />
           </Tabs>
         </Box>
-        <Outlet context={{ refetchPayPeriod } satisfies PayPeriodLayoutContext} />
+        <Outlet context={{ payPeriod, refetchPayPeriod } satisfies PayPeriodLayoutContext} />
       </Stack>
     </Container>
   );

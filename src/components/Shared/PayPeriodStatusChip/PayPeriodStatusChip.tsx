@@ -9,6 +9,7 @@ const payPeriodStatusColors: Record<PayPeriodStatusEnum, ChipProps['color']> = {
   [PayPeriodStatusEnum.Pending]: 'default',
   [PayPeriodStatusEnum.Open]: 'success',
   [PayPeriodStatusEnum.Processed]: 'warning',
+  [PayPeriodStatusEnum.Allocated]: 'primary',
   [PayPeriodStatusEnum.Closed]: 'default',
 };
 

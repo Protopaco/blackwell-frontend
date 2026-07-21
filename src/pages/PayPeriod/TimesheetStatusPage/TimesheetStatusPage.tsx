@@ -8,13 +8,16 @@ import { payrollReportApi, timesheetApi } from '@/api/client';
 import EmployeeTimesheetStatusCard from '@/components/PayPeriodDashboard/EmployeeTimesheetStatusCard/EmployeeTimesheetStatusCard';
 import useAsyncAction from '@/hooks/useAsyncAction';
 import useFetchByKey from '@/hooks/useFetchByKey';
+import payrollReportGenerated from '@/models/payrollReportGenerated';
 import type { PayPeriodLayoutContext } from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
-import fetchPayrollReport from '@/utils/fetchPayrollReport';
 
 const TimesheetStatusPage = () => {
   const { clientId, payPeriodId } = useParams<{ clientId: string; payPeriodId: string }>();
-  const { refetchPayPeriod } = useOutletContext<PayPeriodLayoutContext>();
+  const { payPeriod, refetchPayPeriod } = useOutletContext<PayPeriodLayoutContext>();
   const key = clientId && payPeriodId ? `${clientId}/${payPeriodId}` : undefined;
+  // Includes payPeriod.status so this re-fetches (or starts skipping) the moment the status that
+  // gates payroll-report existence changes, without a separate manual refetch call.
+  const payrollReportKey = key ? `${key}/${payPeriod.status}` : undefined;
 
   const {
     data: employees,
@@ -27,9 +30,9 @@ const TimesheetStatusPage = () => {
     'Failed to load employee timesheet status.'
   );
 
-  const { data: payrollReport, refetch: refetchPayrollReport } = useFetchByKey(
-    key,
-    () => fetchPayrollReport(clientId!, payPeriodId!),
+  const { data: payrollReport } = useFetchByKey(
+    payrollReportKey,
+    () => (payrollReportGenerated(payPeriod.status) ? payrollReportApi.v1GetPayrollReport({ clientId: clientId!, payPeriodId: payPeriodId! }) : Promise.resolve(null)),
     'Failed to load payroll report.'
   );
 
@@ -40,7 +43,6 @@ const TimesheetStatusPage = () => {
   } = useAsyncAction(async () => {
     await payrollReportApi.v1GeneratePayrollReport({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
-    refetchPayrollReport();
   }, 'Failed to generate payroll report.');
 
   const {

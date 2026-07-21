@@ -65,6 +65,7 @@ export const PayPeriodStatusEnum = {
     Pending: 'Pending',
     Open: 'Open',
     Processed: 'Processed',
+    Allocated: 'Allocated',
     Closed: 'Closed'
 } as const;
 export type PayPeriodStatusEnum = typeof PayPeriodStatusEnum[keyof typeof PayPeriodStatusEnum];

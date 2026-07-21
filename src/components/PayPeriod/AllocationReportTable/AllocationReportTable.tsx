@@ -8,7 +8,7 @@ type Props = {
   rows: AllocationReportRow[];
 };
 
-const formatCurrency = (value: number | undefined): string => currencyToString(value ?? 0, { decorated: true });
+const formatCurrency = (value: number | undefined): string => (value === undefined || value === null ? '-' : currencyToString(value, { decorated: true }));
 
 const AllocationReportTable = ({ rows }: Props) => {
   return (

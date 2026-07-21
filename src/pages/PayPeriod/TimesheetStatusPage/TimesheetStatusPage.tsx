@@ -19,21 +19,11 @@ const TimesheetStatusPage = () => {
     data: employees,
     errorMessage: employeesErrorMessage,
     loading: employeesLoading,
+    refetch: refetchEmployees,
   } = useFetchByKey(
     key,
     () => timesheetApi.v1GetTimesheetStatus({ clientId: clientId!, payPeriodId: payPeriodId! }),
     'Failed to load employee timesheet status.'
-  );
-
-  const {
-    data: employeeExpenses,
-    errorMessage: employeeExpensesErrorMessage,
-    loading: employeeExpensesLoading,
-    refetch: refetchEmployeeExpenses,
-  } = useFetchByKey(
-    key,
-    () => payrollReportApi.v1GetEmployeeExpenses({ clientId: clientId!, payPeriodId: payPeriodId! }),
-    'Failed to load employee expenses.'
   );
 
   const {
@@ -45,12 +35,21 @@ const TimesheetStatusPage = () => {
     refetchPayPeriod();
   }, 'Failed to generate payroll report.');
 
-  const errorMessage = employeesErrorMessage ?? employeeExpensesErrorMessage;
-  if (errorMessage) {
-    return <Typography color="error">{errorMessage}</Typography>;
+  const {
+    run: generateTimesheets,
+    loading: generatingTimesheets,
+    errorMessage: timesheetsErrorMessage,
+  } = useAsyncAction(async () => {
+    await timesheetApi.v1GenerateTimesheets({ clientId: clientId!, payPeriodId: payPeriodId! });
+    refetchPayPeriod();
+    refetchEmployees();
+  }, 'Failed to generate timesheets.');
+
+  if (employeesErrorMessage) {
+    return <Typography color="error">{employeesErrorMessage}</Typography>;
   }
 
-  if (employeesLoading || employeeExpensesLoading || !employees || !employeeExpenses) {
+  if (employeesLoading || !employees) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
         <CircularProgress />
@@ -60,13 +59,17 @@ const TimesheetStatusPage = () => {
 
   return (
     <Stack spacing={2}>
-      <Stack direction="row" justifyContent="flex-end">
+      <Stack direction="row" justifyContent="flex-end" spacing={1}>
+        <Button variant="outlined" onClick={generateTimesheets} disabled={generatingTimesheets} loading={generatingTimesheets}>
+          Generate Timesheets
+        </Button>
         <Button variant="contained" onClick={generatePayrollReport} disabled={generatingPayrollReport} loading={generatingPayrollReport}>
           Generate Payroll Report
         </Button>
       </Stack>
+      {timesheetsErrorMessage && <Typography color="error">{timesheetsErrorMessage}</Typography>}
       {payrollReportErrorMessage && <Typography color="error">{payrollReportErrorMessage}</Typography>}
-      <EmployeeTimesheetStatusCard employees={employees} employeeExpenses={employeeExpenses} onEmployeeExpenseUpdated={refetchEmployeeExpenses} />
+      <EmployeeTimesheetStatusCard employees={employees} />
     </Stack>
   );
 };

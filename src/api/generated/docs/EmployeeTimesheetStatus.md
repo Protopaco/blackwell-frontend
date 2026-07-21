@@ -13,6 +13,7 @@ Name | Type
 `flatRateQuantity` | number
 `employeeSigned` | boolean
 `supervisorSigned` | boolean
+`includeInPayroll` | boolean
 `status` | string
 
 ## Example
@@ -29,6 +30,7 @@ const example = {
   "flatRateQuantity": 2,
   "employeeSigned": null,
   "supervisorSigned": null,
+  "includeInPayroll": null,
   "status": null,
 } satisfies EmployeeTimesheetStatus
 

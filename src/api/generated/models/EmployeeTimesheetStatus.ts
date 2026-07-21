@@ -63,6 +63,12 @@ export interface EmployeeTimesheetStatus {
     supervisorSigned?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof EmployeeTimesheetStatus
+     */
+    includeInPayroll?: boolean;
+    /**
+     * 
      * @type {EmployeeTimesheetStatusStatusEnum}
      * @memberof EmployeeTimesheetStatus
      */
@@ -107,6 +113,7 @@ export function EmployeeTimesheetStatusFromJSONTyped(json: any, ignoreDiscrimina
         'flatRateQuantity': json['flatRateQuantity'] == null ? undefined : json['flatRateQuantity'],
         'employeeSigned': json['employeeSigned'] == null ? undefined : json['employeeSigned'],
         'supervisorSigned': json['supervisorSigned'] == null ? undefined : json['supervisorSigned'],
+        'includeInPayroll': json['includeInPayroll'] == null ? undefined : json['includeInPayroll'],
         'status': json['status'] == null ? undefined : json['status'],
     };
 }
@@ -129,6 +136,7 @@ export function EmployeeTimesheetStatusToJSONTyped(value?: EmployeeTimesheetStat
         'flatRateQuantity': value['flatRateQuantity'],
         'employeeSigned': value['employeeSigned'],
         'supervisorSigned': value['supervisorSigned'],
+        'includeInPayroll': value['includeInPayroll'],
         'status': value['status'],
     };
 }

@@ -90,6 +90,15 @@ const PayrollReportPage = () => {
 
     refetchPayrollReport();
     setEditedValues({});
+
+    if (allocationReportExists) {
+      try {
+        await payrollReportApi.v1GenerateAllocationReport({ clientId: clientId!, payPeriodId: payPeriodId! });
+        refetchPayPeriod();
+      } catch (error) {
+        console.error('Failed to auto-regenerate allocation report.', error);
+      }
+    }
   }, 'Failed to save employee expenses.');
 
   const {

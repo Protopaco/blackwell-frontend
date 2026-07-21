@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -19,6 +19,7 @@ import type { PayPeriodLayoutContext } from '@/pages/PayPeriod/PayPeriodLayout/P
 const PayrollReportPage = () => {
   const { clientId, payPeriodId } = useParams<{ clientId: string; payPeriodId: string }>();
   const { payPeriod, refetchPayPeriod } = useOutletContext<PayPeriodLayoutContext>();
+  const navigate = useNavigate();
   const key = clientId && payPeriodId ? `${clientId}/${payPeriodId}` : undefined;
   // Includes payPeriod.status so this re-fetches (or starts skipping) the moment the status that
   // gates payroll-report existence changes, without a separate manual refetch call.
@@ -108,6 +109,7 @@ const PayrollReportPage = () => {
   } = useAsyncAction(async () => {
     await payrollReportApi.v1GenerateAllocationReport({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
+    navigate(`/client/${clientId}/payPeriod/${payPeriodId}/allocationReport`);
   }, 'Failed to generate allocation report.');
 
   const handleEditValue = (employeeId: string, value: string) => {

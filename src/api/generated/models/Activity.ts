@@ -63,6 +63,12 @@ export interface Activity {
      * @memberof Activity
      */
     payRate?: ActivityPayRateEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof Activity
+     */
+    flatRateAmount?: number;
 }
 
 
@@ -112,6 +118,7 @@ export function ActivityFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'payrollCategory': json['payrollCategory'] == null ? undefined : json['payrollCategory'],
         'fundingSources': json['fundingSources'] == null ? undefined : ((json['fundingSources'] as Array<any>).map(ActivityFundingSourcesInnerFromJSON)),
         'payRate': json['payRate'] == null ? undefined : json['payRate'],
+        'flatRateAmount': json['flatRateAmount'] == null ? undefined : json['flatRateAmount'],
     };
 }
 
@@ -132,6 +139,7 @@ export function ActivityToJSONTyped(value?: Activity | null, ignoreDiscriminator
         'payrollCategory': value['payrollCategory'],
         'fundingSources': value['fundingSources'] == null ? undefined : ((value['fundingSources'] as Array<any>).map(ActivityFundingSourcesInnerToJSON)),
         'payRate': value['payRate'],
+        'flatRateAmount': value['flatRateAmount'],
     };
 }
 

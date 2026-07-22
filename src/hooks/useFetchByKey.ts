@@ -4,6 +4,7 @@ type FetchByKeyResult<T> = {
   data: T | null;
   errorMessage: string | null;
   loading: boolean;
+  refetch: () => void;
 };
 
 type FetchByKeyState<T> = {
@@ -18,9 +19,15 @@ type FetchByKeyState<T> = {
  * two clients/pay periods without an unmount): an in-flight response for a
  * stale key landing after a newer one already resolved, and briefly rendering
  * the previous key's data under the new key before its fetch resolves.
+ *
+ * `refetch()` forces the same key to be fetched again — for when a mutation
+ * elsewhere (e.g. generating a payroll report) changes data this hook already
+ * loaded, and the display needs to catch up without waiting for `key` itself
+ * to change.
  */
 const useFetchByKey = <T>(key: string | undefined, fetcher: (key: string) => Promise<T>, errorMessage: string): FetchByKeyResult<T> => {
   const [state, setState] = useState<FetchByKeyState<T> | null>(null);
+  const [refetchNonce, setRefetchNonce] = useState(0);
   const fetcherRef = useRef(fetcher);
 
   useEffect(() => {
@@ -47,7 +54,7 @@ const useFetchByKey = <T>(key: string | undefined, fetcher: (key: string) => Pro
     return () => {
       cancelled = true;
     };
-  }, [key, errorMessage]);
+  }, [key, errorMessage, refetchNonce]);
 
   const isCurrent = state !== null && state.key === key;
 
@@ -55,6 +62,7 @@ const useFetchByKey = <T>(key: string | undefined, fetcher: (key: string) => Pro
     data: isCurrent ? state.data : null,
     errorMessage: isCurrent ? state.errorMessage : null,
     loading: !key || !isCurrent,
+    refetch: () => setRefetchNonce((nonce) => nonce + 1),
   };
 };
 

@@ -4,14 +4,15 @@ All URIs are relative to *http://localhost:3000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**v1GenerateAllocationReport**](PayrollReportApi.md#v1generateallocationreport) | **POST** /api/v1/payrollReport/{clientId}/{payPeriodId}/allocation-report | Generate or regenerate the allocation report for a pay period |
+| [**v1GenerateAllocationReport**](PayrollReportApi.md#v1generateallocationreport) | **POST** /api/v1/payrollReport/{clientId}/{payPeriodId}/allocationReport | Generate or regenerate the allocation report for a pay period |
 | [**v1GeneratePayrollReport**](PayrollReportApi.md#v1generatepayrollreport) | **POST** /api/v1/payrollReport/{clientId}/{payPeriodId}/generate | Generate or regenerate the payroll report for a pay period |
-| [**v1GetAdditionalExpenses**](PayrollReportApi.md#v1getadditionalexpenses) | **GET** /api/v1/payrollReport/{clientId}/{payPeriodId}/additional-expenses | Get additional expense records for a pay period |
-| [**v1GetAllocationReport**](PayrollReportApi.md#v1getallocationreport) | **GET** /api/v1/payrollReport/{clientId}/{payPeriodId}/allocation-report | Get the allocation report for a pay period |
-| [**v1GetEmployeeExpenses**](PayrollReportApi.md#v1getemployeeexpenses) | **GET** /api/v1/payrollReport/{clientId}/{payPeriodId}/employee-expenses | Get employee expense records for a pay period |
+| [**v1GetAdditionalExpenses**](PayrollReportApi.md#v1getadditionalexpenses) | **GET** /api/v1/payrollReport/{clientId}/{payPeriodId}/additionalExpenses | Get additional expense records for a pay period |
+| [**v1GetAllocationReport**](PayrollReportApi.md#v1getallocationreport) | **GET** /api/v1/payrollReport/{clientId}/{payPeriodId}/allocationReport | Get the allocation report for a pay period |
+| [**v1GetEmployeeExpenses**](PayrollReportApi.md#v1getemployeeexpenses) | **GET** /api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses | Get employee expense records for a pay period |
 | [**v1GetPayrollReport**](PayrollReportApi.md#v1getpayrollreport) | **GET** /api/v1/payrollReport/{clientId}/{payPeriodId} | Get the current payroll summary for a pay period grouped by employee |
-| [**v1UpdateAdditionalExpenses**](PayrollReportApi.md#v1updateadditionalexpenses) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/additional-expenses | Save additional expense records for a pay period |
-| [**v1UpdateEmployeeExpenses**](PayrollReportApi.md#v1updateemployeeexpenses) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/employee-expenses | Update a single employee expense record for a pay period |
+| [**v1UpdateAdditionalExpenses**](PayrollReportApi.md#v1updateadditionalexpenses) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/additionalExpenses | Save additional expense records for a pay period |
+| [**v1UpdateEmployeeExpenses**](PayrollReportApi.md#v1updateemployeeexpenses) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses | Update a single employee expense record for a pay period |
+| [**v1UpdateEmployeeExpensesBatch**](PayrollReportApi.md#v1updateemployeeexpensesbatch) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses/batch | Upsert totalExpense for multiple employees in a pay period at once |
 
 
 
@@ -575,7 +576,81 @@ No authorization required
 |-------------|-------------|------------------|
 | **200** | Employee expense updated |  -  |
 | **404** | Client, pay period, or payroll report not found |  -  |
-| **422** | Employee has hours this pay period and cannot be marked inactive |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## v1UpdateEmployeeExpensesBatch
+
+> v1UpdateEmployeeExpensesBatch(clientId, payPeriodId, employeeExpenseUpdate)
+
+Upsert totalExpense for multiple employees in a pay period at once
+
+For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\&#39;t match a known employee in the client\&#39;s PayrollConfig, the entire batch is rejected and nothing is written. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  PayrollReportApi,
+} from '';
+import type { V1UpdateEmployeeExpensesBatchRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new PayrollReportApi();
+
+  const body = {
+    // string
+    clientId: clientId_example,
+    // string
+    payPeriodId: payPeriodId_example,
+    // Array<EmployeeExpenseUpdate>
+    employeeExpenseUpdate: ...,
+  } satisfies V1UpdateEmployeeExpensesBatchRequest;
+
+  try {
+    const data = await api.v1UpdateEmployeeExpensesBatch(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **clientId** | `string` |  | [Defaults to `undefined`] |
+| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
+| **employeeExpenseUpdate** | `Array<EmployeeExpenseUpdate>` |  | |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Employee expenses updated |  -  |
+| **404** | Client, pay period, or payroll report not found |  -  |
+| **422** | One or more employeeId values do not match a known employee in the client\&#39;s PayrollConfig |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

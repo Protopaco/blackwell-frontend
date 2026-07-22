@@ -9,12 +9,12 @@ import useFetchByKey from '@/hooks/useFetchByKey';
 import useSelectedClient from '@/state/client/useSelectedClient';
 import ClientInformationCard from '@/components/ClientSummary/ClientInformationCard/ClientInformationCard';
 import ClientEmployeesCard from '@/components/ClientSummary/ClientEmployeesCard/ClientEmployeesCard';
-import ClientSupervisorsCard from '@/components/ClientSummary/ClientSupervisorsCard/ClientSupervisorsCard';
 import ClientActivitiesCard from '@/components/ClientSummary/ClientActivitiesCard/ClientActivitiesCard';
 import ClientFundingSourcesCard from '@/components/ClientSummary/ClientFundingSourcesCard/ClientFundingSourcesCard';
 import ClientHolidaysCard from '@/components/ClientSummary/ClientHolidaysCard/ClientHolidaysCard';
 import ClientSettingsCard from '@/components/ClientSummary/ClientSettingsCard/ClientSettingsCard';
 import ClientPayPeriodCard from '@/components/ClientSummary/ClientPayPeriodCard/ClientPayPeriodCard';
+import ClientTimesheetFoldersCard from '@/components/ClientSummary/ClientTimesheetFoldersCard/ClientTimesheetFoldersCard';
 
 const ClientSummary = () => {
   const { selectedClient, clientsLoading } = useSelectedClient();
@@ -25,6 +25,7 @@ const ClientSummary = () => {
     data: summary,
     errorMessage,
     loading,
+    refetch,
   } = useFetchByKey(clientId, (clientId) => clientApi.v1GetClientSummary({ clientId }), 'Failed to load client summary.');
 
   // Client list still loading — can't resolve the URL's clientId yet.
@@ -65,25 +66,25 @@ const ClientSummary = () => {
           <ClientInformationCard clientName={selectedClient.clientName ?? ''} clientCode={selectedClient.clientCode ?? ''} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientEmployeesCard employees={summary.employees ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientSupervisorsCard supervisors={summary.supervisors ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientActivitiesCard activities={summary.activities ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientFundingSourcesCard fundingSources={summary.fundingSources ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientHolidaysCard holidays={summary.holidays ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ClientSettingsCard settings={summary.settings ?? {}} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientPayPeriodCard payPeriods={summary.payPeriods ?? []} />
+          <ClientTimesheetFoldersCard clientId={selectedClient.clientId ?? ''} timesheetFolders={summary.timesheetFolders ?? []} />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientEmployeesCard clientId={selectedClient.clientId ?? ''} employees={summary.employees ?? []} />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientActivitiesCard clientId={selectedClient.clientId ?? ''} activities={summary.activities ?? []} />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientFundingSourcesCard clientId={selectedClient.clientId ?? ''} fundingSources={summary.fundingSources ?? []} />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientHolidaysCard clientId={selectedClient.clientId ?? ''} holidays={summary.holidays ?? []} />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientPayPeriodCard payPeriods={summary.payPeriods ?? []} onPayPeriodCreated={refetch} />
         </Grid>
       </Grid>
     </Container>

@@ -7,12 +7,14 @@
 Name | Type
 ------------ | -------------
 `employeeId` | string
-`employeeName` | string
+`firstName` | string
+`lastName` | string
 `timesheetFileId` | string
-`timesheetFileLink` | string
 `totalHours` | number
+`flatRateQuantity` | number
 `employeeSigned` | boolean
 `supervisorSigned` | boolean
+`includeInPayroll` | boolean
 `status` | string
 
 ## Example
@@ -23,12 +25,14 @@ import type { EmployeeTimesheetStatus } from ''
 // TODO: Update the object below with actual values
 const example = {
   "employeeId": null,
-  "employeeName": Morgan Haynes,
+  "firstName": Morgan,
+  "lastName": Haynes,
   "timesheetFileId": null,
-  "timesheetFileLink": https://docs.google.com/spreadsheets/d/...,
   "totalHours": 72.5,
+  "flatRateQuantity": 2,
   "employeeSigned": null,
   "supervisorSigned": null,
+  "includeInPayroll": null,
   "status": null,
 } satisfies EmployeeTimesheetStatus
 

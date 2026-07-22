@@ -44,11 +44,6 @@ export interface V1GetPayPeriodsRequest {
     clientId: string;
 }
 
-export interface V1UpdatePayPeriodRequest {
-    clientId: string;
-    payPeriodId: string;
-}
-
 /**
  * 
  */
@@ -293,58 +288,6 @@ export class PayPeriodApi extends runtime.BaseAPI {
     async v1GetPayPeriods(requestParameters: V1GetPayPeriodsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<PayPeriod>> {
         const response = await this.v1GetPayPeriodsRaw(requestParameters, initOverrides);
         return await response.value();
-    }
-
-    /**
-     * Creates request options for v1UpdatePayPeriod without sending the request
-     */
-    async v1UpdatePayPeriodRequestOpts(requestParameters: V1UpdatePayPeriodRequest): Promise<runtime.RequestOpts> {
-        if (requestParameters['clientId'] == null) {
-            throw new runtime.RequiredError(
-                'clientId',
-                'Required parameter "clientId" was null or undefined when calling v1UpdatePayPeriod().'
-            );
-        }
-
-        if (requestParameters['payPeriodId'] == null) {
-            throw new runtime.RequiredError(
-                'payPeriodId',
-                'Required parameter "payPeriodId" was null or undefined when calling v1UpdatePayPeriod().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-
-        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}`;
-        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
-        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
-
-        return {
-            path: urlPath,
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Update an existing pay period
-     */
-    async v1UpdatePayPeriodRaw(requestParameters: V1UpdatePayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this.v1UpdatePayPeriodRequestOpts(requestParameters);
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Update an existing pay period
-     */
-    async v1UpdatePayPeriod(requestParameters: V1UpdatePayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.v1UpdatePayPeriodRaw(requestParameters, initOverrides);
     }
 
 }

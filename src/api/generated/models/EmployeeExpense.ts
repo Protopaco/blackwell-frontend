@@ -33,12 +33,6 @@ export interface EmployeeExpense {
     employeeName?: string;
     /**
      * 
-     * @type {boolean}
-     * @memberof EmployeeExpense
-     */
-    activeThisPayPeriod?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof EmployeeExpense
      */
@@ -64,7 +58,6 @@ export function EmployeeExpenseFromJSONTyped(json: any, ignoreDiscriminator: boo
         
         'employeeId': json['employeeId'] == null ? undefined : json['employeeId'],
         'employeeName': json['employeeName'] == null ? undefined : json['employeeName'],
-        'activeThisPayPeriod': json['activeThisPayPeriod'] == null ? undefined : json['activeThisPayPeriod'],
         'totalExpense': json['totalExpense'] == null ? undefined : json['totalExpense'],
     };
 }
@@ -82,7 +75,6 @@ export function EmployeeExpenseToJSONTyped(value?: EmployeeExpense | null, ignor
         
         'employeeId': value['employeeId'],
         'employeeName': value['employeeName'],
-        'activeThisPayPeriod': value['activeThisPayPeriod'],
         'totalExpense': value['totalExpense'],
     };
 }

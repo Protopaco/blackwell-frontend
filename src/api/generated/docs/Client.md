@@ -9,14 +9,10 @@ Name | Type
 `clientId` | string
 `clientName` | string
 `clientCode` | string
-`trackFundingSource` | boolean
-`clientFolderLink` | string
-`clientFolderId` | string
+`status` | string
 `employeePayrollFolderId` | string
 `payrollConfigFolderId` | string
-`reportsFolderId` | string
 `payrollReportFolderId` | string
-`timesheetsFolderId` | string
 `payrollConfigFileId` | string
 `payPeriodRegistryFileId` | string
 
@@ -30,14 +26,10 @@ const example = {
   "clientId": null,
   "clientName": null,
   "clientCode": null,
-  "trackFundingSource": null,
-  "clientFolderLink": null,
-  "clientFolderId": null,
+  "status": null,
   "employeePayrollFolderId": null,
   "payrollConfigFolderId": null,
-  "reportsFolderId": null,
   "payrollReportFolderId": null,
-  "timesheetsFolderId": null,
   "payrollConfigFileId": null,
   "payPeriodRegistryFileId": null,
 } satisfies Client

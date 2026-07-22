@@ -9,7 +9,6 @@ All URIs are relative to *http://localhost:3000*
 | [**v1GetNextPayPeriod**](PayPeriodApi.md#v1getnextpayperiod) | **GET** /api/v1/payPeriod/{clientId}/next | Get suggested next pay period for a client |
 | [**v1GetPayPeriodById**](PayPeriodApi.md#v1getpayperiodbyid) | **GET** /api/v1/payPeriod/{clientId}/{payPeriodId} | Get a single pay period by ID |
 | [**v1GetPayPeriods**](PayPeriodApi.md#v1getpayperiods) | **GET** /api/v1/payPeriod/{clientId} | Get all pay periods for a client |
-| [**v1UpdatePayPeriod**](PayPeriodApi.md#v1updatepayperiod) | **PUT** /api/v1/payPeriod/{clientId}/{payPeriodId} | Update an existing pay period |
 
 
 
@@ -344,74 +343,6 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | List of pay periods |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## v1UpdatePayPeriod
-
-> v1UpdatePayPeriod(clientId, payPeriodId)
-
-Update an existing pay period
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PayPeriodApi,
-} from '';
-import type { V1UpdatePayPeriodRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const api = new PayPeriodApi();
-
-  const body = {
-    // string
-    clientId: clientId_example,
-    // string
-    payPeriodId: payPeriodId_example,
-  } satisfies V1UpdatePayPeriodRequest;
-
-  try {
-    const data = await api.v1UpdatePayPeriod(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **clientId** | `string` |  | [Defaults to `undefined`] |
-| **payPeriodId** | `string` |  | [Defaults to `undefined`] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Pay period updated |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

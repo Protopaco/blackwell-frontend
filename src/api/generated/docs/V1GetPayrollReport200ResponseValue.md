@@ -7,6 +7,9 @@
 Name | Type
 ------------ | -------------
 `employeeName` | string
+`totalHours` | number
+`totalFlatRate` | number
+`totalExpense` | number
 `hourly` | [Array&lt;V1GetPayrollReport200ResponseValueHourlyInner&gt;](V1GetPayrollReport200ResponseValueHourlyInner.md)
 `flatRate` | [Array&lt;V1GetPayrollReport200ResponseValueFlatRateInner&gt;](V1GetPayrollReport200ResponseValueFlatRateInner.md)
 
@@ -18,6 +21,9 @@ import type { V1GetPayrollReport200ResponseValue } from ''
 // TODO: Update the object below with actual values
 const example = {
   "employeeName": null,
+  "totalHours": null,
+  "totalFlatRate": null,
+  "totalExpense": null,
   "hourly": null,
   "flatRate": null,
 } satisfies V1GetPayrollReport200ResponseValue

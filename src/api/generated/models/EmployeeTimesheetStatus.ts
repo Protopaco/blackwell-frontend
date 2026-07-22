@@ -30,7 +30,13 @@ export interface EmployeeTimesheetStatus {
      * @type {string}
      * @memberof EmployeeTimesheetStatus
      */
-    employeeName?: string;
+    firstName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EmployeeTimesheetStatus
+     */
+    lastName?: string;
     /**
      * 
      * @type {string}
@@ -39,16 +45,16 @@ export interface EmployeeTimesheetStatus {
     timesheetFileId?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof EmployeeTimesheetStatus
      */
-    timesheetFileLink?: string;
+    totalHours?: number | null;
     /**
      * 
      * @type {number}
      * @memberof EmployeeTimesheetStatus
      */
-    totalHours?: number | null;
+    flatRateQuantity?: number | null;
     /**
      * 
      * @type {boolean}
@@ -61,6 +67,12 @@ export interface EmployeeTimesheetStatus {
      * @memberof EmployeeTimesheetStatus
      */
     supervisorSigned?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof EmployeeTimesheetStatus
+     */
+    includeInPayroll?: boolean;
     /**
      * 
      * @type {EmployeeTimesheetStatusStatusEnum}
@@ -101,12 +113,14 @@ export function EmployeeTimesheetStatusFromJSONTyped(json: any, ignoreDiscrimina
     return {
         
         'employeeId': json['employeeId'] == null ? undefined : json['employeeId'],
-        'employeeName': json['employeeName'] == null ? undefined : json['employeeName'],
+        'firstName': json['firstName'] == null ? undefined : json['firstName'],
+        'lastName': json['lastName'] == null ? undefined : json['lastName'],
         'timesheetFileId': json['timesheetFileId'] == null ? undefined : json['timesheetFileId'],
-        'timesheetFileLink': json['timesheetFileLink'] == null ? undefined : json['timesheetFileLink'],
         'totalHours': json['totalHours'] == null ? undefined : json['totalHours'],
+        'flatRateQuantity': json['flatRateQuantity'] == null ? undefined : json['flatRateQuantity'],
         'employeeSigned': json['employeeSigned'] == null ? undefined : json['employeeSigned'],
         'supervisorSigned': json['supervisorSigned'] == null ? undefined : json['supervisorSigned'],
+        'includeInPayroll': json['includeInPayroll'] == null ? undefined : json['includeInPayroll'],
         'status': json['status'] == null ? undefined : json['status'],
     };
 }
@@ -123,12 +137,14 @@ export function EmployeeTimesheetStatusToJSONTyped(value?: EmployeeTimesheetStat
     return {
         
         'employeeId': value['employeeId'],
-        'employeeName': value['employeeName'],
+        'firstName': value['firstName'],
+        'lastName': value['lastName'],
         'timesheetFileId': value['timesheetFileId'],
-        'timesheetFileLink': value['timesheetFileLink'],
         'totalHours': value['totalHours'],
+        'flatRateQuantity': value['flatRateQuantity'],
         'employeeSigned': value['employeeSigned'],
         'supervisorSigned': value['supervisorSigned'],
+        'includeInPayroll': value['includeInPayroll'],
         'status': value['status'],
     };
 }

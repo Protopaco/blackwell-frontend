@@ -16,24 +16,32 @@
 import * as runtime from '../runtime';
 import type {
   Client,
+  ClientCreateRequest,
   ClientSummary,
-  Employee,
+  ClientUpdateRequest,
 } from '../models/index';
 import {
     ClientFromJSON,
     ClientToJSON,
+    ClientCreateRequestFromJSON,
+    ClientCreateRequestToJSON,
     ClientSummaryFromJSON,
     ClientSummaryToJSON,
-    EmployeeFromJSON,
-    EmployeeToJSON,
+    ClientUpdateRequestFromJSON,
+    ClientUpdateRequestToJSON,
 } from '../models/index';
 
-export interface V1GetClientEmployeesRequest {
-    clientId: string;
+export interface V1CreateClientRequest {
+    clientCreateRequest: ClientCreateRequest;
 }
 
 export interface V1GetClientSummaryRequest {
     clientId: string;
+}
+
+export interface V1UpdateClientRequest {
+    clientId: string;
+    clientUpdateRequest: ClientUpdateRequest;
 }
 
 /**
@@ -42,13 +50,13 @@ export interface V1GetClientSummaryRequest {
 export class ClientApi extends runtime.BaseAPI {
 
     /**
-     * Creates request options for v1GetClientEmployees without sending the request
+     * Creates request options for v1CreateClient without sending the request
      */
-    async v1GetClientEmployeesRequestOpts(requestParameters: V1GetClientEmployeesRequest): Promise<runtime.RequestOpts> {
-        if (requestParameters['clientId'] == null) {
+    async v1CreateClientRequestOpts(requestParameters: V1CreateClientRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientCreateRequest'] == null) {
             throw new runtime.RequiredError(
-                'clientId',
-                'Required parameter "clientId" was null or undefined when calling v1GetClientEmployees().'
+                'clientCreateRequest',
+                'Required parameter "clientCreateRequest" was null or undefined when calling v1CreateClient().'
             );
         }
 
@@ -56,33 +64,37 @@ export class ClientApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters['Content-Type'] = 'application/json';
 
-        let urlPath = `/api/v1/client/{clientId}/employees`;
-        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+
+        let urlPath = `/api/v1/client`;
 
         return {
             path: urlPath,
-            method: 'GET',
+            method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: ClientCreateRequestToJSON(requestParameters['clientCreateRequest']),
         };
     }
 
     /**
-     * Get all employees for a client
+     * Provisions the full Drive/Sheets infrastructure for a new client (folders, PayrollConfig workbook, PayPeriodRegistry workbook) then appends the Clients row. clientId, status, and all folder/file ID fields are server-generated or server-resolved — ignored if present in the request body. Unlike other create endpoints, this returns the full created Client since the caller has no other way to retrieve the generated folder/file IDs. 
+     * Create a new client
      */
-    async v1GetClientEmployeesRaw(requestParameters: V1GetClientEmployeesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Employee>>> {
-        const requestOptions = await this.v1GetClientEmployeesRequestOpts(requestParameters);
+    async v1CreateClientRaw(requestParameters: V1CreateClientRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Client>> {
+        const requestOptions = await this.v1CreateClientRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EmployeeFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ClientFromJSON(jsonValue));
     }
 
     /**
-     * Get all employees for a client
+     * Provisions the full Drive/Sheets infrastructure for a new client (folders, PayrollConfig workbook, PayPeriodRegistry workbook) then appends the Clients row. clientId, status, and all folder/file ID fields are server-generated or server-resolved — ignored if present in the request body. Unlike other create endpoints, this returns the full created Client since the caller has no other way to retrieve the generated folder/file IDs. 
+     * Create a new client
      */
-    async v1GetClientEmployees(requestParameters: V1GetClientEmployeesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Employee>> {
-        const response = await this.v1GetClientEmployeesRaw(requestParameters, initOverrides);
+    async v1CreateClient(requestParameters: V1CreateClientRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Client> {
+        const response = await this.v1CreateClientRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -166,6 +178,62 @@ export class ClientApi extends runtime.BaseAPI {
     async v1GetClients(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Client>> {
         const response = await this.v1GetClientsRaw(initOverrides);
         return await response.value();
+    }
+
+    /**
+     * Creates request options for v1UpdateClient without sending the request
+     */
+    async v1UpdateClientRequestOpts(requestParameters: V1UpdateClientRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1UpdateClient().'
+            );
+        }
+
+        if (requestParameters['clientUpdateRequest'] == null) {
+            throw new runtime.RequiredError(
+                'clientUpdateRequest',
+                'Required parameter "clientUpdateRequest" was null or undefined when calling v1UpdateClient().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/v1/client/{clientId}`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+
+        return {
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ClientUpdateRequestToJSON(requestParameters['clientUpdateRequest']),
+        };
+    }
+
+    /**
+     * Only status, clientName, and clientCode are editable — all other fields (folder/file IDs) are set once at creation. All body fields are optional; only what\'s provided is changed. 
+     * Update a client
+     */
+    async v1UpdateClientRaw(requestParameters: V1UpdateClientRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1UpdateClientRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Only status, clientName, and clientCode are editable — all other fields (folder/file IDs) are set once at creation. All body fields are optional; only what\'s provided is changed. 
+     * Update a client
+     */
+    async v1UpdateClient(requestParameters: V1UpdateClientRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1UpdateClientRaw(requestParameters, initOverrides);
     }
 
 }

@@ -79,12 +79,6 @@ export interface Employee {
      * @memberof Employee
      */
     timesheetFileId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Employee
-     */
-    timesheetFileLink?: string;
 }
 
 
@@ -125,7 +119,6 @@ export function EmployeeFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'email': json['email'] == null ? undefined : json['email'],
         'status': json['status'] == null ? undefined : json['status'],
         'timesheetFileId': json['timesheetFileId'] == null ? undefined : json['timesheetFileId'],
-        'timesheetFileLink': json['timesheetFileLink'] == null ? undefined : json['timesheetFileLink'],
     };
 }
 
@@ -150,7 +143,6 @@ export function EmployeeToJSONTyped(value?: Employee | null, ignoreDiscriminator
         'email': value['email'],
         'status': value['status'],
         'timesheetFileId': value['timesheetFileId'],
-        'timesheetFileLink': value['timesheetFileLink'],
     };
 }
 

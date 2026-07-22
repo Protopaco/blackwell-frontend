@@ -50,6 +50,8 @@ const PayrollReportPage = () => {
         totalHours: report.totalHours ?? 0,
         totalFlatRate: report.totalFlatRate ?? 0,
         totalExpense: report.totalExpense ?? null,
+        hourly: report.hourly ?? [],
+        flatRate: report.flatRate ?? [],
       }))
       .sort((left, right) => left.employeeName.localeCompare(right.employeeName, undefined, { sensitivity: 'base' }));
   }, [payrollReport]);

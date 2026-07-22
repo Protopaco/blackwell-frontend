@@ -35,6 +35,9 @@ const EmployeeTimesheetStatusRow = ({ employee, hasPayrollReportMismatch }: Prop
         )}
       </TableCell>
       <TableCell align="center">{employee.totalHours === null || employee.totalHours === undefined ? '-' : employee.totalHours.toFixed(2)}</TableCell>
+      <TableCell align="center">
+        {employee.flatRateQuantity === null || employee.flatRateQuantity === undefined ? '-' : employee.flatRateQuantity.toFixed(2)}
+      </TableCell>
       <TableCell align="center">{employee.status && <EmployeeTimesheetStatusChip status={employee.status} />}</TableCell>
       <TableCell align="center">
         {includeInPayroll ? <CheckCircleIcon fontSize="small" color="success" /> : <CancelIcon fontSize="small" color="warning" />}

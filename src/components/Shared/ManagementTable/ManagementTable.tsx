@@ -4,7 +4,9 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
+import TableFooter from '@mui/material/TableFooter';
 import TableHead from '@mui/material/TableHead';
+import TablePagination, { type TablePaginationProps } from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import type { ManagementTableHeader } from '@/models/ManagementTableHeader';
@@ -12,6 +14,7 @@ import type { ManagementTableHeader } from '@/models/ManagementTableHeader';
 type Props = {
   headers: ManagementTableHeader[];
   children: ReactNode;
+  pagination?: Pick<TablePaginationProps, 'count' | 'page' | 'rowsPerPage' | 'onPageChange' | 'onRowsPerPageChange' | 'rowsPerPageOptions'>;
 };
 
 // TableSortLabel treats its label + sort arrow as one box, so centering that box shifts the visible
@@ -25,7 +28,7 @@ const sortLabelJustifyContent: Record<NonNullable<ManagementTableHeader['align']
   justify: 'flex-start',
 };
 
-const ManagementTable = ({ headers, children }: Props) => {
+const ManagementTable = ({ headers, children, pagination }: Props) => {
   return (
     <TableContainer>
       <Table size="small">
@@ -59,6 +62,13 @@ const ManagementTable = ({ headers, children }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>{children}</TableBody>
+        {pagination && (
+          <TableFooter>
+            <TableRow>
+              <TablePagination {...pagination} />
+            </TableRow>
+          </TableFooter>
+        )}
       </Table>
     </TableContainer>
   );

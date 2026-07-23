@@ -30,11 +30,17 @@ const TimesheetStatusPage = () => {
     'Failed to load employee timesheet status.'
   );
 
-  const { data: payrollReport } = useFetchByKey(
+  const { data: payrollReport, refetch: refetchPayrollReport } = useFetchByKey(
     payrollReportKey,
     () => (payrollReportGenerated(payPeriod.status) ? payrollReportApi.v1GetPayrollReport({ clientId: clientId!, payPeriodId: payPeriodId! }) : Promise.resolve(null)),
     'Failed to load payroll report.'
   );
+
+  const handleRefresh = () => {
+    refetchPayPeriod();
+    refetchEmployees();
+    refetchPayrollReport();
+  };
 
   const {
     run: generatePayrollReport,
@@ -70,6 +76,9 @@ const TimesheetStatusPage = () => {
   return (
     <Stack spacing={2}>
       <Stack direction="row" justifyContent="flex-end" spacing={1}>
+        <Button variant="outlined" onClick={handleRefresh}>
+          Refresh
+        </Button>
         <Button variant="outlined" onClick={generateTimesheets} disabled={generatingTimesheets} loading={generatingTimesheets}>
           Generate Timesheets
         </Button>

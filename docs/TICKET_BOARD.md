@@ -23,18 +23,17 @@
 
 ---
 
-- [001] - Global toast systems
-
 # IN PROGRESS
 
 ---
 
-- [000] - Employee Timesheet Status - refresh/reload button
+- [001] - Global toast systems
 
 # DONE
 
 ---
 
+- [000] - Employee Timesheet Status - refresh/reload button
 - [019] - Restyle Client Sumamry Page
 - [020] - BUG - Timesheet Status - Tim esheet links should be disabled when timesheets not generated
 - [011] - Reformat Time Sheet Colors

@@ -4,6 +4,7 @@ import { employeeApi } from '@/api/client';
 import type { Employee } from '@/api/generated/models/Employee';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
+import { useToast } from '@/state/toast/toast.context';
 import currencyToString from '@/utils/currencyToString';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
@@ -28,6 +29,7 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!open || !employee) return;
@@ -117,9 +119,12 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
       resetForm();
       onClose();
       onSaved();
+      showToast('Employee updated.', 'success');
     } catch (error) {
       console.error('Failed to update employee.', error);
-      setErrorMessage(await resolveErrorMessage(error, 'Failed to update employee.'));
+      const message = await resolveErrorMessage(error, 'Failed to update employee.');
+      setErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type AsyncActionResult = {
@@ -14,9 +15,10 @@ type AsyncActionResult = {
  * surfacing the backend's own validation message on failure via
  * `resolveErrorMessage` rather than a generic string.
  */
-const useAsyncAction = (action: () => Promise<void>, fallbackErrorMessage: string): AsyncActionResult => {
+const useAsyncAction = (action: () => Promise<void>, fallbackErrorMessage: string, successMessage?: string): AsyncActionResult => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const run = async () => {
     setLoading(true);
@@ -24,9 +26,12 @@ const useAsyncAction = (action: () => Promise<void>, fallbackErrorMessage: strin
 
     try {
       await action();
+      if (successMessage) showToast(successMessage, 'success');
     } catch (error) {
       console.error(fallbackErrorMessage, error);
-      setErrorMessage(await resolveErrorMessage(error, fallbackErrorMessage));
+      const message = await resolveErrorMessage(error, fallbackErrorMessage);
+      setErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setLoading(false);
     }

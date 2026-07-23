@@ -9,6 +9,7 @@ import ManagementListPanel from '@/components/Shared/ManagementListPanel/Managem
 import ManagementToolbar from '@/components/Shared/ManagementToolbar/ManagementToolbar';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useSelectedClient from '@/state/client/useSelectedClient';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 const ActivitiesManagement = () => {
@@ -21,6 +22,7 @@ const ActivitiesManagement = () => {
   const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
   const { selectedClient } = useSelectedClient();
   const clientId = selectedClient?.clientId;
+  const { showToast } = useToast();
 
   const {
     data: activities,
@@ -70,9 +72,12 @@ const ActivitiesManagement = () => {
       await activityApi.v1CreateActivity({ clientId, activity });
       setCreateDialogOpen(false);
       refetch();
+      showToast('Activity created.', 'success');
     } catch (error) {
       console.error('Failed to create activity.', error);
-      setSaveErrorMessage(await resolveErrorMessage(error, 'Failed to create activity.'));
+      const message = await resolveErrorMessage(error, 'Failed to create activity.');
+      setSaveErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }
@@ -88,9 +93,12 @@ const ActivitiesManagement = () => {
       await activityApi.v1UpdateActivity({ clientId, activityId: editingActivity.activityId, activity });
       setEditingActivity(null);
       refetch();
+      showToast('Activity updated.', 'success');
     } catch (error) {
       console.error('Failed to update activity.', error);
-      setSaveErrorMessage(await resolveErrorMessage(error, 'Failed to update activity.'));
+      const message = await resolveErrorMessage(error, 'Failed to update activity.');
+      setSaveErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }
@@ -106,9 +114,12 @@ const ActivitiesManagement = () => {
       await activityApi.v1DeleteActivity({ clientId, activityId: deletingActivity.activityId });
       setDeletingActivity(null);
       refetch();
+      showToast('Activity deleted.', 'success');
     } catch (error) {
       console.error('Failed to delete activity.', error);
-      setDeleteErrorMessage(await resolveErrorMessage(error, 'Failed to delete activity.'));
+      const message = await resolveErrorMessage(error, 'Failed to delete activity.');
+      setDeleteErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setDeleteSaving(false);
     }

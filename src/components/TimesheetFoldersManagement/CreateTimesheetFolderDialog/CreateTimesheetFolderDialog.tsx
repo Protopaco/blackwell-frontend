@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { timesheetFolderApi } from '@/api/client';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type Props = {
@@ -19,6 +20,7 @@ const CreateTimesheetFolderDialog = ({ clientId, open, onClose, onCreated }: Pro
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const resetForm = () => {
     setTimesheetFolderName('');
@@ -58,9 +60,12 @@ const CreateTimesheetFolderDialog = ({ clientId, open, onClose, onCreated }: Pro
       resetForm();
       onClose();
       onCreated();
+      showToast('Timesheet folder created.', 'success');
     } catch (error) {
       console.error('Failed to create timesheet folder.', error);
-      setErrorMessage(await resolveErrorMessage(error, 'Failed to create timesheet folder.'));
+      const message = await resolveErrorMessage(error, 'Failed to create timesheet folder.');
+      setErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }

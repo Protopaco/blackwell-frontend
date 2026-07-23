@@ -49,7 +49,7 @@ const TimesheetStatusPage = () => {
   } = useAsyncAction(async () => {
     await payrollReportApi.v1GeneratePayrollReport({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
-  }, 'Failed to generate payroll report.');
+  }, 'Failed to generate payroll report.', 'Payroll report generated.');
 
   const {
     run: generateTimesheets,
@@ -59,7 +59,7 @@ const TimesheetStatusPage = () => {
     await timesheetApi.v1GenerateTimesheets({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
     refetchEmployees();
-  }, 'Failed to generate timesheets.');
+  }, 'Failed to generate timesheets.', 'Timesheets generated.');
 
   if (employeesErrorMessage) {
     return <Typography color="error">{employeesErrorMessage}</Typography>;

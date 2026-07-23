@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { fundingSourceApi } from '@/api/client';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type Props = {
@@ -19,6 +20,7 @@ const CreateFundingSourceDialog = ({ clientId, open, onClose, onCreated }: Props
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const resetForm = () => {
     setFundingSourceName('');
@@ -58,9 +60,12 @@ const CreateFundingSourceDialog = ({ clientId, open, onClose, onCreated }: Props
       resetForm();
       onClose();
       onCreated();
+      showToast('Funding source created.', 'success');
     } catch (error) {
       console.error('Failed to create funding source.', error);
-      setErrorMessage(await resolveErrorMessage(error, 'Failed to create funding source.'));
+      const message = await resolveErrorMessage(error, 'Failed to create funding source.');
+      setErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }

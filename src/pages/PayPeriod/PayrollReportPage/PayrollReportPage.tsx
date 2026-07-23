@@ -102,7 +102,7 @@ const PayrollReportPage = () => {
         console.error('Failed to auto-regenerate allocation report.', error);
       }
     }
-  }, 'Failed to save employee expenses.');
+  }, 'Failed to save employee expenses.', 'Employee expenses saved.');
 
   const {
     run: generateAllocationReport,
@@ -112,7 +112,7 @@ const PayrollReportPage = () => {
     await payrollReportApi.v1GenerateAllocationReport({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
     navigate(`/client/${clientId}/payPeriod/${payPeriodId}/allocationReport`);
-  }, 'Failed to generate allocation report.');
+  }, 'Failed to generate allocation report.', 'Allocation report generated.');
 
   const handleEditValue = (employeeId: string, value: string) => {
     setEditedValues((previous) => ({ ...previous, [employeeId]: value }));

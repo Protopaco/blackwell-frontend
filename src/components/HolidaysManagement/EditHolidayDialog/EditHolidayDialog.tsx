@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import { holidayApi } from '@/api/client';
 import type { Holiday } from '@/api/generated/models/Holiday';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type Props = {
@@ -21,6 +22,7 @@ const EditHolidayDialog = ({ clientId, holiday, open, onClose, onSaved }: Props)
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!open || !holiday) return;
@@ -69,9 +71,12 @@ const EditHolidayDialog = ({ clientId, holiday, open, onClose, onSaved }: Props)
       resetForm();
       onClose();
       onSaved();
+      showToast('Holiday updated.', 'success');
     } catch (error) {
       console.error('Failed to update holiday.', error);
-      setErrorMessage(await resolveErrorMessage(error, 'Failed to update holiday.'));
+      const message = await resolveErrorMessage(error, 'Failed to update holiday.');
+      setErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }

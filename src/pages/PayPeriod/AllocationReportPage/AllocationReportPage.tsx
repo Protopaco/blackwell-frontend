@@ -112,7 +112,7 @@ const AllocationReportPage = () => {
         console.error('Failed to auto-regenerate allocation report.', error);
       }
     }
-  }, 'Failed to save additional expenses.');
+  }, 'Failed to save additional expenses.', 'Additional expenses saved.');
 
   const handleChangeRow = (index: number, nextRow: AdditionalExpenseFormRow) => {
     setExpenseRows((current) => current.map((row, rowIndex) => (rowIndex === index ? nextRow : row)));
@@ -141,7 +141,7 @@ const AllocationReportPage = () => {
     await payPeriodApi.v1ClosePayPeriod({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
     setCloseDialogOpen(false);
-  }, 'Failed to close pay period.');
+  }, 'Failed to close pay period.', 'Pay period closed.');
 
   const renderAllocationReport = () => {
     if (allocationReportErrorMessage) {

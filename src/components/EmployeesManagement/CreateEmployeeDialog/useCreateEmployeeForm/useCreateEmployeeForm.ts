@@ -5,6 +5,7 @@ import { TimesheetFolderStatusEnum } from '@/api/generated/models/TimesheetFolde
 import type { TimesheetFolder } from '@/api/generated/models/TimesheetFolder';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type TimesheetSetupMode = 'newWorkbook' | 'existingWorkbook';
@@ -34,6 +35,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!open) return;
@@ -148,9 +150,12 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
       resetForm();
       onClose();
       onCreated();
+      showToast('Employee created.', 'success');
     } catch (error) {
       console.error('Failed to create employee.', error);
-      setErrorMessage(await resolveErrorMessage(error, 'Failed to create employee.'));
+      const message = await resolveErrorMessage(error, 'Failed to create employee.');
+      setErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }

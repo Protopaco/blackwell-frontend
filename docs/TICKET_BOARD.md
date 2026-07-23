@@ -2,8 +2,6 @@
 
 ---
 
-- [000] - Employee Timesheet Status - refresh/reload button
-- [001] - Global toast systems
 - [002] - Update "matches pay period report" indicator so all timesheets are read the same way
 - [003] - Unsaved changes guard - Payroll Report
 - [004] - Unsaved changes guard - Allocation Report
@@ -19,24 +17,25 @@
 - [016] - Generic Schema Dricen Backend Validation
 - [017] - Restyle Pay Period Tabs
 - [018] - Adjust Colors of Timesheet status chips
-- [019] - Restyle Client Sumamry Page
 - [021] - Deep-link "Open timesheet" to the current pay period's tab
 
 # READY
 
 ---
 
--
+- [001] - Global toast systems
 
 # IN PROGRESS
 
 ---
 
-- [020] - BUG - Timesheet Status - Tim esheet links should be disabled when timesheets not generated
+- [000] - Employee Timesheet Status - refresh/reload button
 
 # DONE
 
 ---
 
+- [019] - Restyle Client Sumamry Page
+- [020] - BUG - Timesheet Status - Tim esheet links should be disabled when timesheets not generated
 - [011] - Reformat Time Sheet Colors
 - [012] - Caching System for timesheets (Sheets API Quota)

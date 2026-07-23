@@ -4,6 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { blue } from '@mui/material/colors';
 import { clientApi } from '@/api/client';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useSelectedClient from '@/state/client/useSelectedClient';
@@ -60,34 +61,36 @@ const ClientSummary = () => {
   }
 
   return (
-    <Container sx={{ py: 4 }}>
-      <Grid container spacing={2} id="client-summary-cards">
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientInformationCard clientName={selectedClient.clientName ?? ''} clientCode={selectedClient.clientCode ?? ''} />
+    <Box sx={{ backgroundColor: blue[50] }}>
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Grid container spacing={2} id="client-summary-cards">
+          <Grid size={{ xs: 12 }}>
+            <ClientInformationCard clientName={selectedClient.clientName ?? ''} clientCode={selectedClient.clientCode ?? ''} />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <ClientSettingsCard settings={summary.settings ?? {}} />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <ClientTimesheetFoldersCard clientId={selectedClient.clientId ?? ''} timesheetFolders={summary.timesheetFolders ?? []} />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <ClientEmployeesCard clientId={selectedClient.clientId ?? ''} employees={summary.employees ?? []} />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <ClientActivitiesCard clientId={selectedClient.clientId ?? ''} activities={summary.activities ?? []} />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <ClientFundingSourcesCard clientId={selectedClient.clientId ?? ''} fundingSources={summary.fundingSources ?? []} />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <ClientHolidaysCard clientId={selectedClient.clientId ?? ''} holidays={summary.holidays ?? []} />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <ClientPayPeriodCard payPeriods={summary.payPeriods ?? []} onPayPeriodCreated={refetch} />
+          </Grid>
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientSettingsCard settings={summary.settings ?? {}} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientTimesheetFoldersCard clientId={selectedClient.clientId ?? ''} timesheetFolders={summary.timesheetFolders ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientEmployeesCard clientId={selectedClient.clientId ?? ''} employees={summary.employees ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientActivitiesCard clientId={selectedClient.clientId ?? ''} activities={summary.activities ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientFundingSourcesCard clientId={selectedClient.clientId ?? ''} fundingSources={summary.fundingSources ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientHolidaysCard clientId={selectedClient.clientId ?? ''} holidays={summary.holidays ?? []} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <ClientPayPeriodCard payPeriods={summary.payPeriods ?? []} onPayPeriodCreated={refetch} />
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 

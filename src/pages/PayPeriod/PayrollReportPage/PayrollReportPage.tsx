@@ -75,6 +75,11 @@ const PayrollReportPage = () => {
 
   const allExpensesComplete = rows.every((row) => row.totalExpense !== null && row.totalExpense !== undefined);
 
+  const handleRefresh = () => {
+    refetchPayPeriod();
+    refetchPayrollReport();
+  };
+
   const {
     run: saveAll,
     loading: saving,
@@ -102,7 +107,7 @@ const PayrollReportPage = () => {
         console.error('Failed to auto-regenerate allocation report.', error);
       }
     }
-  }, 'Failed to save employee expenses.');
+  }, 'Failed to save employee expenses.', 'Employee expenses saved.');
 
   const {
     run: generateAllocationReport,
@@ -112,7 +117,7 @@ const PayrollReportPage = () => {
     await payrollReportApi.v1GenerateAllocationReport({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
     navigate(`/client/${clientId}/payPeriod/${payPeriodId}/allocationReport`);
-  }, 'Failed to generate allocation report.');
+  }, 'Failed to generate allocation report.', 'Allocation report generated.');
 
   const handleEditValue = (employeeId: string, value: string) => {
     setEditedValues((previous) => ({ ...previous, [employeeId]: value }));
@@ -152,8 +157,23 @@ const PayrollReportPage = () => {
 
     return (
       <Stack spacing={2}>
+        {saveErrorMessage && <Typography color="error">{saveErrorMessage}</Typography>}
+        {generateAllocationReportErrorMessage && <Typography color="error">{generateAllocationReportErrorMessage}</Typography>}
+        <PayrollReportTable rows={rows} editedValues={editedValues} onEditValue={handleEditValue} onBlurValue={handleBlurValue} />
+      </Stack>
+    );
+  };
+
+  const reportAvailable = !!payrollReport && Object.keys(payrollReport).length > 0;
+
+  return (
+    <DashboardCard id="payroll-report-page" header="Payroll Report" configPath={null}>
+      <Stack spacing={2}>
         <Stack direction="row" justifyContent="flex-end" spacing={1}>
-          {!allocationReportExists && (
+          <Button variant="outlined" onClick={handleRefresh} disabled={payrollReportLoading}>
+            Refresh
+          </Button>
+          {reportAvailable && !allocationReportExists && (
             <Button
               variant="outlined"
               onClick={generateAllocationReport}
@@ -163,20 +183,14 @@ const PayrollReportPage = () => {
               Generate Allocation Report
             </Button>
           )}
-          <Button variant="contained" onClick={saveAll} disabled={changedEntries.length === 0 || hasInvalidEdit || saving} loading={saving}>
-            Save All
-          </Button>
+          {reportAvailable && (
+            <Button variant="contained" onClick={saveAll} disabled={changedEntries.length === 0 || hasInvalidEdit || saving} loading={saving}>
+              Save All
+            </Button>
+          )}
         </Stack>
-        {saveErrorMessage && <Typography color="error">{saveErrorMessage}</Typography>}
-        {generateAllocationReportErrorMessage && <Typography color="error">{generateAllocationReportErrorMessage}</Typography>}
-        <PayrollReportTable rows={rows} editedValues={editedValues} onEditValue={handleEditValue} onBlurValue={handleBlurValue} />
+        {renderBody()}
       </Stack>
-    );
-  };
-
-  return (
-    <DashboardCard id="payroll-report-page" header="Payroll Report" configPath={null}>
-      {renderBody()}
     </DashboardCard>
   );
 };

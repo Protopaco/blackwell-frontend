@@ -17,7 +17,10 @@ type Props = {
 
 const EmployeeTimesheetStatusRow = ({ employee, hasPayrollReportMismatch }: Props) => {
   const employeeName = [employee.lastName, employee.firstName].filter(Boolean).join(', ').trim() || 'Unnamed employee';
-  const timesheetUrl = employee.timesheetFileId ? `https://docs.google.com/spreadsheets/d/${employee.timesheetFileId}/edit` : null;
+  const timesheetUrl =
+    employee.timesheetFileId && employee.status !== 'NotGenerated'
+      ? `https://docs.google.com/spreadsheets/d/${employee.timesheetFileId}/edit`
+      : null;
   const includeInPayroll = employee.includeInPayroll ?? true;
 
   return (

@@ -26,11 +26,15 @@ const CreatePayPeriodDialog = ({ clientId, open, onClose, onCreated }: Props) =>
   const [loadingSuggestion, setLoadingSuggestion] = useState(false);
   const [suggestionErrorMessage, setSuggestionErrorMessage] = useState<string | null>(null);
 
-  const { run: runCreate, loading: creating, errorMessage: createErrorMessage } = useAsyncAction(async () => {
-    await payPeriodApi.v1CreatePayPeriod({ clientId });
-    onCreated();
-    onClose();
-  }, 'Failed to create pay period.');
+  const { run: runCreate, loading: creating, errorMessage: createErrorMessage } = useAsyncAction(
+    async () => {
+      await payPeriodApi.v1CreatePayPeriod({ clientId });
+      onCreated();
+      onClose();
+    },
+    'Failed to create pay period.',
+    'Pay period created.'
+  );
 
   useEffect(() => {
     if (!open) return;

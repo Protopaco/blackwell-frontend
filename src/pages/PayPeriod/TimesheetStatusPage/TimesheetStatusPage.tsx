@@ -30,11 +30,17 @@ const TimesheetStatusPage = () => {
     'Failed to load employee timesheet status.'
   );
 
-  const { data: payrollReport } = useFetchByKey(
+  const { data: payrollReport, refetch: refetchPayrollReport } = useFetchByKey(
     payrollReportKey,
     () => (payrollReportGenerated(payPeriod.status) ? payrollReportApi.v1GetPayrollReport({ clientId: clientId!, payPeriodId: payPeriodId! }) : Promise.resolve(null)),
     'Failed to load payroll report.'
   );
+
+  const handleRefresh = () => {
+    refetchPayPeriod();
+    refetchEmployees();
+    refetchPayrollReport();
+  };
 
   const {
     run: generatePayrollReport,
@@ -43,7 +49,7 @@ const TimesheetStatusPage = () => {
   } = useAsyncAction(async () => {
     await payrollReportApi.v1GeneratePayrollReport({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
-  }, 'Failed to generate payroll report.');
+  }, 'Failed to generate payroll report.', 'Payroll report generated.');
 
   const {
     run: generateTimesheets,
@@ -53,7 +59,7 @@ const TimesheetStatusPage = () => {
     await timesheetApi.v1GenerateTimesheets({ clientId: clientId!, payPeriodId: payPeriodId! });
     refetchPayPeriod();
     refetchEmployees();
-  }, 'Failed to generate timesheets.');
+  }, 'Failed to generate timesheets.', 'Timesheets generated.');
 
   if (employeesErrorMessage) {
     return <Typography color="error">{employeesErrorMessage}</Typography>;
@@ -70,6 +76,9 @@ const TimesheetStatusPage = () => {
   return (
     <Stack spacing={2}>
       <Stack direction="row" justifyContent="flex-end" spacing={1}>
+        <Button variant="outlined" onClick={handleRefresh}>
+          Refresh
+        </Button>
         <Button variant="outlined" onClick={generateTimesheets} disabled={generatingTimesheets} loading={generatingTimesheets}>
           Generate Timesheets
         </Button>

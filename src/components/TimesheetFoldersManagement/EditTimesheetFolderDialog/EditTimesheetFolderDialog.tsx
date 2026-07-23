@@ -10,6 +10,7 @@ import { TimesheetFolderStatusEnum } from '@/api/generated/models/TimesheetFolde
 import type { TimesheetFolder } from '@/api/generated/models/TimesheetFolder';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
 import StatusSwitch from '@/components/Shared/StatusSwitch/StatusSwitch';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type Props = {
@@ -26,6 +27,7 @@ const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, o
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!open || !timesheetFolder) return;
@@ -74,9 +76,12 @@ const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, o
       resetForm();
       onClose();
       onSaved();
+      showToast('Timesheet folder updated.', 'success');
     } catch (error) {
       console.error('Failed to update timesheet folder.', error);
-      setErrorMessage(await resolveErrorMessage(error, 'Failed to update timesheet folder.'));
+      const message = await resolveErrorMessage(error, 'Failed to update timesheet folder.');
+      setErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }

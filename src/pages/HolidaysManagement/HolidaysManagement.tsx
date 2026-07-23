@@ -10,6 +10,7 @@ import ManagementListPanel from '@/components/Shared/ManagementListPanel/Managem
 import ManagementToolbar from '@/components/Shared/ManagementToolbar/ManagementToolbar';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useSelectedClient from '@/state/client/useSelectedClient';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 const HolidaysManagement = () => {
@@ -20,6 +21,7 @@ const HolidaysManagement = () => {
   const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
   const { selectedClient } = useSelectedClient();
   const clientId = selectedClient?.clientId;
+  const { showToast } = useToast();
 
   const {
     data: holidays,
@@ -47,9 +49,12 @@ const HolidaysManagement = () => {
       await holidayApi.v1DeleteHoliday({ clientId, holidayId: deletingHoliday.holidayId });
       setDeletingHoliday(null);
       refetch();
+      showToast('Holiday deleted.', 'success');
     } catch (error) {
       console.error('Failed to delete holiday.', error);
-      setDeleteErrorMessage(await resolveErrorMessage(error, 'Failed to delete holiday.'));
+      const message = await resolveErrorMessage(error, 'Failed to delete holiday.');
+      setDeleteErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setDeleteSaving(false);
     }

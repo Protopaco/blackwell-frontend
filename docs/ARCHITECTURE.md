@@ -86,7 +86,7 @@ Activity Management owns the client's activity configuration: list, create, edit
 
 ## 8. Pay Period Workflow Boundary
 
-The Pay Period pipeline (Timesheet Status → Payroll Report → Allocation Report → Close) is a strict linear sequence, not a set of independently-editable pages. Each stage's trigger action lives on the page *before* the artifact it produces — Generate Payroll Report is a Timesheet Status action, first-time Generate Allocation Report is a Payroll Report action, Close Pay Period is an Allocation Report action — rather than each report page owning its own generation control. Full detail in `docs/PAY_PERIOD_PAGES.md`.
+The Pay Period pipeline (Timesheet Status → Payroll Report → Allocation Report → Close) is a strict linear sequence, not a set of independently-editable pages. Each stage's trigger action lives on the page *before* the artifact it produces — Generate Payroll Report is a Timesheet Status action, first-time Generate Allocation Report is a Payroll Report action, Close Pay Period is an Allocation Report action — rather than each report page owning its own generation control. Full detail in `docs/archive/PAY_PERIOD_PAGES.md` (superseded design record, kept for history — active work is tracked via `docs/TICKET_BOARD.md` + `docs/tickets/`).
 
 Once an artifact has been generated for the first time, later edits to its upstream inputs (Total Expense on Payroll Report, Additional Expenses on Allocation Report) trigger silent background regeneration instead of a second manual button; regeneration failures are logged, never surfaced as a UI error, and never roll back the edit that triggered them or leave the page's state dirty/disabled. Presence/stage gating (whether a report exists yet, whether the pay period is closed) is derived from `PayPeriod.status` via small predicate helpers (e.g. `allocationReportGenerated`), not from a speculative fetch of the artifact itself — the same status field also drives `PayPeriodLayout`'s tab-enablement.
 
@@ -95,5 +95,6 @@ Pay Period reports are not archived or versioned — regenerating always overwri
 ## 9. Related Docs
 
 - `docs/STYLE_GUIDE.md`: concrete code conventions and mechanics.
-- `docs/TICKETS.md`: ticket board and epic status.
-- `docs/PAY_PERIOD_PAGES.md`: detailed design record for the pay-period page split.
+- `docs/TICKET_BOARD.md`: current ticket board (Backlog/Ready/In Progress/Done) — user-owned, read-only for Claude.
+- `docs/tickets/`: per-ticket design/implementation detail, one file per ticket number on the board.
+- `docs/archive/`: superseded docs kept for history (`TICKETS.md`, `PAY_PERIOD_PAGES.md`).

@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import { fundingSourceApi } from '@/api/client';
 import type { FundingSource } from '@/api/generated/models/FundingSource';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
+import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type Props = {
@@ -21,6 +22,7 @@ const EditFundingSourceDialog = ({ clientId, fundingSource, open, onClose, onSav
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!open || !fundingSource) return;
@@ -70,9 +72,12 @@ const EditFundingSourceDialog = ({ clientId, fundingSource, open, onClose, onSav
       resetForm();
       onClose();
       onSaved();
+      showToast('Funding source updated.', 'success');
     } catch (error) {
       console.error('Failed to update funding source.', error);
-      setErrorMessage(await resolveErrorMessage(error, 'Failed to update funding source.'));
+      const message = await resolveErrorMessage(error, 'Failed to update funding source.');
+      setErrorMessage(message);
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }

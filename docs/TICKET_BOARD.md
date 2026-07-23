@@ -13,7 +13,6 @@
 - [008] - Settings Management
 - [009] - Employee Timesheet Status - collapsible groups by status
 - [010] - Client Accent Color
-- [011] - Reformat Time Sheet Colors
 - [013] - Per pay period employee roster
 - [014] - Create Frontend Tests
 - [015] - Pay Period Info Refresh Button
@@ -21,6 +20,7 @@
 - [017] - Restyle Pay Period Tabs
 - [018] - Adjust Colors of Timesheet status chips
 - [019] - Restyle Client Sumamry Page
+- [021] - Deep-link "Open timesheet" to the current pay period's tab
 
 # READY
 
@@ -32,10 +32,11 @@
 
 ---
 
+- [020] - BUG - Timesheet Status - Tim esheet links should be disabled when timesheets not generated
+
 # DONE
 
 ---
 
+- [011] - Reformat Time Sheet Colors
 - [012] - Caching System for timesheets (Sheets API Quota)
-
--

@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import ClientProvider from '@/state/client/client.provider';
+import ToastProvider from '@/state/toast/toast.provider';
 import './index.css';
 import App from './App.tsx';
 
@@ -11,9 +12,11 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ClientProvider>
-        <App />
-      </ClientProvider>
+      <ToastProvider>
+        <ClientProvider>
+          <App />
+        </ClientProvider>
+      </ToastProvider>
     </ThemeProvider>
   </StrictMode>
 );

@@ -133,6 +133,12 @@ const AllocationReportPage = () => {
   const [closeDialogOpen, setCloseDialogOpen] = useState(false);
   const payPeriodClosed = payPeriod.status === PayPeriodStatusEnum.Closed;
 
+  const handleRefresh = () => {
+    refetchPayPeriod();
+    refetchAllocationReport();
+    refetchAdditionalExpenses();
+  };
+
   const {
     run: closePayPeriod,
     loading: closingPayPeriod,
@@ -195,13 +201,16 @@ const AllocationReportPage = () => {
   return (
     <DashboardCard id="allocation-report-page" header="Allocation Report" configPath={null}>
       <Stack spacing={3}>
-        {!payPeriodClosed && (
-          <Stack direction="row" justifyContent="flex-end">
+        <Stack direction="row" justifyContent="flex-end" spacing={1}>
+          <Button variant="outlined" onClick={handleRefresh} disabled={allocationReportLoading || additionalExpensesLoading}>
+            Refresh
+          </Button>
+          {!payPeriodClosed && (
             <Button variant="outlined" color="error" onClick={() => setCloseDialogOpen(true)} disabled={!allocationReportExists || closingPayPeriod}>
               Close Pay Period
             </Button>
-          </Stack>
-        )}
+          )}
+        </Stack>
         {renderAllocationReport()}
         <Divider />
         {renderAdditionalExpenses()}

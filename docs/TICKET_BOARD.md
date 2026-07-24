@@ -17,12 +17,11 @@
 - [018] - Adjust Colors of Timesheet status chips
 - [021] - Deep-link "Open timesheet" to the current pay period's tab
 - [022] - Toast coverage — remaining and future mutation flows
+- [023] - Set Up Auth
 
 # READY
 
 ---
-
-- [013] - Per pay period employee roster
 
 # IN PROGRESS
 
@@ -32,6 +31,13 @@
 
 ---
 
+- [013] - Per pay period employee roster
+- [024] — Capture config snapshot at period creation
+- [025] — Redirect generation reads to snapshot
+- [026] — Bulk pay-period-config read endpoint
+- [027] — Edit pay period's employee roster
+- [028] — Edit pay period's activities & funding sources
+- [029] — Edit pay period's holidays snapshot
 - [015] - Pay Period Info Refresh Button
 - [001] - Global toast systems
 - [000] - Employee Timesheet Status - refresh/reload button

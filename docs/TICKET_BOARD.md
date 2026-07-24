@@ -18,6 +18,9 @@
 - [021] - Deep-link "Open timesheet" to the current pay period's tab
 - [022] - Toast coverage — remaining and future mutation flows
 - [023] - Set Up Auth
+- [032] - Activities tab
+- [033] - FundingSources tab
+- [034] - Holidays — sync button in pay period header
 
 # READY
 
@@ -26,6 +29,9 @@
 # IN PROGRESS
 
 ---
+
+- [030] - Per-Pay-Period Configuration UI (Epic)
+- [031] - Employees tab — rename + remove action
 
 # DONE
 

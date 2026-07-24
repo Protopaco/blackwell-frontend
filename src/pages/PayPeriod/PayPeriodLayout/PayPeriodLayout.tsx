@@ -86,7 +86,7 @@ const PayPeriodLayout = () => {
               navigate(nextValue === 'timesheetStatus' ? basePath : `${basePath}/${nextValue}`);
             }}
           >
-            <Tab label="Timesheet Status" value="timesheetStatus" />
+            <Tab label="Employees" value="timesheetStatus" />
             <Tab label="Payroll Report" value="payrollReport" disabled={!payrollReportGenerated(payPeriod.status)} />
             <Tab label="Allocation Report" value="allocationReport" disabled={!allocationReportGenerated(payPeriod.status)} />
           </Tabs>

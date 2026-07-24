@@ -9,7 +9,7 @@ import HolidaysManagement from '@/pages/HolidaysManagement/HolidaysManagement';
 import AllocationReportPage from '@/pages/PayPeriod/AllocationReportPage/AllocationReportPage';
 import PayPeriodLayout from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
 import PayrollReportPage from '@/pages/PayPeriod/PayrollReportPage/PayrollReportPage';
-import TimesheetStatusPage from '@/pages/PayPeriod/TimesheetStatusPage/TimesheetStatusPage';
+import EmployeesPage from '@/pages/PayPeriod/EmployeesPage/EmployeesPage';
 import TimesheetFoldersManagement from '@/pages/TimesheetFoldersManagement/TimesheetFoldersManagement';
 
 const router = createBrowserRouter([
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         path: 'client/:clientId/payPeriod/:payPeriodId',
         element: <PayPeriodLayout />,
         children: [
-          { index: true, element: <TimesheetStatusPage /> },
+          { index: true, element: <EmployeesPage /> },
           { path: 'payrollReport', element: <PayrollReportPage /> },
           { path: 'allocationReport', element: <AllocationReportPage /> },
         ],

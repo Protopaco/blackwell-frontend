@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { payPeriodApi } from '@/api/client';
 import DashboardCard from '@/components/Shared/DashboardCard/DashboardCard';
 import EmployeeTimesheetStatusRow from '@/components/PayPeriodDashboard/EmployeeTimesheetStatusCard/EmployeeTimesheetStatusRow/EmployeeTimesheetStatusRow';
 import hasPayrollReportMismatch from '@/components/PayPeriodDashboard/EmployeeTimesheetStatusCard/hasPayrollReportMismatch';
@@ -11,12 +12,17 @@ import TIMESHEET_STATUS_PROGRESSION from '@/models/timesheetStatusProgression';
 import useTablePagination from '@/hooks/useTablePagination';
 import useTableSort from '@/hooks/useTableSort';
 import useTextSearch from '@/hooks/useTextSearch';
+import { useToast } from '@/state/toast/toast.context';
+import resolveErrorMessage from '@/utils/resolveErrorMessage';
 import type { EmployeeTimesheetStatus } from '@/api/generated/models/EmployeeTimesheetStatus';
 import type { V1GetPayrollReport200ResponseValue } from '@/api/generated/models/V1GetPayrollReport200ResponseValue';
 
 type Props = {
+  clientId: string;
+  payPeriodId: string;
   employees: EmployeeTimesheetStatus[];
   payrollReport: { [employeeId: string]: V1GetPayrollReport200ResponseValue } | null;
+  onEmployeeRemoved: () => void;
 };
 
 type SortKey = 'name' | 'totalHours' | 'flatRate' | 'status' | 'includeInPayroll' | 'mismatch';
@@ -31,7 +37,24 @@ const matchesCompletionFilter = (employee: EmployeeTimesheetStatus, filter: Comp
   return filter === 'complete' ? isComplete : !isComplete;
 };
 
-const EmployeeTimesheetStatusCard = ({ employees, payrollReport }: Props) => {
+const EmployeeTimesheetStatusCard = ({ clientId, payPeriodId, employees, payrollReport, onEmployeeRemoved }: Props) => {
+  const { showToast } = useToast();
+  const [removingEmployeeId, setRemovingEmployeeId] = useState<string | null>(null);
+
+  const handleRemove = async (employeeId: string) => {
+    setRemovingEmployeeId(employeeId);
+    try {
+      await payPeriodApi.v1RemoveEmployeeFromPayPeriod({ clientId, payPeriodId, employeeId });
+      showToast('Employee removed from pay period.', 'success');
+      onEmployeeRemoved();
+    } catch (error) {
+      const message = await resolveErrorMessage(error, 'Failed to remove employee from pay period.');
+      showToast(message, 'error');
+    } finally {
+      setRemovingEmployeeId(null);
+    }
+  };
+
   const { searchTerm, setSearchTerm, filteredItems: searchedEmployees } = useTextSearch(employees, (employee) => [
     sortableEmployeeName(employee),
   ]);
@@ -91,6 +114,7 @@ const EmployeeTimesheetStatusCard = ({ employees, payrollReport }: Props) => {
           sortableHeader('status', 'Status', 'center'),
           sortableHeader('includeInPayroll', 'Included', 'center'),
           sortableHeader('mismatch', 'Mismatch', 'center'),
+          { label: 'Remove', align: 'center' },
         ]}
         pagination={paginationProps}
       >
@@ -99,6 +123,8 @@ const EmployeeTimesheetStatusCard = ({ employees, payrollReport }: Props) => {
             key={employee.employeeId ?? `${employee.lastName ?? ''}-${employee.firstName ?? ''}`}
             employee={employee}
             hasPayrollReportMismatch={hasPayrollReportMismatch(employee, payrollReport)}
+            onRemove={() => handleRemove(employee.employeeId!)}
+            removing={removingEmployeeId === employee.employeeId}
           />
         ))}
       </ManagementTable>

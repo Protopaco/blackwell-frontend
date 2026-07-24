@@ -11,7 +11,7 @@ import useFetchByKey from '@/hooks/useFetchByKey';
 import payrollReportGenerated from '@/models/payrollReportGenerated';
 import type { PayPeriodLayoutContext } from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
 
-const TimesheetStatusPage = () => {
+const EmployeesPage = () => {
   const { clientId, payPeriodId } = useParams<{ clientId: string; payPeriodId: string }>();
   const { payPeriod, refetchPayPeriod } = useOutletContext<PayPeriodLayoutContext>();
   const key = clientId && payPeriodId ? `${clientId}/${payPeriodId}` : undefined;
@@ -88,9 +88,15 @@ const TimesheetStatusPage = () => {
       </Stack>
       {timesheetsErrorMessage && <Typography color="error">{timesheetsErrorMessage}</Typography>}
       {payrollReportErrorMessage && <Typography color="error">{payrollReportErrorMessage}</Typography>}
-      <EmployeeTimesheetStatusCard employees={employees} payrollReport={payrollReport} />
+      <EmployeeTimesheetStatusCard
+        clientId={clientId!}
+        payPeriodId={payPeriodId!}
+        employees={employees}
+        payrollReport={payrollReport}
+        onEmployeeRemoved={refetchEmployees}
+      />
     </Stack>
   );
 };
 
-export default TimesheetStatusPage;
+export default EmployeesPage;

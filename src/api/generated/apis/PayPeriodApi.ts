@@ -15,12 +15,36 @@
 
 import * as runtime from '../runtime';
 import type {
+  Activity,
   PayPeriod,
+  PayPeriodConfigSnapshot,
 } from '../models/index';
 import {
+    ActivityFromJSON,
+    ActivityToJSON,
     PayPeriodFromJSON,
     PayPeriodToJSON,
+    PayPeriodConfigSnapshotFromJSON,
+    PayPeriodConfigSnapshotToJSON,
 } from '../models/index';
+
+export interface V1AddActivityToPayPeriodRequest {
+    clientId: string;
+    payPeriodId: string;
+    activityId: string;
+}
+
+export interface V1AddEmployeeToPayPeriodRequest {
+    clientId: string;
+    payPeriodId: string;
+    employeeId: string;
+}
+
+export interface V1AddFundingSourceToPayPeriodRequest {
+    clientId: string;
+    payPeriodId: string;
+    fundingSourceId: string;
+}
 
 export interface V1ClosePayPeriodRequest {
     clientId: string;
@@ -40,14 +64,235 @@ export interface V1GetPayPeriodByIdRequest {
     payPeriodId: string;
 }
 
+export interface V1GetPayPeriodConfigRequest {
+    clientId: string;
+    payPeriodId: string;
+}
+
 export interface V1GetPayPeriodsRequest {
     clientId: string;
+}
+
+export interface V1RemoveActivityFromPayPeriodRequest {
+    clientId: string;
+    payPeriodId: string;
+    activityId: string;
+}
+
+export interface V1RemoveEmployeeFromPayPeriodRequest {
+    clientId: string;
+    payPeriodId: string;
+    employeeId: string;
+}
+
+export interface V1RemoveFundingSourceFromPayPeriodRequest {
+    clientId: string;
+    payPeriodId: string;
+    fundingSourceId: string;
+}
+
+export interface V1SyncHolidaysOnPayPeriodRequest {
+    clientId: string;
+    payPeriodId: string;
+}
+
+export interface V1UpdateActivityOnPayPeriodRequest {
+    clientId: string;
+    payPeriodId: string;
+    activityId: string;
+    activity: Activity;
 }
 
 /**
  * 
  */
 export class PayPeriodApi extends runtime.BaseAPI {
+
+    /**
+     * Creates request options for v1AddActivityToPayPeriod without sending the request
+     */
+    async v1AddActivityToPayPeriodRequestOpts(requestParameters: V1AddActivityToPayPeriodRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1AddActivityToPayPeriod().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1AddActivityToPayPeriod().'
+            );
+        }
+
+        if (requestParameters['activityId'] == null) {
+            throw new runtime.RequiredError(
+                'activityId',
+                'Required parameter "activityId" was null or undefined when calling v1AddActivityToPayPeriod().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/activity/{activityId}`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+        urlPath = urlPath.replace(`{${"activityId"}}`, encodeURIComponent(String(requestParameters['activityId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Copies the activity\'s current row from the client\'s PayrollConfig into this pay period\'s report workbook snapshot. Blocked once the first timesheet has been generated for this pay period. The activity\'s funding sources must already exist on this pay period\'s snapshot. 
+     * Add an activity to a pay period
+     */
+    async v1AddActivityToPayPeriodRaw(requestParameters: V1AddActivityToPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1AddActivityToPayPeriodRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Copies the activity\'s current row from the client\'s PayrollConfig into this pay period\'s report workbook snapshot. Blocked once the first timesheet has been generated for this pay period. The activity\'s funding sources must already exist on this pay period\'s snapshot. 
+     * Add an activity to a pay period
+     */
+    async v1AddActivityToPayPeriod(requestParameters: V1AddActivityToPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1AddActivityToPayPeriodRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for v1AddEmployeeToPayPeriod without sending the request
+     */
+    async v1AddEmployeeToPayPeriodRequestOpts(requestParameters: V1AddEmployeeToPayPeriodRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1AddEmployeeToPayPeriod().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1AddEmployeeToPayPeriod().'
+            );
+        }
+
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling v1AddEmployeeToPayPeriod().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/employee/{employeeId}`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+        urlPath = urlPath.replace(`{${"employeeId"}}`, encodeURIComponent(String(requestParameters['employeeId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Copies the employee\'s current row from the client\'s PayrollConfig into this pay period\'s report workbook snapshot. The employee must exist and be Active in PayrollConfig. If the employee was previously removed from this pay period, their snapshot row is refreshed and reactivated. 
+     * Add an employee to a pay period
+     */
+    async v1AddEmployeeToPayPeriodRaw(requestParameters: V1AddEmployeeToPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1AddEmployeeToPayPeriodRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Copies the employee\'s current row from the client\'s PayrollConfig into this pay period\'s report workbook snapshot. The employee must exist and be Active in PayrollConfig. If the employee was previously removed from this pay period, their snapshot row is refreshed and reactivated. 
+     * Add an employee to a pay period
+     */
+    async v1AddEmployeeToPayPeriod(requestParameters: V1AddEmployeeToPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1AddEmployeeToPayPeriodRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for v1AddFundingSourceToPayPeriod without sending the request
+     */
+    async v1AddFundingSourceToPayPeriodRequestOpts(requestParameters: V1AddFundingSourceToPayPeriodRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1AddFundingSourceToPayPeriod().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1AddFundingSourceToPayPeriod().'
+            );
+        }
+
+        if (requestParameters['fundingSourceId'] == null) {
+            throw new runtime.RequiredError(
+                'fundingSourceId',
+                'Required parameter "fundingSourceId" was null or undefined when calling v1AddFundingSourceToPayPeriod().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/fundingSource/{fundingSourceId}`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+        urlPath = urlPath.replace(`{${"fundingSourceId"}}`, encodeURIComponent(String(requestParameters['fundingSourceId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Copies the funding source\'s current row from the client\'s PayrollConfig into this pay period\'s report workbook snapshot. Blocked once the first timesheet has been generated for this pay period. 
+     * Add a funding source to a pay period
+     */
+    async v1AddFundingSourceToPayPeriodRaw(requestParameters: V1AddFundingSourceToPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1AddFundingSourceToPayPeriodRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Copies the funding source\'s current row from the client\'s PayrollConfig into this pay period\'s report workbook snapshot. Blocked once the first timesheet has been generated for this pay period. 
+     * Add a funding source to a pay period
+     */
+    async v1AddFundingSourceToPayPeriod(requestParameters: V1AddFundingSourceToPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1AddFundingSourceToPayPeriodRaw(requestParameters, initOverrides);
+    }
 
     /**
      * Creates request options for v1ClosePayPeriod without sending the request
@@ -246,6 +491,61 @@ export class PayPeriodApi extends runtime.BaseAPI {
     }
 
     /**
+     * Creates request options for v1GetPayPeriodConfig without sending the request
+     */
+    async v1GetPayPeriodConfigRequestOpts(requestParameters: V1GetPayPeriodConfigRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1GetPayPeriodConfig().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1GetPayPeriodConfig().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/config`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * One batched read across the pay period\'s snapshot tabs, backing the Employees/Activities/ FundingSources/Holidays tabs on the Pay Period page. 
+     * Get a pay period\'s full config snapshot (employees, activities, funding sources, holidays, settings)
+     */
+    async v1GetPayPeriodConfigRaw(requestParameters: V1GetPayPeriodConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PayPeriodConfigSnapshot>> {
+        const requestOptions = await this.v1GetPayPeriodConfigRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PayPeriodConfigSnapshotFromJSON(jsonValue));
+    }
+
+    /**
+     * One batched read across the pay period\'s snapshot tabs, backing the Employees/Activities/ FundingSources/Holidays tabs on the Pay Period page. 
+     * Get a pay period\'s full config snapshot (employees, activities, funding sources, holidays, settings)
+     */
+    async v1GetPayPeriodConfig(requestParameters: V1GetPayPeriodConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PayPeriodConfigSnapshot> {
+        const response = await this.v1GetPayPeriodConfigRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for v1GetPayPeriods without sending the request
      */
     async v1GetPayPeriodsRequestOpts(requestParameters: V1GetPayPeriodsRequest): Promise<runtime.RequestOpts> {
@@ -288,6 +588,318 @@ export class PayPeriodApi extends runtime.BaseAPI {
     async v1GetPayPeriods(requestParameters: V1GetPayPeriodsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<PayPeriod>> {
         const response = await this.v1GetPayPeriodsRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     * Creates request options for v1RemoveActivityFromPayPeriod without sending the request
+     */
+    async v1RemoveActivityFromPayPeriodRequestOpts(requestParameters: V1RemoveActivityFromPayPeriodRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1RemoveActivityFromPayPeriod().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1RemoveActivityFromPayPeriod().'
+            );
+        }
+
+        if (requestParameters['activityId'] == null) {
+            throw new runtime.RequiredError(
+                'activityId',
+                'Required parameter "activityId" was null or undefined when calling v1RemoveActivityFromPayPeriod().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/activity/{activityId}`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+        urlPath = urlPath.replace(`{${"activityId"}}`, encodeURIComponent(String(requestParameters['activityId'])));
+
+        return {
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Deletes the activity from this pay period\'s snapshot. Blocked once the first timesheet has been generated for this pay period. 
+     * Remove an activity from a pay period
+     */
+    async v1RemoveActivityFromPayPeriodRaw(requestParameters: V1RemoveActivityFromPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1RemoveActivityFromPayPeriodRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Deletes the activity from this pay period\'s snapshot. Blocked once the first timesheet has been generated for this pay period. 
+     * Remove an activity from a pay period
+     */
+    async v1RemoveActivityFromPayPeriod(requestParameters: V1RemoveActivityFromPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1RemoveActivityFromPayPeriodRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for v1RemoveEmployeeFromPayPeriod without sending the request
+     */
+    async v1RemoveEmployeeFromPayPeriodRequestOpts(requestParameters: V1RemoveEmployeeFromPayPeriodRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1RemoveEmployeeFromPayPeriod().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1RemoveEmployeeFromPayPeriod().'
+            );
+        }
+
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling v1RemoveEmployeeFromPayPeriod().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/employee/{employeeId}`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+        urlPath = urlPath.replace(`{${"employeeId"}}`, encodeURIComponent(String(requestParameters['employeeId'])));
+
+        return {
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Soft-removes the employee from this pay period\'s snapshot (flips their snapshot row to Inactive — no hard delete). Blocked once a timesheet has already been generated for that employee this pay period; use the includeInPayroll checkbox on their timesheet instead. 
+     * Remove an employee from a pay period
+     */
+    async v1RemoveEmployeeFromPayPeriodRaw(requestParameters: V1RemoveEmployeeFromPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1RemoveEmployeeFromPayPeriodRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Soft-removes the employee from this pay period\'s snapshot (flips their snapshot row to Inactive — no hard delete). Blocked once a timesheet has already been generated for that employee this pay period; use the includeInPayroll checkbox on their timesheet instead. 
+     * Remove an employee from a pay period
+     */
+    async v1RemoveEmployeeFromPayPeriod(requestParameters: V1RemoveEmployeeFromPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1RemoveEmployeeFromPayPeriodRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for v1RemoveFundingSourceFromPayPeriod without sending the request
+     */
+    async v1RemoveFundingSourceFromPayPeriodRequestOpts(requestParameters: V1RemoveFundingSourceFromPayPeriodRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1RemoveFundingSourceFromPayPeriod().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1RemoveFundingSourceFromPayPeriod().'
+            );
+        }
+
+        if (requestParameters['fundingSourceId'] == null) {
+            throw new runtime.RequiredError(
+                'fundingSourceId',
+                'Required parameter "fundingSourceId" was null or undefined when calling v1RemoveFundingSourceFromPayPeriod().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/fundingSource/{fundingSourceId}`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+        urlPath = urlPath.replace(`{${"fundingSourceId"}}`, encodeURIComponent(String(requestParameters['fundingSourceId'])));
+
+        return {
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Deletes the funding source from this pay period\'s snapshot. Blocked once the first timesheet has been generated for this pay period, or while any snapshot activity still references it. 
+     * Remove a funding source from a pay period
+     */
+    async v1RemoveFundingSourceFromPayPeriodRaw(requestParameters: V1RemoveFundingSourceFromPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1RemoveFundingSourceFromPayPeriodRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Deletes the funding source from this pay period\'s snapshot. Blocked once the first timesheet has been generated for this pay period, or while any snapshot activity still references it. 
+     * Remove a funding source from a pay period
+     */
+    async v1RemoveFundingSourceFromPayPeriod(requestParameters: V1RemoveFundingSourceFromPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1RemoveFundingSourceFromPayPeriodRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for v1SyncHolidaysOnPayPeriod without sending the request
+     */
+    async v1SyncHolidaysOnPayPeriodRequestOpts(requestParameters: V1SyncHolidaysOnPayPeriodRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1SyncHolidaysOnPayPeriod().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1SyncHolidaysOnPayPeriod().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/holiday/sync`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Recomputes this pay period\'s snapshot Holidays tab from the client\'s current PayrollConfig, keeping only holidays whose date falls within this pay period\'s date range. Fully replaces the snapshot\'s Holidays list — a holiday deleted or moved out of range in PayrollConfig drops off the snapshot. Blocked once the first timesheet has been generated for this pay period. 
+     * Sync a pay period\'s holidays from PayrollConfig
+     */
+    async v1SyncHolidaysOnPayPeriodRaw(requestParameters: V1SyncHolidaysOnPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1SyncHolidaysOnPayPeriodRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Recomputes this pay period\'s snapshot Holidays tab from the client\'s current PayrollConfig, keeping only holidays whose date falls within this pay period\'s date range. Fully replaces the snapshot\'s Holidays list — a holiday deleted or moved out of range in PayrollConfig drops off the snapshot. Blocked once the first timesheet has been generated for this pay period. 
+     * Sync a pay period\'s holidays from PayrollConfig
+     */
+    async v1SyncHolidaysOnPayPeriod(requestParameters: V1SyncHolidaysOnPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1SyncHolidaysOnPayPeriodRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for v1UpdateActivityOnPayPeriod without sending the request
+     */
+    async v1UpdateActivityOnPayPeriodRequestOpts(requestParameters: V1UpdateActivityOnPayPeriodRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1UpdateActivityOnPayPeriod().'
+            );
+        }
+
+        if (requestParameters['payPeriodId'] == null) {
+            throw new runtime.RequiredError(
+                'payPeriodId',
+                'Required parameter "payPeriodId" was null or undefined when calling v1UpdateActivityOnPayPeriod().'
+            );
+        }
+
+        if (requestParameters['activityId'] == null) {
+            throw new runtime.RequiredError(
+                'activityId',
+                'Required parameter "activityId" was null or undefined when calling v1UpdateActivityOnPayPeriod().'
+            );
+        }
+
+        if (requestParameters['activity'] == null) {
+            throw new runtime.RequiredError(
+                'activity',
+                'Required parameter "activity" was null or undefined when calling v1UpdateActivityOnPayPeriod().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/v1/payPeriod/{clientId}/{payPeriodId}/activity/{activityId}`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+        urlPath = urlPath.replace(`{${"payPeriodId"}}`, encodeURIComponent(String(requestParameters['payPeriodId'])));
+        urlPath = urlPath.replace(`{${"activityId"}}`, encodeURIComponent(String(requestParameters['activityId'])));
+
+        return {
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ActivityToJSON(requestParameters['activity']),
+        };
+    }
+
+    /**
+     * activityId is taken from the path — ignored if present in the request body. activityName, trackSeparately, payrollCategory, payRate, and flatRateAmount are locked once the first timesheet has been generated for this pay period. fundingSources percentages stay editable through Processed status and lock once the allocation report has been generated (Allocated). fundingSources cannot have more than 3 entries, and the last entry\'s percentage is always overwritten with the remainder needed to make the total exactly 100. 
+     * Update an activity on a pay period
+     */
+    async v1UpdateActivityOnPayPeriodRaw(requestParameters: V1UpdateActivityOnPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1UpdateActivityOnPayPeriodRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * activityId is taken from the path — ignored if present in the request body. activityName, trackSeparately, payrollCategory, payRate, and flatRateAmount are locked once the first timesheet has been generated for this pay period. fundingSources percentages stay editable through Processed status and lock once the allocation report has been generated (Allocated). fundingSources cannot have more than 3 entries, and the last entry\'s percentage is always overwritten with the remainder needed to make the total exactly 100. 
+     * Update an activity on a pay period
+     */
+    async v1UpdateActivityOnPayPeriod(requestParameters: V1UpdateActivityOnPayPeriodRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1UpdateActivityOnPayPeriodRaw(requestParameters, initOverrides);
     }
 
 }

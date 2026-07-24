@@ -19,6 +19,7 @@ export * from './FolderInput';
 export * from './FundingSource';
 export * from './Holiday';
 export * from './PayPeriod';
+export * from './PayPeriodConfigSnapshot';
 export * from './Settings';
 export * from './Supervisor';
 export * from './TimesheetFolder';

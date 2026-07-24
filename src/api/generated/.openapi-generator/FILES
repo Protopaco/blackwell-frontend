@@ -39,6 +39,7 @@ docs/Holiday.md
 docs/HolidayApi.md
 docs/PayPeriod.md
 docs/PayPeriodApi.md
+docs/PayPeriodConfigSnapshot.md
 docs/PayrollReportApi.md
 docs/Settings.md
 docs/SettingsApi.md
@@ -72,6 +73,7 @@ models/FolderInput.ts
 models/FundingSource.ts
 models/Holiday.ts
 models/PayPeriod.ts
+models/PayPeriodConfigSnapshot.ts
 models/Settings.ts
 models/Supervisor.ts
 models/TimesheetFolder.ts

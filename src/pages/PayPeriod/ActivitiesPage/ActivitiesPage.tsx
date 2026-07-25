@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import { payPeriodApi } from '@/api/client';
 import ActivitiesCard from '@/components/PayPeriodDashboard/ActivitiesCard/ActivitiesCard';
 import useFetchByKey from '@/hooks/useFetchByKey';
-import firstTimesheetGenerated from '@/models/firstTimesheetGenerated';
 import type { PayPeriodLayoutContext } from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
 
 const ActivitiesPage = () => {
@@ -41,7 +40,8 @@ const ActivitiesPage = () => {
       clientId={clientId!}
       payPeriodId={payPeriodId!}
       activities={payPeriodConfig.activities ?? []}
-      canRemove={!firstTimesheetGenerated(payPeriod.status)}
+      fundingSources={payPeriodConfig.fundingSources ?? []}
+      payPeriodStatus={payPeriod.status}
       onActivitiesChanged={refetchPayPeriodConfig}
     />
   );

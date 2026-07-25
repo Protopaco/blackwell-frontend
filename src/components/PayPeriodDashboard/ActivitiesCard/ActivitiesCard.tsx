@@ -1,26 +1,43 @@
 import { useState } from 'react';
 import { payPeriodApi } from '@/api/client';
+import ActivityDialog from '@/components/ActivitiesManagement/ActivityDialog/ActivityDialog';
 import ActivityRow from '@/components/PayPeriodDashboard/ActivitiesCard/ActivityRow/ActivityRow';
 import DashboardCard from '@/components/Shared/DashboardCard/DashboardCard';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
 import useTableSort from '@/hooks/useTableSort';
+import activityFundingSourcesLocked from '@/models/activityFundingSourcesLocked';
+import firstTimesheetGenerated from '@/models/firstTimesheetGenerated';
 import { useToast } from '@/state/toast/toast.context';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 import type { Activity } from '@/api/generated/models/Activity';
+import type { FundingSource } from '@/api/generated/models/FundingSource';
+import type { PayPeriodStatusEnum } from '@/api/generated/models/PayPeriod';
 
 type Props = {
   clientId: string;
   payPeriodId: string;
   activities: Activity[];
-  canRemove: boolean;
+  fundingSources: FundingSource[];
+  payPeriodStatus: PayPeriodStatusEnum | undefined;
   onActivitiesChanged: () => void;
 };
 
 type SortKey = 'name' | 'payrollCategory' | 'payRate';
 
-const ActivitiesCard = ({ clientId, payPeriodId, activities, canRemove, onActivitiesChanged }: Props) => {
+const structuralFieldsLockedMessage = 'A timesheet has already been generated for this pay period.';
+const percentagesLockedMessage = 'Funding allocation percentages lock once the pay period has been allocated.';
+
+const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, payPeriodStatus, onActivitiesChanged }: Props) => {
   const { showToast } = useToast();
   const [removingActivityId, setRemovingActivityId] = useState<string | null>(null);
+  const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveErrorMessage, setSaveErrorMessage] = useState<string | null>(null);
+
+  const structuralFieldsLocked = firstTimesheetGenerated(payPeriodStatus);
+  const percentagesLocked = activityFundingSourcesLocked(payPeriodStatus);
+  const canRemove = !structuralFieldsLocked;
+  const canEdit = !percentagesLocked;
 
   const handleRemove = async (activityId: string) => {
     setRemovingActivityId(activityId);
@@ -33,6 +50,22 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, canRemove, onActivi
       showToast(message, 'error');
     } finally {
       setRemovingActivityId(null);
+    }
+  };
+
+  const handleSave = async (activity: Activity) => {
+    setSaving(true);
+    setSaveErrorMessage(null);
+    try {
+      await payPeriodApi.v1UpdateActivityOnPayPeriod({ clientId, payPeriodId, activityId: activity.activityId!, activity });
+      showToast('Activity updated.', 'success');
+      setEditingActivity(null);
+      onActivitiesChanged();
+    } catch (error) {
+      const message = await resolveErrorMessage(error, 'Failed to update activity.');
+      setSaveErrorMessage(message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -57,6 +90,7 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, canRemove, onActivi
           { label: 'Flat Rate Amount' },
           { label: 'Funding Allocation' },
           { label: 'Track Separately' },
+          { label: 'Edit', align: 'center' },
           { label: 'Remove', align: 'center' },
         ]}
       >
@@ -64,12 +98,30 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, canRemove, onActivi
           <ActivityRow
             key={activity.activityId ?? activity.activityName ?? ''}
             activity={activity}
+            canEdit={canEdit}
             canRemove={canRemove}
+            onEdit={() => setEditingActivity(activity)}
             onRemove={() => handleRemove(activity.activityId!)}
             removing={removingActivityId === activity.activityId}
           />
         ))}
       </ManagementTable>
+      <ActivityDialog
+        activity={editingActivity}
+        errorMessage={saveErrorMessage}
+        fundingSources={fundingSources}
+        formId="edit-pay-period-activity"
+        onClose={() => setEditingActivity(null)}
+        onSave={handleSave}
+        open={editingActivity !== null}
+        percentagesLocked={percentagesLocked}
+        percentagesLockedMessage={percentagesLockedMessage}
+        saving={saving}
+        structuralFieldsLocked={structuralFieldsLocked}
+        structuralFieldsLockedMessage={structuralFieldsLockedMessage}
+        submitLabel="Save"
+        title="Edit Activity"
+      />
     </DashboardCard>
   );
 };

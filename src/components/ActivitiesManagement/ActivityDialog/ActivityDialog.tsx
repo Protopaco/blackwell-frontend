@@ -26,7 +26,11 @@ type Props = {
   onClose: () => void;
   onSave: (activity: Activity) => void;
   open: boolean;
+  percentagesLocked?: boolean;
+  percentagesLockedMessage?: string;
   saving: boolean;
+  structuralFieldsLocked?: boolean;
+  structuralFieldsLockedMessage?: string;
   submitLabel: string;
   title: string;
 };
@@ -40,7 +44,22 @@ const calculateAllocationTotal = (allocations: AllocationFormRow[]) => {
   return Math.round(total * 100) / 100;
 };
 
-const ActivityDialog = ({ activity, errorMessage, fundingSources, formId, onClose, onSave, open, saving, submitLabel, title }: Props) => {
+const ActivityDialog = ({
+  activity,
+  errorMessage,
+  fundingSources,
+  formId,
+  onClose,
+  onSave,
+  open,
+  percentagesLocked = false,
+  percentagesLockedMessage,
+  saving,
+  structuralFieldsLocked = false,
+  structuralFieldsLockedMessage,
+  submitLabel,
+  title,
+}: Props) => {
   const [activityName, setActivityName] = useState('');
   const [trackSeparately, setTrackSeparately] = useState(false);
   const [payrollCategory, setPayrollCategory] = useState<ActivityPayrollCategory>(ActivityPayrollCategoryEnum.Regular);
@@ -167,6 +186,8 @@ const ActivityDialog = ({ activity, errorMessage, fundingSources, formId, onClos
           activityName={activityName}
           flatRateAmount={flatRateAmount}
           flatRateAmountInvalid={flatRateAmountInvalid}
+          locked={structuralFieldsLocked}
+          lockedMessage={structuralFieldsLockedMessage}
           nameRequired={nameRequired}
           onActivityNameChange={setActivityName}
           onFlatRateAmountChange={setFlatRateAmount}
@@ -185,6 +206,8 @@ const ActivityDialog = ({ activity, errorMessage, fundingSources, formId, onClos
           fundingSources={fundingSources}
           invalidAllocationTotal={invalidAllocationTotal}
           invalidAllocationPercentage={invalidAllocationPercentage}
+          locked={percentagesLocked}
+          lockedMessage={percentagesLockedMessage}
           missingFundingSources={missingFundingSources}
           onAddAllocation={addAllocation}
           onRemoveAllocation={removeAllocation}

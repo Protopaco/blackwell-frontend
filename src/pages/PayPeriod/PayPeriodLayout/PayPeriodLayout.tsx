@@ -67,7 +67,7 @@ const PayPeriodLayout = () => {
   }
 
   const lastSegment = location.pathname.split('/').pop();
-  const tabValue = lastSegment === payPeriodId ? 'timesheetStatus' : lastSegment;
+  const tabValue = lastSegment === payPeriodId ? 'employees' : lastSegment;
 
   return (
     <Container sx={{ py: 4 }} id="pay-period-layout">
@@ -80,10 +80,10 @@ const PayPeriodLayout = () => {
           <Tabs
             value={tabValue}
             onChange={(_, nextValue: string) => {
-              navigate(nextValue === 'timesheetStatus' ? basePath : `${basePath}/${nextValue}`);
+              navigate(nextValue === 'employees' ? basePath : `${basePath}/${nextValue}`);
             }}
           >
-            <Tab label="Employees" value="timesheetStatus" />
+            <Tab label="Employees" value="employees" />
             <Tab label="Activities" value="activities" />
             <Tab label="Payroll Report" value="payrollReport" disabled={!payrollReportGenerated(payPeriod.status)} />
             <Tab label="Allocation Report" value="allocationReport" disabled={!allocationReportGenerated(payPeriod.status)} />

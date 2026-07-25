@@ -120,22 +120,23 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
           />
         ))}
       </ManagementTable>
-      <ActivityDialog
-        activity={editingActivity}
-        errorMessage={saveErrorMessage}
-        fundingSources={fundingSources}
-        formId="edit-pay-period-activity"
-        onClose={() => setEditingActivity(null)}
-        onSave={handleSave}
-        open={editingActivity !== null}
-        percentagesLocked={percentagesLocked}
-        percentagesLockedMessage={percentagesLockedMessage}
-        saving={saving}
-        structuralFieldsLocked={structuralFieldsLocked}
-        structuralFieldsLockedMessage={structuralFieldsLockedMessage}
-        submitLabel="Save"
-        title="Edit Activity"
-      />
+      {editingActivity && (
+        <ActivityDialog
+          activity={editingActivity}
+          errorMessage={saveErrorMessage}
+          fundingSources={fundingSources}
+          formId="edit-pay-period-activity"
+          onClose={() => setEditingActivity(null)}
+          onSave={handleSave}
+          percentagesLocked={percentagesLocked}
+          percentagesLockedMessage={percentagesLockedMessage}
+          saving={saving}
+          structuralFieldsLocked={structuralFieldsLocked}
+          structuralFieldsLockedMessage={structuralFieldsLockedMessage}
+          submitLabel="Save"
+          title="Edit Activity"
+        />
+      )}
       <AddExistingActivityDialog
         clientId={clientId}
         payPeriodId={payPeriodId}

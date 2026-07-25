@@ -16,14 +16,13 @@ import type { PayPeriod } from '@/api/generated/models/PayPeriod';
 
 type Props = {
   clientId: string;
-  open: boolean;
   onClose: () => void;
   onCreated: () => void;
 };
 
-const CreatePayPeriodDialog = ({ clientId, open, onClose, onCreated }: Props) => {
+const CreatePayPeriodDialog = ({ clientId, onClose, onCreated }: Props) => {
   const [suggested, setSuggested] = useState<PayPeriod | null>(null);
-  const [loadingSuggestion, setLoadingSuggestion] = useState(false);
+  const [loadingSuggestion, setLoadingSuggestion] = useState(true);
   const [suggestionErrorMessage, setSuggestionErrorMessage] = useState<string | null>(null);
 
   const { run: runCreate, loading: creating, errorMessage: createErrorMessage } = useAsyncAction(
@@ -37,12 +36,7 @@ const CreatePayPeriodDialog = ({ clientId, open, onClose, onCreated }: Props) =>
   );
 
   useEffect(() => {
-    if (!open) return;
-
     let cancelled = false;
-    setSuggested(null);
-    setSuggestionErrorMessage(null);
-    setLoadingSuggestion(true);
 
     payPeriodApi
       .v1GetNextPayPeriod({ clientId })
@@ -63,10 +57,10 @@ const CreatePayPeriodDialog = ({ clientId, open, onClose, onCreated }: Props) =>
     return () => {
       cancelled = true;
     };
-  }, [open, clientId]);
+  }, [clientId]);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Create Pay Period</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ pt: 1 }}>

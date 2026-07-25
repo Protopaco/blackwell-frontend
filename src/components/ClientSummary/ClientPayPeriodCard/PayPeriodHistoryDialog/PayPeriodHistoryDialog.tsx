@@ -13,22 +13,16 @@ import type { PayPeriod } from '@/api/generated/models/PayPeriod';
 
 type Props = {
   clientId: string;
-  open: boolean;
   onClose: () => void;
 };
 
-const PayPeriodHistoryDialog = ({ clientId, open, onClose }: Props) => {
+const PayPeriodHistoryDialog = ({ clientId, onClose }: Props) => {
   const [payPeriods, setPayPeriods] = useState<PayPeriod[] | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!open) return;
-
     let cancelled = false;
-    setPayPeriods(null);
-    setErrorMessage(null);
-    setLoading(true);
 
     payPeriodApi
       .v1GetPayPeriods({ clientId })
@@ -49,10 +43,10 @@ const PayPeriodHistoryDialog = ({ clientId, open, onClose }: Props) => {
     return () => {
       cancelled = true;
     };
-  }, [open, clientId]);
+  }, [clientId]);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Pay Period History</DialogTitle>
       <DialogContent>
         {loading ? (

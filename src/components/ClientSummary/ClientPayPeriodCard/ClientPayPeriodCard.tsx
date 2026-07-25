@@ -45,16 +45,11 @@ const ClientPayPeriodCard = ({ payPeriods, onPayPeriodCreated }: Props) => {
           + Create Pay Period
         </Button>
       </Stack>
-      {clientId ? (
-        <>
-          <CreatePayPeriodDialog
-            clientId={clientId}
-            open={createDialogOpen}
-            onClose={() => setCreateDialogOpen(false)}
-            onCreated={onPayPeriodCreated}
-          />
-          <PayPeriodHistoryDialog clientId={clientId} open={historyDialogOpen} onClose={() => setHistoryDialogOpen(false)} />
-        </>
+      {clientId && createDialogOpen ? (
+        <CreatePayPeriodDialog clientId={clientId} onClose={() => setCreateDialogOpen(false)} onCreated={onPayPeriodCreated} />
+      ) : null}
+      {clientId && historyDialogOpen ? (
+        <PayPeriodHistoryDialog clientId={clientId} onClose={() => setHistoryDialogOpen(false)} />
       ) : null}
     </DashboardCard>
   );

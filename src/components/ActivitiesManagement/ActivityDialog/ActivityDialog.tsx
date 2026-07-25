@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import Stack from '@mui/material/Stack';
 import {
@@ -25,7 +25,6 @@ type Props = {
   formId: string;
   onClose: () => void;
   onSave: (activity: Activity) => void;
-  open: boolean;
   percentagesLocked?: boolean;
   percentagesLockedMessage?: string;
   saving: boolean;
@@ -51,7 +50,6 @@ const ActivityDialog = ({
   formId,
   onClose,
   onSave,
-  open,
   percentagesLocked = false,
   percentagesLockedMessage,
   saving,
@@ -60,32 +58,20 @@ const ActivityDialog = ({
   submitLabel,
   title,
 }: Props) => {
-  const [activityName, setActivityName] = useState('');
-  const [trackSeparately, setTrackSeparately] = useState(false);
-  const [payrollCategory, setPayrollCategory] = useState<ActivityPayrollCategory>(ActivityPayrollCategoryEnum.Regular);
-  const [payRate, setPayRate] = useState<ActivityPayRate>(ActivityPayRateEnum.HourlyPayRate1);
-  const [flatRateAmount, setFlatRateAmount] = useState('');
-  const [allocations, setAllocations] = useState<AllocationFormRow[]>(defaultAllocationRows(fundingSources));
+  const [activityName, setActivityName] = useState(activity?.activityName ?? '');
+  const [trackSeparately, setTrackSeparately] = useState(activity?.trackSeparately ?? false);
+  const [payrollCategory, setPayrollCategory] = useState<ActivityPayrollCategory>(activity?.payrollCategory ?? ActivityPayrollCategoryEnum.Regular);
+  const [payRate, setPayRate] = useState<ActivityPayRate>(activity?.payRate ?? ActivityPayRateEnum.HourlyPayRate1);
+  const [flatRateAmount, setFlatRateAmount] = useState(currencyToString(activity?.flatRateAmount));
+  const [allocations, setAllocations] = useState<AllocationFormRow[]>(
+    activity?.fundingSources?.length
+      ? activity.fundingSources.map((fundingSource) => ({
+          fundingSourceName: fundingSource.fundingSourceName ?? '',
+          percentage: currencyToString(fundingSource.percentage),
+        }))
+      : defaultAllocationRows(fundingSources),
+  );
   const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-
-    setActivityName(activity?.activityName ?? '');
-    setTrackSeparately(activity?.trackSeparately ?? false);
-    setPayrollCategory(activity?.payrollCategory ?? ActivityPayrollCategoryEnum.Regular);
-    setPayRate(activity?.payRate ?? ActivityPayRateEnum.HourlyPayRate1);
-    setFlatRateAmount(currencyToString(activity?.flatRateAmount));
-    setAllocations(
-      activity?.fundingSources?.length
-        ? activity.fundingSources.map((fundingSource) => ({
-            fundingSourceName: fundingSource.fundingSourceName ?? '',
-            percentage: currencyToString(fundingSource.percentage),
-          }))
-        : defaultAllocationRows(fundingSources),
-    );
-    setSubmitted(false);
-  }, [activity, fundingSources, open]);
 
   const allocationTotal = useMemo(() => calculateAllocationTotal(allocations), [allocations]);
   const flatRateSelected = isFlatPayRate(payRate);
@@ -175,7 +161,7 @@ const ActivityDialog = ({
       errorMessage={errorMessage}
       formId={formId}
       onClose={onClose}
-      open={open}
+      open
       saving={saving}
       submitDisabled={invalidAllocationTotal}
       submitLabel={submitLabel}

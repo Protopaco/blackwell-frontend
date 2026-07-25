@@ -1,7 +1,9 @@
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MenuItem from '@mui/material/MenuItem';
+import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import {
   ActivityPayRateEnum,
   ActivityPayrollCategoryEnum,
@@ -17,6 +19,8 @@ type Props = {
   activityName: string;
   flatRateAmount: string;
   flatRateAmountInvalid: boolean;
+  locked?: boolean;
+  lockedMessage?: string;
   nameRequired: boolean;
   onActivityNameChange: (value: string) => void;
   onFlatRateAmountChange: (value: string) => void;
@@ -40,6 +44,8 @@ const ActivityDetailsFields = ({
   activityName,
   flatRateAmount,
   flatRateAmountInvalid,
+  locked = false,
+  lockedMessage,
   nameRequired,
   onActivityNameChange,
   onFlatRateAmountChange,
@@ -51,11 +57,13 @@ const ActivityDetailsFields = ({
   saving,
   trackSeparately,
 }: Props) => {
-  return (
-    <>
+  const disabled = saving || locked;
+
+  const fields = (
+    <Stack spacing={2}>
       <TextField
         autoFocus
-        disabled={saving}
+        disabled={disabled}
         error={nameRequired}
         fullWidth
         helperText={nameRequired ? 'Activity name is required.' : undefined}
@@ -65,11 +73,11 @@ const ActivityDetailsFields = ({
         value={activityName}
       />
       <FormControlLabel
-        control={<Switch checked={trackSeparately} disabled={saving} onChange={(event) => onTrackSeparatelyChange(event.target.checked)} />}
+        control={<Switch checked={trackSeparately} disabled={disabled} onChange={(event) => onTrackSeparatelyChange(event.target.checked)} />}
         label="Track separately"
       />
       <TextField
-        disabled={saving}
+        disabled={disabled}
         fullWidth
         label="Payroll category"
         onChange={(event) => onPayrollCategoryChange(event.target.value as ActivityPayrollCategory)}
@@ -82,7 +90,7 @@ const ActivityDetailsFields = ({
           </MenuItem>
         ))}
       </TextField>
-      <TextField disabled={saving} fullWidth label="Pay rate" onChange={(event) => onPayRateChange(event.target.value as ActivityPayRate)} select value={payRate}>
+      <TextField disabled={disabled} fullWidth label="Pay rate" onChange={(event) => onPayRateChange(event.target.value as ActivityPayRate)} select value={payRate}>
         {Object.values(ActivityPayRateEnum).map((rate) => (
           <MenuItem key={rate} value={rate}>
             {payRateLabels[rate]}
@@ -91,7 +99,7 @@ const ActivityDetailsFields = ({
       </TextField>
       {isFlatPayRate(payRate) ? (
         <TextField
-          disabled={saving}
+          disabled={disabled}
           error={flatRateAmountInvalid}
           fullWidth
           helperText={flatRateAmountInvalid ? 'Flat rate amount must be a valid number.' : undefined}
@@ -101,8 +109,10 @@ const ActivityDetailsFields = ({
           value={flatRateAmount}
         />
       ) : null}
-    </>
+    </Stack>
   );
+
+  return locked ? <Tooltip title={lockedMessage}>{fields}</Tooltip> : fields;
 };
 
 export default ActivityDetailsFields;

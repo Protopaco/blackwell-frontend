@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { ReactNode, SyntheticEvent } from 'react';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
@@ -8,26 +8,27 @@ import type { Toast, ToastSeverity } from '@/state/toast/toast.types';
 const AUTO_HIDE_DURATION_MS = 6000;
 
 const ToastProvider = ({ children }: { children: ReactNode }) => {
-  const [queue, setQueue] = useState<Toast[]>([]);
+  const [, setQueue] = useState<Toast[]>([]);
   const [activeToast, setActiveToast] = useState<Toast | null>(null);
   const [open, setOpen] = useState(false);
 
+  // Shows toasts one at a time: if nothing is active, show the new one immediately; otherwise
+  // queue it and close the current one so its exit transition can hand off to the next
+  // (see handleExited).
   const showToast = (message: string, severity: ToastSeverity) => {
-    setQueue((prev) => [...prev, { id: crypto.randomUUID(), message, severity }]);
-  };
+    const toast: Toast = { id: crypto.randomUUID(), message, severity };
 
-  // Shows toasts one at a time: when nothing is active, pull the next one off the queue;
-  // if a new toast arrives while one is showing, close the current one first so its exit
-  // transition can hand off to the next (see handleExited).
-  useEffect(() => {
-    if (!activeToast && queue.length > 0) {
-      setActiveToast(queue[0]);
-      setQueue((prev) => prev.slice(1));
+    if (!activeToast) {
+      setActiveToast(toast);
       setOpen(true);
-    } else if (activeToast && open && queue.length > 0) {
+      return;
+    }
+
+    if (open) {
       setOpen(false);
     }
-  }, [activeToast, open, queue]);
+    setQueue((prev) => [...prev, toast]);
+  };
 
   const handleClose = (_event: SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') return;
@@ -35,7 +36,17 @@ const ToastProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleExited = () => {
-    setActiveToast(null);
+    setQueue((prev) => {
+      if (prev.length === 0) {
+        setActiveToast(null);
+        return prev;
+      }
+
+      const [next, ...rest] = prev;
+      setActiveToast(next);
+      setOpen(true);
+      return rest;
+    });
   };
 
   return (

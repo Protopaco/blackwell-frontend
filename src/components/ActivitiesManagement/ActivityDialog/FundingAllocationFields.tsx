@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type { FundingSource } from '@/api/generated/models/FundingSource';
 import type { AllocationFormRow } from './AllocationFormRow';
@@ -17,6 +18,8 @@ type Props = {
   fundingSources: FundingSource[];
   invalidAllocationPercentage: boolean;
   invalidAllocationTotal: boolean;
+  locked?: boolean;
+  lockedMessage?: string;
   missingFundingSources: boolean;
   onAddAllocation: () => void;
   onRemoveAllocation: (index: number) => void;
@@ -34,6 +37,8 @@ const FundingAllocationFields = ({
   fundingSources,
   invalidAllocationPercentage,
   invalidAllocationTotal,
+  locked = false,
+  lockedMessage,
   missingFundingSources,
   onAddAllocation,
   onRemoveAllocation,
@@ -42,7 +47,9 @@ const FundingAllocationFields = ({
   selectedFundingSourceNames,
   submitted,
 }: Props) => {
-  return (
+  const disabled = saving || locked;
+
+  const fields = (
     <Stack spacing={1}>
       <Typography variant="subtitle2">Funding allocation</Typography>
       {allocations.map((allocation, index) => {
@@ -58,7 +65,7 @@ const FundingAllocationFields = ({
         return (
           <Stack key={index} direction="row" spacing={1} alignItems="flex-start">
             <TextField
-              disabled={saving}
+              disabled={disabled}
               error={submitted && !allocation.fundingSourceName}
               helperText={submitted && !allocation.fundingSourceName ? 'Funding source is required.' : undefined}
               label="Funding source"
@@ -74,7 +81,7 @@ const FundingAllocationFields = ({
               ))}
             </TextField>
             <TextField
-              disabled={saving}
+              disabled={disabled}
               error={percentageInvalid}
               helperText={percentageInvalid ? 'Percentage must be zero or greater.' : undefined}
               label="Percentage"
@@ -82,7 +89,7 @@ const FundingAllocationFields = ({
               sx={{ width: 140 }}
               value={allocation.percentage}
             />
-            <IconButton aria-label="Remove funding allocation" disabled={saving || allocations.length <= 1} onClick={() => onRemoveAllocation(index)} sx={{ mt: 1 }} size="small">
+            <IconButton aria-label="Remove funding allocation" disabled={disabled || allocations.length <= 1} onClick={() => onRemoveAllocation(index)} sx={{ mt: 1 }} size="small">
               <DeleteIcon fontSize="small" />
             </IconButton>
           </Stack>
@@ -91,7 +98,7 @@ const FundingAllocationFields = ({
       <Typography color={invalidAllocationTotal ? 'error' : 'text.secondary'} variant="body2">
         Total: {allocationTotal.toFixed(2)}%
       </Typography>
-      <Button disabled={saving || allocations.length >= 3 || fundingSources.length <= allocations.length} onClick={onAddAllocation} startIcon={<AddIcon />} variant="text">
+      <Button disabled={disabled || allocations.length >= 3 || fundingSources.length <= allocations.length} onClick={onAddAllocation} startIcon={<AddIcon />} variant="text">
         Add funding source
       </Button>
       {missingFundingSources ? (
@@ -121,6 +128,8 @@ const FundingAllocationFields = ({
       ) : null}
     </Stack>
   );
+
+  return locked ? <Tooltip title={lockedMessage}>{fields}</Tooltip> : fields;
 };
 
 export default FundingAllocationFields;

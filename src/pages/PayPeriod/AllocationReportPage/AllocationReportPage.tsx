@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -71,11 +71,14 @@ const AllocationReportPage = () => {
   );
 
   const [expenseRows, setExpenseRows] = useState<AdditionalExpenseFormRow[]>([]);
+  const [syncedAdditionalExpenses, setSyncedAdditionalExpenses] = useState(additionalExpenses);
 
-  useEffect(() => {
-    if (additionalExpenses === null) return;
-    setExpenseRows(toFormRows(additionalExpenses));
-  }, [additionalExpenses]);
+  if (additionalExpenses !== syncedAdditionalExpenses) {
+    setSyncedAdditionalExpenses(additionalExpenses);
+    if (additionalExpenses !== null) {
+      setExpenseRows(toFormRows(additionalExpenses));
+    }
+  }
 
   const savedExpenseRows = useMemo(() => toFormRows(additionalExpenses ?? []), [additionalExpenses]);
   const expensesDirty = JSON.stringify(expenseRows) !== JSON.stringify(savedExpenseRows);

@@ -6,10 +6,12 @@ import ClientSummary from '@/pages/ClientSummary';
 import EmployeesManagement from '@/pages/EmployeesManagement/EmployeesManagement';
 import FundingSourcesManagement from '@/pages/FundingSourcesManagement/FundingSourcesManagement';
 import HolidaysManagement from '@/pages/HolidaysManagement/HolidaysManagement';
+import ActivitiesPage from '@/pages/PayPeriod/ActivitiesPage/ActivitiesPage';
 import AllocationReportPage from '@/pages/PayPeriod/AllocationReportPage/AllocationReportPage';
+import FundingSourcesPage from '@/pages/PayPeriod/FundingSourcesPage/FundingSourcesPage';
 import PayPeriodLayout from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
 import PayrollReportPage from '@/pages/PayPeriod/PayrollReportPage/PayrollReportPage';
-import TimesheetStatusPage from '@/pages/PayPeriod/TimesheetStatusPage/TimesheetStatusPage';
+import EmployeesPage from '@/pages/PayPeriod/EmployeesPage/EmployeesPage';
 import TimesheetFoldersManagement from '@/pages/TimesheetFoldersManagement/TimesheetFoldersManagement';
 
 const router = createBrowserRouter([
@@ -28,7 +30,9 @@ const router = createBrowserRouter([
         path: 'client/:clientId/payPeriod/:payPeriodId',
         element: <PayPeriodLayout />,
         children: [
-          { index: true, element: <TimesheetStatusPage /> },
+          { index: true, element: <EmployeesPage /> },
+          { path: 'activities', element: <ActivitiesPage /> },
+          { path: 'fundingSources', element: <FundingSourcesPage /> },
           { path: 'payrollReport', element: <PayrollReportPage /> },
           { path: 'allocationReport', element: <AllocationReportPage /> },
         ],

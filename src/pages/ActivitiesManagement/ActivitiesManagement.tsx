@@ -136,30 +136,32 @@ const ActivitiesManagement = () => {
       >
         <ActivitiesTable activities={visibleActivities} onDelete={setDeletingActivity} onEdit={setEditingActivity} />
       </ManagementListPanel>
-      <ActivityDialog
-        activity={null}
-        errorMessage={saveErrorMessage}
-        fundingSources={availableFundingSources}
-        formId="create-activity-form"
-        onClose={closeCreateDialog}
-        onSave={createActivity}
-        open={createDialogOpen}
-        saving={saving}
-        submitLabel="Create"
-        title="Create Activity"
-      />
-      <ActivityDialog
-        activity={editingActivity}
-        errorMessage={saveErrorMessage}
-        fundingSources={availableFundingSources}
-        formId="edit-activity-form"
-        onClose={closeEditDialog}
-        onSave={updateActivity}
-        open={editingActivity !== null}
-        saving={saving}
-        submitLabel="Save"
-        title="Edit Activity"
-      />
+      {createDialogOpen && (
+        <ActivityDialog
+          activity={null}
+          errorMessage={saveErrorMessage}
+          fundingSources={availableFundingSources}
+          formId="create-activity-form"
+          onClose={closeCreateDialog}
+          onSave={createActivity}
+          saving={saving}
+          submitLabel="Create"
+          title="Create Activity"
+        />
+      )}
+      {editingActivity && (
+        <ActivityDialog
+          activity={editingActivity}
+          errorMessage={saveErrorMessage}
+          fundingSources={availableFundingSources}
+          formId="edit-activity-form"
+          onClose={closeEditDialog}
+          onSave={updateActivity}
+          saving={saving}
+          submitLabel="Save"
+          title="Edit Activity"
+        />
+      )}
       <DeleteConfirmationDialog
         body="This removes the activity from client configuration and can affect generated timesheets, payroll, and allocation reporting."
         errorMessage={deleteErrorMessage}

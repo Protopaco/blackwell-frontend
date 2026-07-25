@@ -1,7 +1,9 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
@@ -13,15 +15,18 @@ import '@/components/PayPeriodDashboard/EmployeeTimesheetStatusCard/EmployeeTime
 type Props = {
   employee: EmployeeTimesheetStatus;
   hasPayrollReportMismatch: boolean;
+  onRemove: () => void;
+  removing: boolean;
 };
 
-const EmployeeTimesheetStatusRow = ({ employee, hasPayrollReportMismatch }: Props) => {
+const EmployeeTimesheetStatusRow = ({ employee, hasPayrollReportMismatch, onRemove, removing }: Props) => {
   const employeeName = [employee.lastName, employee.firstName].filter(Boolean).join(', ').trim() || 'Unnamed employee';
   const timesheetUrl =
     employee.timesheetFileId && employee.status !== 'NotGenerated'
       ? `https://docs.google.com/spreadsheets/d/${employee.timesheetFileId}/edit`
       : null;
   const includeInPayroll = employee.includeInPayroll ?? true;
+  const canRemove = employee.status === 'NotGenerated';
 
   return (
     <TableRow className="employee-timesheet-status-row">
@@ -49,6 +54,19 @@ const EmployeeTimesheetStatusRow = ({ employee, hasPayrollReportMismatch }: Prop
         {hasPayrollReportMismatch && (
           <Tooltip title="This employee's live timesheet totals no longer match the generated payroll report.">
             <WarningAmberIcon fontSize="small" color="warning" />
+          </Tooltip>
+        )}
+      </TableCell>
+      <TableCell align="center">
+        {removing ? (
+          <CircularProgress size={20} />
+        ) : (
+          <Tooltip title={canRemove ? 'Remove from this pay period' : 'A timesheet has already been generated for this employee this pay period.'}>
+            <span>
+              <IconButton aria-label="Remove from this pay period" onClick={onRemove} disabled={!canRemove} size="small">
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </span>
           </Tooltip>
         )}
       </TableCell>

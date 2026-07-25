@@ -84,6 +84,7 @@ const PayPeriodLayout = () => {
             }}
           >
             <Tab label="Employees" value="employees" />
+            <Tab label="Funding Sources" value="fundingSources" />
             <Tab label="Activities" value="activities" />
             <Tab label="Payroll Report" value="payrollReport" disabled={!payrollReportGenerated(payPeriod.status)} />
             <Tab label="Allocation Report" value="allocationReport" disabled={!allocationReportGenerated(payPeriod.status)} />

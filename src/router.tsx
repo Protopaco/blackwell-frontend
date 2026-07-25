@@ -8,6 +8,7 @@ import FundingSourcesManagement from '@/pages/FundingSourcesManagement/FundingSo
 import HolidaysManagement from '@/pages/HolidaysManagement/HolidaysManagement';
 import ActivitiesPage from '@/pages/PayPeriod/ActivitiesPage/ActivitiesPage';
 import AllocationReportPage from '@/pages/PayPeriod/AllocationReportPage/AllocationReportPage';
+import FundingSourcesPage from '@/pages/PayPeriod/FundingSourcesPage/FundingSourcesPage';
 import PayPeriodLayout from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
 import PayrollReportPage from '@/pages/PayPeriod/PayrollReportPage/PayrollReportPage';
 import EmployeesPage from '@/pages/PayPeriod/EmployeesPage/EmployeesPage';
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <EmployeesPage /> },
           { path: 'activities', element: <ActivitiesPage /> },
+          { path: 'fundingSources', element: <FundingSourcesPage /> },
           { path: 'payrollReport', element: <PayrollReportPage /> },
           { path: 'allocationReport', element: <AllocationReportPage /> },
         ],

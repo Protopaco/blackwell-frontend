@@ -105,6 +105,14 @@ This applies everywhere a button calls the API: Create Pay Period, Generate Time
 
 **Manual first trigger, automatic afterward, for derived/downstream reports** (decided 2026-07-11, see `docs/PAY_PERIOD_PAGES.md` — Allocation Report). When a report is purely derived from other data the user is actively editing, and there's no value in an intermediate "stale" state sitting around unreconciled (a working bookkeeping tool, not an archival record), the _first_ generation should still be a deliberate, gated button (avoids the derived report failing pointlessly before its prerequisites exist) — but every _subsequent_ edit to the data it's derived from should silently trigger regeneration in the background, with no button, ever. Relying on a person to remember to click "regenerate" after every relevant edit is exactly the kind of manual step that gets missed. Failures on these automatic regenerations should be handled silently (logged, not surfaced) — by the time automatic regeneration is happening, prerequisites are already established, so a failure here is a rare edge case, not the expected/common case a user-clicked button's failure would be.
 
+## 8a. Button variants
+
+Decided 2026-07-25, looking at the Pay Period page's mix of button styles. Not previously codified — button variant had been chosen ad hoc per button, which produced one accidental outlier (Sync Holidays defaulted to MUI's unstyled `text` variant, simply because `variant` was never set, not a deliberate choice).
+
+- **`contained`** (filled) — the primary/creation action on a card or page: Add Activity, Generate Payroll Report, Save.
+- **`outlined`** — secondary utility actions: navigation (Client Summary back button via `NavButton`), Refresh, Generate Timesheets, Sync Holidays, Close Pay Period.
+- **Default (`text`, no `variant` prop)** — not a real third tier. Every button must explicitly set `variant="contained"` or `variant="outlined"` per the above; an unset `variant` is a bug, not a style choice.
+
 ## 9. Theming
 
 - **Build the theming _architecture_ now, even though there's only one theme today.** Mirror Babeonym's structure: `src/themes/{types.theme.ts, themeRegistry.ts, themes/<name>.theme.ts, ...}`, a `themeRegistry` map, `ThemeProvider` fed from the registry — not a bare inline `createTheme()` call like the current template stub has.

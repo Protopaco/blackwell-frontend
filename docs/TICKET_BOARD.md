@@ -18,7 +18,6 @@
 - [021] - Deep-link "Open timesheet" to the current pay period's tab
 - [022] - Toast coverage — remaining and future mutation flows
 - [023] - Set Up Auth
-- [034] - Holidays — sync button in pay period header
 - [036] - Auto-add required FundingSources when adding an Activity to a pay period (backend)
 - [037] - Remove pay period status chip from pay period creation dialog
 - [038] - Background color standardization to match ClientSummary.tsx's blue[50].
@@ -32,12 +31,13 @@
 ---
 
 - [030] - Per-Pay-Period Configuration UI (Epic)
-- [033] - FundingSources tab
+- [034] - Holidays — sync button in pay period header
 
 # DONE
 
 ---
 
+- [033] - FundingSources tab
 - [032] - Activities tab
 - [035] Rename "timesheetStatus" page/route identifier to "Employees"
 - [031] - Employees tab — rename + remove action

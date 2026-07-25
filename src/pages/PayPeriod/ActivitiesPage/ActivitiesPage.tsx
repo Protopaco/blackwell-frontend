@@ -5,17 +5,19 @@ import Typography from '@mui/material/Typography';
 import { payPeriodApi } from '@/api/client';
 import ActivitiesCard from '@/components/PayPeriodDashboard/ActivitiesCard/ActivitiesCard';
 import useFetchByKey from '@/hooks/useFetchByKey';
+import firstTimesheetGenerated from '@/models/firstTimesheetGenerated';
 import type { PayPeriodLayoutContext } from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
 
 const ActivitiesPage = () => {
   const { clientId, payPeriodId } = useParams<{ clientId: string; payPeriodId: string }>();
-  useOutletContext<PayPeriodLayoutContext>();
+  const { payPeriod } = useOutletContext<PayPeriodLayoutContext>();
   const key = clientId && payPeriodId ? `${clientId}/${payPeriodId}` : undefined;
 
   const {
     data: payPeriodConfig,
     errorMessage,
     loading,
+    refetch: refetchPayPeriodConfig,
   } = useFetchByKey(
     key,
     () => payPeriodApi.v1GetPayPeriodConfig({ clientId: clientId!, payPeriodId: payPeriodId! }),
@@ -34,7 +36,15 @@ const ActivitiesPage = () => {
     );
   }
 
-  return <ActivitiesCard activities={payPeriodConfig.activities ?? []} />;
+  return (
+    <ActivitiesCard
+      clientId={clientId!}
+      payPeriodId={payPeriodId!}
+      activities={payPeriodConfig.activities ?? []}
+      canRemove={!firstTimesheetGenerated(payPeriod.status)}
+      onActivitiesChanged={refetchPayPeriodConfig}
+    />
+  );
 };
 
 export default ActivitiesPage;

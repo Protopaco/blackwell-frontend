@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import { payPeriodApi } from '@/api/client';
 import ActivityDialog from '@/components/ActivitiesManagement/ActivityDialog/ActivityDialog';
+import AddExistingActivityDialog from '@/components/PayPeriodDashboard/ActivitiesCard/AddExistingActivityDialog/AddExistingActivityDialog';
 import ActivityRow from '@/components/PayPeriodDashboard/ActivitiesCard/ActivityRow/ActivityRow';
 import DashboardCard from '@/components/Shared/DashboardCard/DashboardCard';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
@@ -33,6 +37,7 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveErrorMessage, setSaveErrorMessage] = useState<string | null>(null);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
 
   const structuralFieldsLocked = firstTimesheetGenerated(payPeriodStatus);
   const percentagesLocked = activityFundingSourcesLocked(payPeriodStatus);
@@ -82,6 +87,15 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
 
   return (
     <DashboardCard id="activities-card" header="Activities" configPath={null}>
+      <Stack direction="row" justifyContent="flex-end" sx={{ mb: 2 }}>
+        <Tooltip title={canRemove ? '' : structuralFieldsLockedMessage}>
+          <span>
+            <Button variant="contained" onClick={() => setAddDialogOpen(true)} disabled={!canRemove}>
+              Add Activity
+            </Button>
+          </span>
+        </Tooltip>
+      </Stack>
       <ManagementTable
         headers={[
           sortableHeader('name', 'Activity'),
@@ -121,6 +135,14 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
         structuralFieldsLockedMessage={structuralFieldsLockedMessage}
         submitLabel="Save"
         title="Edit Activity"
+      />
+      <AddExistingActivityDialog
+        clientId={clientId}
+        payPeriodId={payPeriodId}
+        open={addDialogOpen}
+        onClose={() => setAddDialogOpen(false)}
+        currentActivityIds={activities.map((activity) => activity.activityId!)}
+        onAdded={onActivitiesChanged}
       />
     </DashboardCard>
   );

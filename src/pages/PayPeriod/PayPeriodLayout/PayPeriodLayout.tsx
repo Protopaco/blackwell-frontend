@@ -66,11 +66,8 @@ const PayPeriodLayout = () => {
     );
   }
 
-  const tabValue = location.pathname.endsWith('/allocationReport')
-    ? 'allocationReport'
-    : location.pathname.endsWith('/payrollReport')
-      ? 'payrollReport'
-      : 'timesheetStatus';
+  const lastSegment = location.pathname.split('/').pop();
+  const tabValue = lastSegment === payPeriodId ? 'timesheetStatus' : lastSegment;
 
   return (
     <Container sx={{ py: 4 }} id="pay-period-layout">
@@ -87,6 +84,7 @@ const PayPeriodLayout = () => {
             }}
           >
             <Tab label="Employees" value="timesheetStatus" />
+            <Tab label="Activities" value="activities" />
             <Tab label="Payroll Report" value="payrollReport" disabled={!payrollReportGenerated(payPeriod.status)} />
             <Tab label="Allocation Report" value="allocationReport" disabled={!allocationReportGenerated(payPeriod.status)} />
           </Tabs>

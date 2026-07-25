@@ -4,6 +4,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { payPeriodApi } from '@/api/client';
+import AddExistingEmployeeDialog from '@/components/PayPeriodDashboard/EmployeeTimesheetStatusCard/AddExistingEmployeeDialog/AddExistingEmployeeDialog';
 import DashboardCard from '@/components/Shared/DashboardCard/DashboardCard';
 import EmployeeTimesheetStatusRow from '@/components/PayPeriodDashboard/EmployeeTimesheetStatusCard/EmployeeTimesheetStatusRow/EmployeeTimesheetStatusRow';
 import hasPayrollReportMismatch from '@/components/PayPeriodDashboard/EmployeeTimesheetStatusCard/hasPayrollReportMismatch';
@@ -22,7 +23,7 @@ type Props = {
   payPeriodId: string;
   employees: EmployeeTimesheetStatus[];
   payrollReport: { [employeeId: string]: V1GetPayrollReport200ResponseValue } | null;
-  onEmployeeRemoved: () => void;
+  onEmployeesChanged: () => void;
 };
 
 type SortKey = 'name' | 'totalHours' | 'flatRate' | 'status' | 'includeInPayroll' | 'mismatch';
@@ -37,16 +38,17 @@ const matchesCompletionFilter = (employee: EmployeeTimesheetStatus, filter: Comp
   return filter === 'complete' ? isComplete : !isComplete;
 };
 
-const EmployeeTimesheetStatusCard = ({ clientId, payPeriodId, employees, payrollReport, onEmployeeRemoved }: Props) => {
+const EmployeeTimesheetStatusCard = ({ clientId, payPeriodId, employees, payrollReport, onEmployeesChanged }: Props) => {
   const { showToast } = useToast();
   const [removingEmployeeId, setRemovingEmployeeId] = useState<string | null>(null);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
 
   const handleRemove = async (employeeId: string) => {
     setRemovingEmployeeId(employeeId);
     try {
       await payPeriodApi.v1RemoveEmployeeFromPayPeriod({ clientId, payPeriodId, employeeId });
       showToast('Employee removed from pay period.', 'success');
-      onEmployeeRemoved();
+      onEmployeesChanged();
     } catch (error) {
       const message = await resolveErrorMessage(error, 'Failed to remove employee from pay period.');
       showToast(message, 'error');
@@ -80,30 +82,35 @@ const EmployeeTimesheetStatusCard = ({ clientId, payPeriodId, employees, payroll
 
   return (
     <DashboardCard id="employee-timesheet-status-card" header="Employee Timesheet Status" configPath={null}>
-      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
-        <TextField
-          size="small"
-          label="Search by name"
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
-        <ButtonGroup size="small">
-          <Button variant={completionFilter === 'all' ? 'contained' : 'outlined'} onClick={() => setCompletionFilter('all')}>
-            All
-          </Button>
-          <Button
-            variant={completionFilter === 'incomplete' ? 'contained' : 'outlined'}
-            onClick={() => setCompletionFilter('incomplete')}
-          >
-            Incomplete
-          </Button>
-          <Button
-            variant={completionFilter === 'complete' ? 'contained' : 'outlined'}
-            onClick={() => setCompletionFilter('complete')}
-          >
-            Complete
-          </Button>
-        </ButtonGroup>
+      <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <TextField
+            size="small"
+            label="Search by name"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
+          <ButtonGroup size="small">
+            <Button variant={completionFilter === 'all' ? 'contained' : 'outlined'} onClick={() => setCompletionFilter('all')}>
+              All
+            </Button>
+            <Button
+              variant={completionFilter === 'incomplete' ? 'contained' : 'outlined'}
+              onClick={() => setCompletionFilter('incomplete')}
+            >
+              Incomplete
+            </Button>
+            <Button
+              variant={completionFilter === 'complete' ? 'contained' : 'outlined'}
+              onClick={() => setCompletionFilter('complete')}
+            >
+              Complete
+            </Button>
+          </ButtonGroup>
+        </Stack>
+        <Button variant="contained" onClick={() => setAddDialogOpen(true)}>
+          Add Employee
+        </Button>
       </Stack>
       <ManagementTable
         headers={[
@@ -128,6 +135,14 @@ const EmployeeTimesheetStatusCard = ({ clientId, payPeriodId, employees, payroll
           />
         ))}
       </ManagementTable>
+      <AddExistingEmployeeDialog
+        clientId={clientId}
+        payPeriodId={payPeriodId}
+        open={addDialogOpen}
+        onClose={() => setAddDialogOpen(false)}
+        currentEmployeeIds={employees.map((employee) => employee.employeeId!)}
+        onAdded={onEmployeesChanged}
+      />
     </DashboardCard>
   );
 };

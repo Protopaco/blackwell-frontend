@@ -93,7 +93,7 @@ const EmployeesPage = () => {
         payPeriodId={payPeriodId!}
         employees={employees}
         payrollReport={payrollReport}
-        onEmployeeRemoved={refetchEmployees}
+        onEmployeesChanged={refetchEmployees}
       />
     </Stack>
   );

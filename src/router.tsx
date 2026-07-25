@@ -6,6 +6,7 @@ import ClientSummary from '@/pages/ClientSummary';
 import EmployeesManagement from '@/pages/EmployeesManagement/EmployeesManagement';
 import FundingSourcesManagement from '@/pages/FundingSourcesManagement/FundingSourcesManagement';
 import HolidaysManagement from '@/pages/HolidaysManagement/HolidaysManagement';
+import ActivitiesPage from '@/pages/PayPeriod/ActivitiesPage/ActivitiesPage';
 import AllocationReportPage from '@/pages/PayPeriod/AllocationReportPage/AllocationReportPage';
 import PayPeriodLayout from '@/pages/PayPeriod/PayPeriodLayout/PayPeriodLayout';
 import PayrollReportPage from '@/pages/PayPeriod/PayrollReportPage/PayrollReportPage';
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
         element: <PayPeriodLayout />,
         children: [
           { index: true, element: <EmployeesPage /> },
+          { path: 'activities', element: <ActivitiesPage /> },
           { path: 'payrollReport', element: <PayrollReportPage /> },
           { path: 'allocationReport', element: <AllocationReportPage /> },
         ],

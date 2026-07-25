@@ -27,7 +27,6 @@ const SubList = <T,>({ entries, columns }: Props<T>) => {
       </TableHead>
       <TableBody>
         {entries.map((entry, index) => (
-          // eslint-disable-next-line react/no-array-index-key -- entries have no stable id, order is stable within a render
           <TableRow key={index}>
             {columns.map((column) => (
               <TableCell key={String(column.key)}>

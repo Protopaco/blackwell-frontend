@@ -21,6 +21,8 @@
 - [036] - Auto-add required FundingSources when adding an Activity to a pay period (backend)
 - [037] - Remove pay period status chip from pay period creation dialog
 - [038] - Background color standardization to match ClientSummary.tsx's blue[50].
+- [039] - Remove redundant PayPeriod Client Summary button
+- [040] - Restyle Client Selector
 
 # READY
 

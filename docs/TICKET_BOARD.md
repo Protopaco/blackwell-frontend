@@ -7,7 +7,6 @@
 - [004] - Unsaved changes guard - Allocation Report
 - [006] - Employee email format validation and normalization
 - [007] - Supervisor Management Epic
-- [008] - Settings Management
 - [009] - Employee Timesheet Status - collapsible groups by status
 - [010] - Client Accent Color
 - [014] - Create Frontend Tests
@@ -30,10 +29,16 @@
 - [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
 - [070] - Validation: require Settings fields on client create
 - [071] - BUG - Client Name and Client Code must be unique
+- [072] - Rename updateClient to reflect its actual (identity-only) scope
+- [073] - Manage active/inactive clients (Clients list page)
+- [075] - BUG - Redundant fetch calls during timesheet generation polling
+- [076] - Tooltips on status chips explaining what each status means
 
 # READY
 
 ---
+
+- [008] - Settings Management
 
 # IN PROGRESS
 
@@ -43,6 +48,7 @@
 
 ---
 
+- [074] - Timesheet formatting redesign — RowStyle layer + section labeling
 - [059] - Client Management Workflow (Epic)
 - [061] - Client Create page
 - [062] - Edit Client dialog on ClientSummary

@@ -28,6 +28,7 @@
 - [045] - Better "week of" styling on timesheet
 - [046] - "Generate Payroll Report" should auto-navigate to Payroll Report tab like Allocation Report does
 - [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
+- [070] - Validation: require Settings fields on client create
 
 # READY
 
@@ -38,7 +39,6 @@
 ---
 
 - [059] - Client Management Workflow (Epic)
-- [060] - "+ New Client" entry point
 - [061] - Client Create page
 - [062] - Edit Client dialog on ClientSummary
 
@@ -46,6 +46,7 @@
 
 ---
 
+- [060] - "+ New Client" entry point
 - [030] - Per-Pay-Period Configuration UI (Epic)
 - [034] - Holidays — sync button in pay period header
 - [067] - Cascade-delete EmployeeActivityRates rows when an Activity is deleted

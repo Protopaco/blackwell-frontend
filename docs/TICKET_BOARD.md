@@ -26,7 +26,6 @@
 - [044] - BUG - Holiday styling looks off (coloration)
 - [045] - Better "week of" styling on timesheet
 - [046] - "Generate Payroll Report" should auto-navigate to Payroll Report tab like Allocation Report does
-- [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
 - [070] - Validation: require Settings fields on client create
 - [071] - BUG - Client Name and Client Code must be unique
 - [072] - Rename updateClient to reflect its actual (identity-only) scope
@@ -38,8 +37,6 @@
 
 ---
 
-- [008] - Settings Management
-
 # IN PROGRESS
 
 ---
@@ -48,6 +45,8 @@
 
 ---
 
+- [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
+- [008] - Settings Management
 - [074] - Timesheet formatting redesign — RowStyle layer + section labeling
 - [059] - Client Management Workflow (Epic)
 - [061] - Client Create page

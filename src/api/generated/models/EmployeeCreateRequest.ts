@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { EmployeeActivityRate } from './EmployeeActivityRate';
+import {
+    EmployeeActivityRateFromJSON,
+    EmployeeActivityRateFromJSONTyped,
+    EmployeeActivityRateToJSON,
+    EmployeeActivityRateToJSONTyped,
+} from './EmployeeActivityRate';
+
 /**
  * Exactly one of timesheetFileLink or timesheetFolderId must be provided.
  * @export
@@ -38,23 +46,17 @@ export interface EmployeeCreateRequest {
      */
     position: string;
     /**
-     * 
+     * Absence or 0 means not salaried.
      * @type {number}
      * @memberof EmployeeCreateRequest
      */
-    hourlyPayRate1: number;
+    salaryAmount: number;
     /**
      * 
-     * @type {number}
+     * @type {Array<EmployeeActivityRate>}
      * @memberof EmployeeCreateRequest
      */
-    hourlyPayRate2: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof EmployeeCreateRequest
-     */
-    holidayPayRate: number;
+    activityRates: Array<EmployeeActivityRate>;
     /**
      * 
      * @type {string}
@@ -99,9 +101,8 @@ export function instanceOfEmployeeCreateRequest(value: object): value is Employe
     if (!('firstName' in value) || value['firstName'] === undefined) return false;
     if (!('lastName' in value) || value['lastName'] === undefined) return false;
     if (!('position' in value) || value['position'] === undefined) return false;
-    if (!('hourlyPayRate1' in value) || value['hourlyPayRate1'] === undefined) return false;
-    if (!('hourlyPayRate2' in value) || value['hourlyPayRate2'] === undefined) return false;
-    if (!('holidayPayRate' in value) || value['holidayPayRate'] === undefined) return false;
+    if (!('salaryAmount' in value) || value['salaryAmount'] === undefined) return false;
+    if (!('activityRates' in value) || value['activityRates'] === undefined) return false;
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('status' in value) || value['status'] === undefined) return false;
     return true;
@@ -120,9 +121,8 @@ export function EmployeeCreateRequestFromJSONTyped(json: any, ignoreDiscriminato
         'firstName': json['firstName'],
         'lastName': json['lastName'],
         'position': json['position'],
-        'hourlyPayRate1': json['hourlyPayRate1'],
-        'hourlyPayRate2': json['hourlyPayRate2'],
-        'holidayPayRate': json['holidayPayRate'],
+        'salaryAmount': json['salaryAmount'],
+        'activityRates': ((json['activityRates'] as Array<any>).map(EmployeeActivityRateFromJSON)),
         'email': json['email'],
         'status': json['status'],
         'timesheetFileLink': json['timesheetFileLink'] == null ? undefined : json['timesheetFileLink'],
@@ -144,9 +144,8 @@ export function EmployeeCreateRequestToJSONTyped(value?: EmployeeCreateRequest |
         'firstName': value['firstName'],
         'lastName': value['lastName'],
         'position': value['position'],
-        'hourlyPayRate1': value['hourlyPayRate1'],
-        'hourlyPayRate2': value['hourlyPayRate2'],
-        'holidayPayRate': value['holidayPayRate'],
+        'salaryAmount': value['salaryAmount'],
+        'activityRates': ((value['activityRates'] as Array<any>).map(EmployeeActivityRateToJSON)),
         'email': value['email'],
         'status': value['status'],
         'timesheetFileLink': value['timesheetFileLink'],

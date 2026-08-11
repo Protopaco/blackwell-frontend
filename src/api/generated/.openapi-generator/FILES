@@ -25,6 +25,7 @@ docs/ClientCreateRequestEmployeePayrollFolder.md
 docs/ClientSummary.md
 docs/ClientUpdateRequest.md
 docs/Employee.md
+docs/EmployeeActivityRate.md
 docs/EmployeeApi.md
 docs/EmployeeCreateRequest.md
 docs/EmployeeExpense.md
@@ -64,6 +65,7 @@ models/ClientCreateRequestEmployeePayrollFolder.ts
 models/ClientSummary.ts
 models/ClientUpdateRequest.ts
 models/Employee.ts
+models/EmployeeActivityRate.ts
 models/EmployeeCreateRequest.ts
 models/EmployeeExpense.ts
 models/EmployeeExpenseUpdate.ts

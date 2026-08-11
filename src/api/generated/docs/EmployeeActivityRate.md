@@ -1,30 +1,31 @@
 
-# Activity
+# EmployeeActivityRate
 
+id is omitted for a newly-added row that hasn\'t been saved yet.
 
 ## Properties
 
 Name | Type
 ------------ | -------------
+`id` | string
 `activityId` | string
-`activityName` | string
-`trackSeparately` | boolean
-`payrollCategory` | string
-`fundingSources` | [Array&lt;ActivityFundingSourcesInner&gt;](ActivityFundingSourcesInner.md)
+`payRateType` | string
+`payRate` | number
+`holidayPayRate` | number
 
 ## Example
 
 ```typescript
-import type { Activity } from ''
+import type { EmployeeActivityRate } from ''
 
 // TODO: Update the object below with actual values
 const example = {
+  "id": null,
   "activityId": null,
-  "activityName": Job Coaching,
-  "trackSeparately": null,
-  "payrollCategory": null,
-  "fundingSources": null,
-} satisfies Activity
+  "payRateType": null,
+  "payRate": 25.96,
+  "holidayPayRate": 38.94,
+} satisfies EmployeeActivityRate
 
 console.log(example)
 
@@ -33,7 +34,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as Activity
+const exampleParsed = JSON.parse(exampleJSON) as EmployeeActivityRate
 console.log(exampleParsed)
 ```
 

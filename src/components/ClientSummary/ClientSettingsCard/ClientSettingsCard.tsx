@@ -4,6 +4,7 @@ import formatUTCDateMedium from '@/utils/formatUTCDateMedium';
 import { SettingsTimeInputMethodEnum, type Settings } from '@/api/generated/models/Settings';
 
 type Props = {
+  clientId: string;
   settings: Settings;
 };
 
@@ -12,9 +13,9 @@ const timeInputMethodLabels: Record<SettingsTimeInputMethodEnum, string> = {
   [SettingsTimeInputMethodEnum.ClockInOut]: 'Clock In/Out',
 };
 
-const ClientSettingsCard = ({ settings }: Props) => {
+const ClientSettingsCard = ({ clientId, settings }: Props) => {
   return (
-    <DashboardCard id="client-settings-card" header="Settings" configPath={null}>
+    <DashboardCard id="client-settings-card" header="Settings" configPath={`/client/${clientId}/settings`}>
       <DashboardList
         items={[
           {

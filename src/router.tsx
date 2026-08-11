@@ -3,6 +3,7 @@ import AppLayout from '@/AppLayout';
 import ActivitiesManagement from '@/pages/ActivitiesManagement/ActivitiesManagement';
 import ClientCreate from '@/pages/ClientCreate/ClientCreate';
 import ClientInfoManagement from '@/pages/ClientInfoManagement/ClientInfoManagement';
+import ClientSettingsManagement from '@/pages/ClientSettingsManagement/ClientSettingsManagement';
 import Landing from '@/pages/Landing';
 import ClientSummary from '@/pages/ClientSummary';
 import EmployeesManagement from '@/pages/EmployeesManagement/EmployeesManagement';
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
       { path: 'client/:clientId/employees', element: <EmployeesManagement /> },
       { path: 'client/:clientId/fundingSources', element: <FundingSourcesManagement /> },
       { path: 'client/:clientId/info', element: <ClientInfoManagement /> },
+      { path: 'client/:clientId/settings', element: <ClientSettingsManagement /> },
       { path: 'client/:clientId/holidays', element: <HolidaysManagement /> },
       { path: 'client/:clientId/timesheetFolders', element: <TimesheetFoldersManagement /> },
       {

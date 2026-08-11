@@ -11,6 +11,9 @@ type Props = {
   payPeriodInterval: SettingsPayPeriodIntervalEnum | '';
   payPeriodIntervalRequired: boolean;
   payPeriodStartDate: string;
+  // True once the client has at least one pay period — payPeriodStartDate is only ever read by
+  // getNextPayPeriod before the first pay period exists, so it's locked (with an explanation) after that.
+  payPeriodStartDateDisabled?: boolean;
   payPeriodStartDateRequired: boolean;
   timeInputMethod: SettingsTimeInputMethodEnum | '';
   timeInputMethodRequired: boolean;
@@ -35,6 +38,7 @@ const ClientSettingsFields = ({
   payPeriodInterval,
   payPeriodIntervalRequired,
   payPeriodStartDate,
+  payPeriodStartDateDisabled = false,
   payPeriodStartDateRequired,
   timeInputMethod,
   timeInputMethodRequired,
@@ -76,10 +80,16 @@ const ClientSettingsFields = ({
         ))}
       </TextField>
       <TextField
-        disabled={disabled}
+        disabled={disabled || payPeriodStartDateDisabled}
         error={payPeriodStartDateRequired}
         fullWidth
-        helperText={payPeriodStartDateRequired ? 'Pay period start date is required.' : undefined}
+        helperText={
+          payPeriodStartDateRequired
+            ? 'Pay period start date is required.'
+            : payPeriodStartDateDisabled
+              ? 'This client already has pay period history — this value is no longer used.'
+              : undefined
+        }
         label="Pay period start date"
         onChange={(event) => onPayPeriodStartDateChange(event.target.value)}
         required

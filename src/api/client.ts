@@ -9,6 +9,7 @@ import {
   HolidayApi,
   PayPeriodApi,
   PayrollReportApi,
+  SettingsApi,
   TimesheetApi,
   TimesheetFolderApi,
 } from '@/api/generated/apis';
@@ -26,5 +27,6 @@ export const healthApi = new HealthApi(config);
 export const holidayApi = new HolidayApi(config);
 export const payPeriodApi = new PayPeriodApi(config);
 export const payrollReportApi = new PayrollReportApi(config);
+export const settingsApi = new SettingsApi(config);
 export const timesheetApi = new TimesheetApi(config);
 export const timesheetFolderApi = new TimesheetFolderApi(config);

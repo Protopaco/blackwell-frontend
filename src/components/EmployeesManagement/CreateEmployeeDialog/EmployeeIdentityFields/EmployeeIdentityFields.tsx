@@ -129,7 +129,7 @@ const EmployeeIdentityFields = ({
           error={salaryAmountInvalid}
           fullWidth
           helperText={salaryAmountInvalid ? 'Enter a salary amount.' : undefined}
-          label="Salary amount"
+          label="Salary amount (per pay period)"
           onBlur={() => onSalaryAmountChange(currencyToString(salaryAmount))}
           onChange={(event) => onSalaryAmountChange(event.target.value)}
           required

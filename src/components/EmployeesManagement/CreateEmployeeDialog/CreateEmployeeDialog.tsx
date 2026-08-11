@@ -1,5 +1,6 @@
 import Stack from '@mui/material/Stack';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
+import EmployeeActivityRatesFields from './EmployeeActivityRatesFields/EmployeeActivityRatesFields';
 import EmployeeIdentityFields from './EmployeeIdentityFields/EmployeeIdentityFields';
 import EmployeeTimesheetSetupFields from './EmployeeTimesheetSetupFields/EmployeeTimesheetSetupFields';
 import useCreateEmployeeForm from './useCreateEmployeeForm/useCreateEmployeeForm';
@@ -18,6 +19,7 @@ const CreateEmployeeDialog = ({ clientId, open, onClose, onCreated }: Props) => 
     <ManagementDialog
       errorMessage={form.errorMessage}
       formId="create-employee-form"
+      maxWidth="md"
       onClose={form.closeDialog}
       open={open}
       saving={form.saving}
@@ -46,6 +48,17 @@ const CreateEmployeeDialog = ({ clientId, open, onClose, onCreated }: Props) => 
           salaryAmount={form.salaryAmount}
           salaryAmountInvalid={form.salaryAmountInvalid}
           status={form.status}
+        />
+        <EmployeeActivityRatesFields
+          activities={form.activities}
+          activityRates={form.activityRates}
+          disabled={form.saving}
+          duplicateActivity={form.duplicateActivity}
+          onAddActivityRate={form.addActivityRate}
+          onRemoveActivityRate={form.removeActivityRate}
+          onUpdateActivityRate={form.updateActivityRate}
+          selectedActivityIds={form.selectedActivityIds}
+          submitted={form.submitted}
         />
         <EmployeeTimesheetSetupFields
           disabled={form.saving}

@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { employeeApi, timesheetFolderApi } from '@/api/client';
+import { activityApi, employeeApi, timesheetFolderApi } from '@/api/client';
+import { EmployeeActivityRatePayRateTypeEnum } from '@/api/generated/models/EmployeeActivityRate';
 import { TimesheetFolderStatusEnum } from '@/api/generated/models/TimesheetFolder';
 import type { TimesheetFolder } from '@/api/generated/models/TimesheetFolder';
+import type { EmployeeActivityRateFormRow } from '../EmployeeActivityRatesFields/EmployeeActivityRateFormRow';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
 import { useToast } from '@/state/toast/toast.context';
+import useFetchByKey from '@/hooks/useFetchByKey';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
 type TimesheetSetupMode = 'newWorkbook' | 'existingWorkbook';
@@ -25,6 +28,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
   const [status, setStatus] = useState<EmployeeStatusValueType>(EmployeeStatusValue.Active);
   const [salaried, setSalaried] = useState(false);
   const [salaryAmount, setSalaryAmount] = useState('');
+  const [activityRates, setActivityRates] = useState<EmployeeActivityRateFormRow[]>([]);
   const [timesheetSetupMode, setTimesheetSetupMode] = useState<TimesheetSetupMode>('newWorkbook');
   const [timesheetFolderId, setTimesheetFolderId] = useState('');
   const [timesheetFileLink, setTimesheetFileLink] = useState('');
@@ -35,6 +39,39 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { showToast } = useToast();
+
+  const { data: activities } = useFetchByKey(
+    open ? clientId : undefined,
+    (clientId) => activityApi.v1GetActivities({ clientId }),
+    'Failed to load activities.',
+  );
+
+  const addActivityRate = () => {
+    setActivityRates((currentActivityRates) => {
+      const currentActivityIds = currentActivityRates.map((activityRate) => activityRate.activityId).filter(Boolean);
+      const availableActivity = (activities ?? []).find((activity) => !currentActivityIds.includes(activity.activityId ?? ''));
+
+      return [
+        ...currentActivityRates,
+        {
+          activityId: availableActivity?.activityId ?? '',
+          payRateType: EmployeeActivityRatePayRateTypeEnum.Hourly,
+          payRate: '',
+          holidayPayRate: '',
+        },
+      ];
+    });
+  };
+
+  const updateActivityRate = (index: number, nextActivityRate: EmployeeActivityRateFormRow) => {
+    setActivityRates((currentActivityRates) =>
+      currentActivityRates.map((activityRate, activityRateIndex) => (activityRateIndex === index ? nextActivityRate : activityRate)),
+    );
+  };
+
+  const removeActivityRate = (index: number) => {
+    setActivityRates((currentActivityRates) => currentActivityRates.filter((_, activityRateIndex) => activityRateIndex !== index));
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -77,6 +114,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     setStatus(EmployeeStatusValue.Active);
     setSalaried(false);
     setSalaryAmount('');
+    setActivityRates([]);
     setTimesheetSetupMode('newWorkbook');
     setTimesheetFolderId('');
     setTimesheetFileLink('');
@@ -107,6 +145,17 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     const trimmedTimesheetFileLink = timesheetFileLink.trim();
     const parsedSalaryAmount = Number(salaryAmount);
     const usingNewWorkbook = timesheetSetupMode === 'newWorkbook';
+    const selectedActivityIds = activityRates.map((activityRate) => activityRate.activityId).filter(Boolean);
+    const hasMissingActivity = activityRates.some((activityRate) => !activityRate.activityId);
+    const hasDuplicateActivity = new Set(selectedActivityIds).size !== selectedActivityIds.length;
+    const hasInvalidPayRate = activityRates.some((activityRate) => {
+      if (activityRate.payRateType === EmployeeActivityRatePayRateTypeEnum.Salary) return false;
+      return activityRate.payRate === '' || Number.isNaN(Number(activityRate.payRate));
+    });
+    const hasInvalidHolidayPayRate = activityRates.some((activityRate) => {
+      if (activityRate.payRateType === EmployeeActivityRatePayRateTypeEnum.Salary) return false;
+      return activityRate.holidayPayRate === '' || Number.isNaN(Number(activityRate.holidayPayRate));
+    });
 
     if (
       !trimmedFirstName ||
@@ -114,6 +163,10 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
       !trimmedPosition ||
       !trimmedEmail ||
       (salaried && (!salaryAmount || Number.isNaN(parsedSalaryAmount))) ||
+      hasMissingActivity ||
+      hasDuplicateActivity ||
+      hasInvalidPayRate ||
+      hasInvalidHolidayPayRate ||
       (usingNewWorkbook && !timesheetFolderId) ||
       (!usingNewWorkbook && !trimmedTimesheetFileLink)
     ) {
@@ -132,7 +185,12 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
           email: trimmedEmail,
           status,
           salaryAmount: salaried ? parsedSalaryAmount : 0,
-          activityRates: [],
+          activityRates: activityRates.map((activityRate) => ({
+            activityId: activityRate.activityId,
+            payRateType: activityRate.payRateType,
+            payRate: activityRate.payRateType === EmployeeActivityRatePayRateTypeEnum.Salary ? 0 : Number(activityRate.payRate),
+            holidayPayRate: activityRate.payRateType === EmployeeActivityRatePayRateTypeEnum.Salary ? 0 : Number(activityRate.holidayPayRate),
+          })),
           timesheetFolderId: usingNewWorkbook ? timesheetFolderId : undefined,
           timesheetFileLink: usingNewWorkbook ? undefined : trimmedTimesheetFileLink,
         },
@@ -154,9 +212,15 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
   const noActiveTimesheetFolders =
     timesheetSetupMode === 'newWorkbook' && !loadingTimesheetFolders && !timesheetFolderErrorMessage && timesheetFolders.length === 0;
 
+  const selectedActivityIds = activityRates.map((activityRate) => activityRate.activityId).filter(Boolean);
+
   return {
+    activities: activities ?? [],
+    activityRates,
+    addActivityRate,
     closeDialog,
     createEmployee,
+    duplicateActivity: submitted && new Set(selectedActivityIds).size !== selectedActivityIds.length,
     email,
     emailRequired: submitted && !email.trim(),
     errorMessage,
@@ -168,10 +232,12 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     noActiveTimesheetFolders,
     position,
     positionRequired: submitted && !position.trim(),
+    removeActivityRate,
     salaried,
     salaryAmount,
     salaryAmountInvalid: submitted && salaried && (!salaryAmount || Number.isNaN(Number(salaryAmount))),
     saving,
+    selectedActivityIds,
     setEmail,
     setFirstName,
     setLastName,
@@ -183,6 +249,8 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     setTimesheetFolderId,
     setTimesheetSetupMode,
     status,
+    submitted,
+    updateActivityRate,
     timesheetFileLink,
     timesheetFileLinkRequired: submitted && timesheetSetupMode === 'existingWorkbook' && !timesheetFileLink.trim(),
     timesheetFolderErrorMessage,

@@ -5,7 +5,6 @@
 - [002] - Update "matches pay period report" indicator so all timesheets are read the same way
 - [003] - Unsaved changes guard - Payroll Report
 - [004] - Unsaved changes guard - Allocation Report
-- [005] - Create Client Management Workflow
 - [006] - Employee email format validation and normalization
 - [007] - Supervisor Management Epic
 - [008] - Settings Management
@@ -23,10 +22,38 @@
 - [038] - Background color standardization to match ClientSummary.tsx's blue[50].
 - [039] - Remove redundant PayPeriod Client Summary button
 - [040] - Restyle Client Selector
+- [042] - BUG - Direct/shared links to client pages 404 on Render
+- [043] - BUG - Pay period dashboard shows holidays outside the pay period's date range
+- [044] - BUG - Holiday styling looks off (coloration)
+- [045] - Better "week of" styling on timesheet
+- [046] - "Generate Payroll Report" should auto-navigate to Payroll Report tab like Allocation Report does
+- [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
 
 # READY
 
 ---
+
+- [048] - Expand EmployeeActivityRates (Epic)
+- [049] - EmployeeActivityRates tab infra
+- [051] - Update Employee — remove old pay rates, add salaryAmount + embed activityRates
+- [052] - Update Activity — remove payRate/flatRateAmount
+- [053] - devTestData scenario revamp
+- [054] - EmployeeActivityRates in pay-period snapshot workflow + rate locking
+- [055] - EmployeeActivityRates in timesheet generation + activity-required validation
+- [056] - Update allocation calc to use EmployeeActivityRates + holidayPayRate
+- [057] - Salary calculation
+- [058] - Validation: salaried employee with zero salary-hours
+- [059] - Client Management Workflow (Epic)
+- [060] - "+ New Client" entry point
+- [061] - Client Create page
+- [062] - Edit Client dialog on ClientSummary
+- [063] - Employee Activity Rates in Employee Dialog (Epic)
+- [064] - Employee dialog — remove old pay-rate fields, add Salaried toggle
+- [065] - EmployeeActivityRatesFields — repeatable row list
+- [066] - Validation: Active employee must have at least one activityRate
+- [067] - Cascade-delete EmployeeActivityRates rows when an Activity is deleted
+- [068] - Remove old Activity payRate/flatRateAmount fields from frontend
+- [069] - Remove old Employee hourlyPayRate/holidayPayRate fields from frontend
 
 # IN PROGRESS
 

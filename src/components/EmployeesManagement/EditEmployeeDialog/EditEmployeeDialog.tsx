@@ -4,6 +4,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import type { Employee } from '@/api/generated/models/Employee';
+import EmployeeActivityRatesFields from '@/components/EmployeesManagement/CreateEmployeeDialog/EmployeeActivityRatesFields/EmployeeActivityRatesFields';
 import EmployeeIdentityFields from '@/components/EmployeesManagement/CreateEmployeeDialog/EmployeeIdentityFields/EmployeeIdentityFields';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
 import useEditEmployeeForm from './useEditEmployeeForm/useEditEmployeeForm';
@@ -24,6 +25,7 @@ const EditEmployeeDialog = ({ clientId, employee, open, onClose, onSaved }: Prop
     <ManagementDialog
       errorMessage={form.errorMessage}
       formId="edit-employee-form"
+      maxWidth="md"
       onClose={form.closeDialog}
       open={open}
       saving={form.saving}
@@ -52,6 +54,17 @@ const EditEmployeeDialog = ({ clientId, employee, open, onClose, onSaved }: Prop
           salaryAmount={form.salaryAmount}
           salaryAmountInvalid={form.salaryAmountInvalid}
           status={form.status}
+        />
+        <EmployeeActivityRatesFields
+          activities={form.activities}
+          activityRates={form.activityRates}
+          disabled={form.saving}
+          duplicateActivity={form.duplicateActivity}
+          onAddActivityRate={form.addActivityRate}
+          onRemoveActivityRate={form.removeActivityRate}
+          onUpdateActivityRate={form.updateActivityRate}
+          selectedActivityIds={form.selectedActivityIds}
+          submitted={form.submitted}
         />
         <TextField
           disabled

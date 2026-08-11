@@ -6,11 +6,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import type { Breakpoint } from '@mui/material/styles';
 
 type Props = {
   children: ReactNode;
   errorMessage: string | null;
   formId: string;
+  maxWidth?: Breakpoint;
   onClose: () => void;
   open: boolean;
   saving: boolean;
@@ -19,9 +21,20 @@ type Props = {
   title: string;
 };
 
-const ManagementDialog = ({ children, errorMessage, formId, onClose, open, saving, submitDisabled = false, submitLabel, title }: Props) => {
+const ManagementDialog = ({
+  children,
+  errorMessage,
+  formId,
+  maxWidth = 'sm',
+  onClose,
+  open,
+  saving,
+  submitDisabled = false,
+  submitLabel,
+  title,
+}: Props) => {
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth={maxWidth}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ pt: 1 }}>

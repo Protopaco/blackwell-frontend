@@ -77,10 +77,10 @@ const ClientSummary = () => {
             <ClientEmployeesCard clientId={selectedClient.clientId ?? ''} employees={summary.employees ?? []} />
           </Grid>
           <Grid size={{ xs: 12 }}>
-            <ClientActivitiesCard clientId={selectedClient.clientId ?? ''} activities={summary.activities ?? []} />
+            <ClientFundingSourcesCard clientId={selectedClient.clientId ?? ''} fundingSources={summary.fundingSources ?? []} />
           </Grid>
           <Grid size={{ xs: 12 }}>
-            <ClientFundingSourcesCard clientId={selectedClient.clientId ?? ''} fundingSources={summary.fundingSources ?? []} />
+            <ClientActivitiesCard clientId={selectedClient.clientId ?? ''} activities={summary.activities ?? []} />
           </Grid>
           <Grid size={{ xs: 12 }}>
             <ClientHolidaysCard clientId={selectedClient.clientId ?? ''} holidays={summary.holidays ?? []} />

@@ -23,9 +23,8 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
   const [position, setPosition] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<EmployeeStatusValueType>(EmployeeStatusValue.Active);
-  const [hourlyPayRate1, setHourlyPayRate1] = useState('');
-  const [hourlyPayRate2, setHourlyPayRate2] = useState('');
-  const [holidayPayRate, setHolidayPayRate] = useState('');
+  const [salaried, setSalaried] = useState(false);
+  const [salaryAmount, setSalaryAmount] = useState('');
   const [timesheetSetupMode, setTimesheetSetupMode] = useState<TimesheetSetupMode>('newWorkbook');
   const [timesheetFolderId, setTimesheetFolderId] = useState('');
   const [timesheetFileLink, setTimesheetFileLink] = useState('');
@@ -76,9 +75,8 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     setPosition('');
     setEmail('');
     setStatus(EmployeeStatusValue.Active);
-    setHourlyPayRate1('');
-    setHourlyPayRate2('');
-    setHolidayPayRate('');
+    setSalaried(false);
+    setSalaryAmount('');
     setTimesheetSetupMode('newWorkbook');
     setTimesheetFolderId('');
     setTimesheetFileLink('');
@@ -107,9 +105,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     const trimmedPosition = position.trim();
     const trimmedEmail = email.trim();
     const trimmedTimesheetFileLink = timesheetFileLink.trim();
-    const parsedHourlyPayRate1 = Number(hourlyPayRate1);
-    const parsedHourlyPayRate2 = Number(hourlyPayRate2);
-    const parsedHolidayPayRate = Number(holidayPayRate);
+    const parsedSalaryAmount = Number(salaryAmount);
     const usingNewWorkbook = timesheetSetupMode === 'newWorkbook';
 
     if (
@@ -117,12 +113,7 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
       !trimmedLastName ||
       !trimmedPosition ||
       !trimmedEmail ||
-      !hourlyPayRate1 ||
-      !hourlyPayRate2 ||
-      !holidayPayRate ||
-      Number.isNaN(parsedHourlyPayRate1) ||
-      Number.isNaN(parsedHourlyPayRate2) ||
-      Number.isNaN(parsedHolidayPayRate) ||
+      (salaried && (!salaryAmount || Number.isNaN(parsedSalaryAmount))) ||
       (usingNewWorkbook && !timesheetFolderId) ||
       (!usingNewWorkbook && !trimmedTimesheetFileLink)
     ) {
@@ -140,9 +131,8 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
           position: trimmedPosition,
           email: trimmedEmail,
           status,
-          hourlyPayRate1: parsedHourlyPayRate1,
-          hourlyPayRate2: parsedHourlyPayRate2,
-          holidayPayRate: parsedHolidayPayRate,
+          salaryAmount: salaried ? parsedSalaryAmount : 0,
+          activityRates: [],
           timesheetFolderId: usingNewWorkbook ? timesheetFolderId : undefined,
           timesheetFileLink: usingNewWorkbook ? undefined : trimmedTimesheetFileLink,
         },
@@ -172,26 +162,22 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
     errorMessage,
     firstName,
     firstNameRequired: submitted && !firstName.trim(),
-    holidayPayRate,
-    holidayPayRateInvalid: submitted && (!holidayPayRate || Number.isNaN(Number(holidayPayRate))),
-    hourlyPayRate1,
-    hourlyPayRate1Invalid: submitted && (!hourlyPayRate1 || Number.isNaN(Number(hourlyPayRate1))),
-    hourlyPayRate2,
-    hourlyPayRate2Invalid: submitted && (!hourlyPayRate2 || Number.isNaN(Number(hourlyPayRate2))),
     lastName,
     lastNameRequired: submitted && !lastName.trim(),
     loadingTimesheetFolders,
     noActiveTimesheetFolders,
     position,
     positionRequired: submitted && !position.trim(),
+    salaried,
+    salaryAmount,
+    salaryAmountInvalid: submitted && salaried && (!salaryAmount || Number.isNaN(Number(salaryAmount))),
     saving,
     setEmail,
     setFirstName,
-    setHolidayPayRate,
-    setHourlyPayRate1,
-    setHourlyPayRate2,
     setLastName,
     setPosition,
+    setSalaried,
+    setSalaryAmount,
     setStatus,
     setTimesheetFileLink,
     setTimesheetFolderId,

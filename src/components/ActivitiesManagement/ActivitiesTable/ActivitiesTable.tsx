@@ -7,11 +7,9 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import type { Activity } from '@/api/generated/models/Activity';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
-import currencyToString from '@/utils/currencyToString';
 import useTableSort from '@/hooks/useTableSort';
-import { isFlatPayRate, payRateLabels } from '../activityDisplay';
 
-type SortKey = 'name' | 'payrollCategory' | 'payRate';
+type SortKey = 'name' | 'payrollCategory';
 
 type Props = {
   activities: Activity[];
@@ -38,7 +36,6 @@ const ActivitiesTable = ({ activities, onDelete, onEdit }: Props) => {
     {
       name: (left, right) => (left.activityName ?? '').localeCompare(right.activityName ?? '', undefined, { sensitivity: 'base' }),
       payrollCategory: (left, right) => (left.payrollCategory ?? '').localeCompare(right.payrollCategory ?? '', undefined, { sensitivity: 'base' }),
-      payRate: (left, right) => (left.payRate ?? '').localeCompare(right.payRate ?? '', undefined, { sensitivity: 'base' }),
     },
     'name',
   );
@@ -48,8 +45,6 @@ const ActivitiesTable = ({ activities, onDelete, onEdit }: Props) => {
       headers={[
         sortableHeader('name', 'Activity'),
         sortableHeader('payrollCategory', 'Payroll Category'),
-        sortableHeader('payRate', 'Pay Rate'),
-        { label: 'Flat Rate Amount' },
         { label: 'Funding Allocation' },
         { label: 'Track Separately' },
         { label: 'Actions', align: 'right' },
@@ -59,8 +54,6 @@ const ActivitiesTable = ({ activities, onDelete, onEdit }: Props) => {
         <TableRow key={activity.activityId ?? activity.activityName ?? ''}>
           <TableCell>{activity.activityName}</TableCell>
           <TableCell>{activity.payrollCategory}</TableCell>
-          <TableCell>{activity.payRate ? payRateLabels[activity.payRate] : ''}</TableCell>
-          <TableCell>{isFlatPayRate(activity.payRate) ? currencyToString(activity.flatRateAmount, { decorated: true }) : ''}</TableCell>
           <TableCell>
             <Stack spacing={0.5}>
               {formatFundingAllocations(activity).map((fundingAllocation) => (

@@ -1,8 +1,13 @@
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import StatusSwitch from '@/components/Shared/StatusSwitch/StatusSwitch';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
+import currencyToString from '@/utils/currencyToString';
 
 type Props = {
   disabled: boolean;
@@ -16,9 +21,14 @@ type Props = {
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
   onPositionChange: (value: string) => void;
+  onSalariedChange: (value: boolean) => void;
+  onSalaryAmountChange: (value: string) => void;
   onStatusChange: (value: EmployeeStatusValueType) => void;
   position: string;
   positionRequired: boolean;
+  salaried: boolean;
+  salaryAmount: string;
+  salaryAmountInvalid: boolean;
   status: EmployeeStatusValueType;
 };
 
@@ -34,9 +44,14 @@ const EmployeeIdentityFields = ({
   onFirstNameChange,
   onLastNameChange,
   onPositionChange,
+  onSalariedChange,
+  onSalaryAmountChange,
   onStatusChange,
   position,
   positionRequired,
+  salaried,
+  salaryAmount,
+  salaryAmountInvalid,
   status,
 }: Props) => {
   return (
@@ -89,13 +104,40 @@ const EmployeeIdentityFields = ({
         type="email"
         value={email}
       />
-      <StatusSwitch
-        activeValue={EmployeeStatusValue.Active}
-        disabled={disabled}
-        inactiveValue={EmployeeStatusValue.Inactive}
-        onChange={onStatusChange}
-        value={status}
-      />
+      <Stack direction="row" spacing={2}>
+        <StatusSwitch
+          activeValue={EmployeeStatusValue.Active}
+          disabled={disabled}
+          inactiveValue={EmployeeStatusValue.Inactive}
+          onChange={onStatusChange}
+          value={status}
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={salaried}
+              disabled={disabled}
+              onChange={(event) => onSalariedChange(event.target.checked)}
+            />
+          }
+          label="Salaried"
+        />
+      </Stack>
+      {salaried && (
+        <TextField
+          disabled={disabled}
+          error={salaryAmountInvalid}
+          fullWidth
+          helperText={salaryAmountInvalid ? 'Enter a salary amount.' : undefined}
+          label="Salary amount"
+          onBlur={() => onSalaryAmountChange(currencyToString(salaryAmount))}
+          onChange={(event) => onSalaryAmountChange(event.target.value)}
+          required
+          slotProps={{ input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } }}
+          type="number"
+          value={salaryAmount}
+        />
+      )}
     </>
   );
 };

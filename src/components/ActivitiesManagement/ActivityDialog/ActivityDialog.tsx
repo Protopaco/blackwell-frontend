@@ -1,19 +1,14 @@
 import { useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import Stack from '@mui/material/Stack';
-import {
-  ActivityPayRateEnum,
-  ActivityPayrollCategoryEnum,
-} from '@/api/generated/models/Activity';
+import { ActivityPayrollCategoryEnum } from '@/api/generated/models/Activity';
 import type {
   Activity,
-  ActivityPayRateEnum as ActivityPayRate,
   ActivityPayrollCategoryEnum as ActivityPayrollCategory,
 } from '@/api/generated/models/Activity';
 import type { FundingSource } from '@/api/generated/models/FundingSource';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
 import currencyToString from '@/utils/currencyToString';
-import { isFlatPayRate } from '../activityDisplay';
 import ActivityDetailsFields from './ActivityDetailsFields';
 import FundingAllocationFields from './FundingAllocationFields';
 import type { AllocationFormRow } from './AllocationFormRow';
@@ -61,8 +56,6 @@ const ActivityDialog = ({
   const [activityName, setActivityName] = useState(activity?.activityName ?? '');
   const [trackSeparately, setTrackSeparately] = useState(activity?.trackSeparately ?? false);
   const [payrollCategory, setPayrollCategory] = useState<ActivityPayrollCategory>(activity?.payrollCategory ?? ActivityPayrollCategoryEnum.Regular);
-  const [payRate, setPayRate] = useState<ActivityPayRate>(activity?.payRate ?? ActivityPayRateEnum.HourlyPayRate1);
-  const [flatRateAmount, setFlatRateAmount] = useState(currencyToString(activity?.flatRateAmount));
   const [allocations, setAllocations] = useState<AllocationFormRow[]>(
     activity?.fundingSources?.length
       ? activity.fundingSources.map((fundingSource) => ({
@@ -74,7 +67,6 @@ const ActivityDialog = ({
   const [submitted, setSubmitted] = useState(false);
 
   const allocationTotal = useMemo(() => calculateAllocationTotal(allocations), [allocations]);
-  const flatRateSelected = isFlatPayRate(payRate);
 
   const selectedFundingSourceNames = allocations.map((allocation) => allocation.fundingSourceName).filter(Boolean);
 
@@ -107,7 +99,6 @@ const ActivityDialog = ({
     setSubmitted(true);
 
     const trimmedActivityName = activityName.trim();
-    const parsedFlatRateAmount = Number(flatRateAmount);
     const hasDuplicateFundingSources = new Set(selectedFundingSourceNames).size !== selectedFundingSourceNames.length;
     const hasMissingFundingSource = allocations.some((allocation) => !allocation.fundingSourceName);
     const hasInvalidPercentage = allocations.some((allocation) => {
@@ -123,8 +114,7 @@ const ActivityDialog = ({
       hasMissingFundingSource ||
       hasDuplicateFundingSources ||
       hasInvalidPercentage ||
-      hasInvalidTotal ||
-      (flatRateSelected && (flatRateAmount === '' || Number.isNaN(parsedFlatRateAmount)))
+      hasInvalidTotal
     ) {
       return;
     }
@@ -134,8 +124,6 @@ const ActivityDialog = ({
       activityName: trimmedActivityName,
       trackSeparately,
       payrollCategory,
-      payRate,
-      flatRateAmount: flatRateSelected ? parsedFlatRateAmount : 0,
       fundingSources: allocations.map((allocation) => ({
         fundingSourceName: allocation.fundingSourceName,
         percentage: Number(allocation.percentage),
@@ -144,7 +132,6 @@ const ActivityDialog = ({
   };
 
   const nameRequired = submitted && !activityName.trim();
-  const flatRateAmountInvalid = submitted && flatRateSelected && (flatRateAmount === '' || Number.isNaN(Number(flatRateAmount)));
   const missingFundingSources = submitted && fundingSources.length === 0;
   const allocationRequired = submitted && allocations.some((allocation) => !allocation.fundingSourceName);
   const duplicateAllocation = submitted && new Set(selectedFundingSourceNames).size !== selectedFundingSourceNames.length;
@@ -170,17 +157,12 @@ const ActivityDialog = ({
       <Stack component="form" id={formId} spacing={2} onSubmit={saveActivity} noValidate>
         <ActivityDetailsFields
           activityName={activityName}
-          flatRateAmount={flatRateAmount}
-          flatRateAmountInvalid={flatRateAmountInvalid}
           locked={structuralFieldsLocked}
           lockedMessage={structuralFieldsLockedMessage}
           nameRequired={nameRequired}
           onActivityNameChange={setActivityName}
-          onFlatRateAmountChange={setFlatRateAmount}
-          onPayRateChange={setPayRate}
           onPayrollCategoryChange={setPayrollCategory}
           onTrackSeparatelyChange={setTrackSeparately}
-          payRate={payRate}
           payrollCategory={payrollCategory}
           saving={saving}
           trackSeparately={trackSeparately}

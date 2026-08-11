@@ -26,7 +26,7 @@ type Props = {
   onActivitiesChanged: () => void;
 };
 
-type SortKey = 'name' | 'payrollCategory' | 'payRate';
+type SortKey = 'name' | 'payrollCategory';
 
 const structuralFieldsLockedMessage = 'A timesheet has already been generated for this pay period.';
 const percentagesLockedMessage = 'Funding allocation percentages lock once the pay period has been allocated.';
@@ -80,7 +80,6 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
       name: (left, right) => (left.activityName ?? '').localeCompare(right.activityName ?? '', undefined, { sensitivity: 'base' }),
       payrollCategory: (left, right) =>
         (left.payrollCategory ?? '').localeCompare(right.payrollCategory ?? '', undefined, { sensitivity: 'base' }),
-      payRate: (left, right) => (left.payRate ?? '').localeCompare(right.payRate ?? '', undefined, { sensitivity: 'base' }),
     },
     'name',
   );
@@ -100,8 +99,6 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
         headers={[
           sortableHeader('name', 'Activity'),
           sortableHeader('payrollCategory', 'Payroll Category'),
-          sortableHeader('payRate', 'Pay Rate'),
-          { label: 'Flat Rate Amount' },
           { label: 'Funding Allocation' },
           { label: 'Track Separately' },
           { label: 'Edit', align: 'center' },

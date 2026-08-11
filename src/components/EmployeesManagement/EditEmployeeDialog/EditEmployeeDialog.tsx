@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import type { Employee } from '@/api/generated/models/Employee';
 import EmployeeIdentityFields from '@/components/EmployeesManagement/CreateEmployeeDialog/EmployeeIdentityFields/EmployeeIdentityFields';
-import EmployeePayRateFields from '@/components/EmployeesManagement/CreateEmployeeDialog/EmployeePayRateFields/EmployeePayRateFields';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
 import useEditEmployeeForm from './useEditEmployeeForm/useEditEmployeeForm';
 
@@ -44,22 +43,15 @@ const EditEmployeeDialog = ({ clientId, employee, open, onClose, onSaved }: Prop
           onFirstNameChange={form.setFirstName}
           onLastNameChange={form.setLastName}
           onPositionChange={form.setPosition}
+          onSalariedChange={form.setSalaried}
+          onSalaryAmountChange={form.setSalaryAmount}
           onStatusChange={form.setStatus}
           position={form.position}
           positionRequired={form.positionRequired}
+          salaried={form.salaried}
+          salaryAmount={form.salaryAmount}
+          salaryAmountInvalid={form.salaryAmountInvalid}
           status={form.status}
-        />
-        <EmployeePayRateFields
-          disabled={form.saving}
-          holidayPayRate={form.holidayPayRate}
-          holidayPayRateInvalid={form.holidayPayRateInvalid}
-          hourlyPayRate1={form.hourlyPayRate1}
-          hourlyPayRate1Invalid={form.hourlyPayRate1Invalid}
-          hourlyPayRate2={form.hourlyPayRate2}
-          hourlyPayRate2Invalid={form.hourlyPayRate2Invalid}
-          onHolidayPayRateChange={form.setHolidayPayRate}
-          onHourlyPayRate1Change={form.setHourlyPayRate1}
-          onHourlyPayRate2Change={form.setHourlyPayRate2}
         />
         <TextField
           disabled

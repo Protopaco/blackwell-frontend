@@ -22,9 +22,8 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
   const [position, setPosition] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<EmployeeStatusValueType>(EmployeeStatusValue.Active);
-  const [hourlyPayRate1, setHourlyPayRate1] = useState('');
-  const [hourlyPayRate2, setHourlyPayRate2] = useState('');
-  const [holidayPayRate, setHolidayPayRate] = useState('');
+  const [salaried, setSalaried] = useState(false);
+  const [salaryAmount, setSalaryAmount] = useState('');
   const [timesheetFileId, setTimesheetFileId] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -39,9 +38,8 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
     setPosition(employee.position ?? '');
     setEmail(employee.email ?? '');
     setStatus(employee.status ?? EmployeeStatusValue.Active);
-    setHourlyPayRate1(currencyToString(employee.hourlyPayRate1));
-    setHourlyPayRate2(currencyToString(employee.hourlyPayRate2));
-    setHolidayPayRate(currencyToString(employee.holidayPayRate));
+    setSalaried((employee.salaryAmount ?? 0) > 0);
+    setSalaryAmount(employee.salaryAmount ? currencyToString(employee.salaryAmount) : '');
     setTimesheetFileId(employee.timesheetFileId ?? '');
     setSubmitted(false);
     setErrorMessage(null);
@@ -53,9 +51,8 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
     setPosition('');
     setEmail('');
     setStatus(EmployeeStatusValue.Active);
-    setHourlyPayRate1('');
-    setHourlyPayRate2('');
-    setHolidayPayRate('');
+    setSalaried(false);
+    setSalaryAmount('');
     setTimesheetFileId('');
     setSubmitted(false);
     setErrorMessage(null);
@@ -78,21 +75,14 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
     const trimmedLastName = lastName.trim();
     const trimmedPosition = position.trim();
     const trimmedEmail = email.trim();
-    const parsedHourlyPayRate1 = Number(hourlyPayRate1);
-    const parsedHourlyPayRate2 = Number(hourlyPayRate2);
-    const parsedHolidayPayRate = Number(holidayPayRate);
+    const parsedSalaryAmount = Number(salaryAmount);
 
     if (
       !trimmedFirstName ||
       !trimmedLastName ||
       !trimmedPosition ||
       !trimmedEmail ||
-      !hourlyPayRate1 ||
-      !hourlyPayRate2 ||
-      !holidayPayRate ||
-      Number.isNaN(parsedHourlyPayRate1) ||
-      Number.isNaN(parsedHourlyPayRate2) ||
-      Number.isNaN(parsedHolidayPayRate)
+      (salaried && (!salaryAmount || Number.isNaN(parsedSalaryAmount)))
     ) {
       return;
     }
@@ -110,9 +100,8 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
           position: trimmedPosition,
           email: trimmedEmail,
           status,
-          hourlyPayRate1: parsedHourlyPayRate1,
-          hourlyPayRate2: parsedHourlyPayRate2,
-          holidayPayRate: parsedHolidayPayRate,
+          salaryAmount: salaried ? parsedSalaryAmount : 0,
+          activityRates: employee.activityRates ?? [],
           timesheetFileId,
         },
       });
@@ -137,25 +126,21 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
     errorMessage,
     firstName,
     firstNameRequired: submitted && !firstName.trim(),
-    holidayPayRate,
-    holidayPayRateInvalid: submitted && (!holidayPayRate || Number.isNaN(Number(holidayPayRate))),
-    hourlyPayRate1,
-    hourlyPayRate1Invalid: submitted && (!hourlyPayRate1 || Number.isNaN(Number(hourlyPayRate1))),
-    hourlyPayRate2,
-    hourlyPayRate2Invalid: submitted && (!hourlyPayRate2 || Number.isNaN(Number(hourlyPayRate2))),
     lastName,
     lastNameRequired: submitted && !lastName.trim(),
     position,
     positionRequired: submitted && !position.trim(),
+    salaried,
+    salaryAmount,
+    salaryAmountInvalid: submitted && salaried && (!salaryAmount || Number.isNaN(Number(salaryAmount))),
     saveEmployee,
     saving,
     setEmail,
     setFirstName,
-    setHolidayPayRate,
-    setHourlyPayRate1,
-    setHourlyPayRate2,
     setLastName,
     setPosition,
+    setSalaried,
+    setSalaryAmount,
     setStatus,
     status,
     timesheetFileId,

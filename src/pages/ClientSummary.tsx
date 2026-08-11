@@ -65,7 +65,11 @@ const ClientSummary = () => {
       <Container maxWidth="md" sx={{ py: 4 }}>
         <Grid container spacing={2} id="client-summary-cards">
           <Grid size={{ xs: 12 }}>
-            <ClientInformationCard clientName={selectedClient.clientName ?? ''} clientCode={selectedClient.clientCode ?? ''} />
+            <ClientInformationCard
+              clientCode={selectedClient.clientCode ?? ''}
+              clientId={selectedClient.clientId ?? ''}
+              clientName={selectedClient.clientName ?? ''}
+            />
           </Grid>
           <Grid size={{ xs: 12 }}>
             <ClientSettingsCard settings={summary.settings ?? {}} />

@@ -29,6 +29,7 @@
 - [046] - "Generate Payroll Report" should auto-navigate to Payroll Report tab like Allocation Report does
 - [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
 - [070] - Validation: require Settings fields on client create
+- [071] - BUG - Client Name and Client Code must be unique
 
 # READY
 
@@ -38,14 +39,13 @@
 
 ---
 
-- [059] - Client Management Workflow (Epic)
-- [061] - Client Create page
-- [062] - Edit Client dialog on ClientSummary
-
 # DONE
 
 ---
 
+- [059] - Client Management Workflow (Epic)
+- [061] - Client Create page
+- [062] - Edit Client dialog on ClientSummary
 - [060] - "+ New Client" entry point
 - [030] - Per-Pay-Period Configuration UI (Epic)
 - [034] - Holidays — sync button in pay period header

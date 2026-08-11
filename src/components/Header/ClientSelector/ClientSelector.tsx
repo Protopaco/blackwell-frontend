@@ -26,6 +26,7 @@ const ClientSelector = () => {
       renderInput={(params) => (
         <TextField
           {...params}
+          color="secondary"
           label="Client"
           slotProps={{
             input: {

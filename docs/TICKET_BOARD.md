@@ -33,6 +33,25 @@
 
 ---
 
+# IN PROGRESS
+
+---
+
+- [059] - Client Management Workflow (Epic)
+- [060] - "+ New Client" entry point
+- [061] - Client Create page
+- [062] - Edit Client dialog on ClientSummary
+
+# DONE
+
+---
+
+- [030] - Per-Pay-Period Configuration UI (Epic)
+- [034] - Holidays — sync button in pay period header
+- [067] - Cascade-delete EmployeeActivityRates rows when an Activity is deleted
+- [068] - Remove old Activity payRate/flatRateAmount fields from frontend
+- [069] - Remove old Employee hourlyPayRate/holidayPayRate fields from frontend
+- [066] - Validation: Active employee must have at least one activityRate
 - [048] - Expand EmployeeActivityRates (Epic)
 - [049] - EmployeeActivityRates tab infra
 - [051] - Update Employee — remove old pay rates, add salaryAmount + embed activityRates
@@ -43,29 +62,9 @@
 - [056] - Update allocation calc to use EmployeeActivityRates + holidayPayRate
 - [057] - Salary calculation
 - [058] - Validation: salaried employee with zero salary-hours
-- [059] - Client Management Workflow (Epic)
-- [060] - "+ New Client" entry point
-- [061] - Client Create page
-- [062] - Edit Client dialog on ClientSummary
 - [063] - Employee Activity Rates in Employee Dialog (Epic)
 - [064] - Employee dialog — remove old pay-rate fields, add Salaried toggle
 - [065] - EmployeeActivityRatesFields — repeatable row list
-- [066] - Validation: Active employee must have at least one activityRate
-- [067] - Cascade-delete EmployeeActivityRates rows when an Activity is deleted
-- [068] - Remove old Activity payRate/flatRateAmount fields from frontend
-- [069] - Remove old Employee hourlyPayRate/holidayPayRate fields from frontend
-
-# IN PROGRESS
-
----
-
-- [030] - Per-Pay-Period Configuration UI (Epic)
-- [034] - Holidays — sync button in pay period header
-
-# DONE
-
----
-
 - [033] - FundingSources tab
 - [032] - Activities tab
 - [035] Rename "timesheetStatus" page/route identifier to "Employees"

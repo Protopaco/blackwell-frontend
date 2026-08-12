@@ -10,6 +10,7 @@ export * from './ClientCreateRequestEmployeePayrollFolder';
 export * from './ClientSummary';
 export * from './ClientUpdateRequest';
 export * from './Employee';
+export * from './EmployeeActivityRate';
 export * from './EmployeeCreateRequest';
 export * from './EmployeeExpense';
 export * from './EmployeeExpenseUpdate';

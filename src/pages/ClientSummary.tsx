@@ -65,10 +65,14 @@ const ClientSummary = () => {
       <Container maxWidth="md" sx={{ py: 4 }}>
         <Grid container spacing={2} id="client-summary-cards">
           <Grid size={{ xs: 12 }}>
-            <ClientInformationCard clientName={selectedClient.clientName ?? ''} clientCode={selectedClient.clientCode ?? ''} />
+            <ClientInformationCard
+              clientCode={selectedClient.clientCode ?? ''}
+              clientId={selectedClient.clientId ?? ''}
+              clientName={selectedClient.clientName ?? ''}
+            />
           </Grid>
           <Grid size={{ xs: 12 }}>
-            <ClientSettingsCard settings={summary.settings ?? {}} />
+            <ClientSettingsCard clientId={selectedClient.clientId ?? ''} settings={summary.settings ?? {}} />
           </Grid>
           <Grid size={{ xs: 12 }}>
             <ClientTimesheetFoldersCard clientId={selectedClient.clientId ?? ''} timesheetFolders={summary.timesheetFolders ?? []} />
@@ -77,10 +81,10 @@ const ClientSummary = () => {
             <ClientEmployeesCard clientId={selectedClient.clientId ?? ''} employees={summary.employees ?? []} />
           </Grid>
           <Grid size={{ xs: 12 }}>
-            <ClientActivitiesCard clientId={selectedClient.clientId ?? ''} activities={summary.activities ?? []} />
+            <ClientFundingSourcesCard clientId={selectedClient.clientId ?? ''} fundingSources={summary.fundingSources ?? []} />
           </Grid>
           <Grid size={{ xs: 12 }}>
-            <ClientFundingSourcesCard clientId={selectedClient.clientId ?? ''} fundingSources={summary.fundingSources ?? []} />
+            <ClientActivitiesCard clientId={selectedClient.clientId ?? ''} activities={summary.activities ?? []} />
           </Grid>
           <Grid size={{ xs: 12 }}>
             <ClientHolidaysCard clientId={selectedClient.clientId ?? ''} holidays={summary.holidays ?? []} />

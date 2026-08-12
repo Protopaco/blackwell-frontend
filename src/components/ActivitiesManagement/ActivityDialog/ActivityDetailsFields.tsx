@@ -4,30 +4,17 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
-import {
-  ActivityPayRateEnum,
-  ActivityPayrollCategoryEnum,
-} from '@/api/generated/models/Activity';
-import type {
-  ActivityPayRateEnum as ActivityPayRate,
-  ActivityPayrollCategoryEnum as ActivityPayrollCategory,
-} from '@/api/generated/models/Activity';
-import currencyToString from '@/utils/currencyToString';
-import { isFlatPayRate, payRateLabels } from '../activityDisplay';
+import { ActivityPayrollCategoryEnum } from '@/api/generated/models/Activity';
+import type { ActivityPayrollCategoryEnum as ActivityPayrollCategory } from '@/api/generated/models/Activity';
 
 type Props = {
   activityName: string;
-  flatRateAmount: string;
-  flatRateAmountInvalid: boolean;
   locked?: boolean;
   lockedMessage?: string;
   nameRequired: boolean;
   onActivityNameChange: (value: string) => void;
-  onFlatRateAmountChange: (value: string) => void;
-  onPayRateChange: (value: ActivityPayRate) => void;
   onPayrollCategoryChange: (value: ActivityPayrollCategory) => void;
   onTrackSeparatelyChange: (value: boolean) => void;
-  payRate: ActivityPayRate;
   payrollCategory: ActivityPayrollCategory;
   saving: boolean;
   trackSeparately: boolean;
@@ -42,17 +29,12 @@ const payrollCategoryLabels: Record<ActivityPayrollCategory, string> = {
 
 const ActivityDetailsFields = ({
   activityName,
-  flatRateAmount,
-  flatRateAmountInvalid,
   locked = false,
   lockedMessage,
   nameRequired,
   onActivityNameChange,
-  onFlatRateAmountChange,
-  onPayRateChange,
   onPayrollCategoryChange,
   onTrackSeparatelyChange,
-  payRate,
   payrollCategory,
   saving,
   trackSeparately,
@@ -90,25 +72,6 @@ const ActivityDetailsFields = ({
           </MenuItem>
         ))}
       </TextField>
-      <TextField disabled={disabled} fullWidth label="Pay rate" onChange={(event) => onPayRateChange(event.target.value as ActivityPayRate)} select value={payRate}>
-        {Object.values(ActivityPayRateEnum).map((rate) => (
-          <MenuItem key={rate} value={rate}>
-            {payRateLabels[rate]}
-          </MenuItem>
-        ))}
-      </TextField>
-      {isFlatPayRate(payRate) ? (
-        <TextField
-          disabled={disabled}
-          error={flatRateAmountInvalid}
-          fullWidth
-          helperText={flatRateAmountInvalid ? 'Flat rate amount must be a valid number.' : undefined}
-          label="Flat rate amount"
-          onBlur={() => onFlatRateAmountChange(currencyToString(flatRateAmount))}
-          onChange={(event) => onFlatRateAmountChange(event.target.value)}
-          value={flatRateAmount}
-        />
-      ) : null}
     </Stack>
   );
 

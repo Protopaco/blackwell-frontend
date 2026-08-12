@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { EmployeeActivityRate } from './EmployeeActivityRate';
+import {
+    EmployeeActivityRateFromJSON,
+    EmployeeActivityRateFromJSONTyped,
+    EmployeeActivityRateToJSON,
+    EmployeeActivityRateToJSONTyped,
+} from './EmployeeActivityRate';
+
 /**
  * 
  * @export
@@ -44,23 +52,17 @@ export interface Employee {
      */
     position?: string;
     /**
-     * 
+     * Absence or 0 means not salaried.
      * @type {number}
      * @memberof Employee
      */
-    hourlyPayRate1?: number;
+    salaryAmount?: number;
     /**
      * 
-     * @type {number}
+     * @type {Array<EmployeeActivityRate>}
      * @memberof Employee
      */
-    hourlyPayRate2?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Employee
-     */
-    holidayPayRate?: number;
+    activityRates?: Array<EmployeeActivityRate>;
     /**
      * 
      * @type {string}
@@ -113,9 +115,8 @@ export function EmployeeFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'firstName': json['firstName'] == null ? undefined : json['firstName'],
         'lastName': json['lastName'] == null ? undefined : json['lastName'],
         'position': json['position'] == null ? undefined : json['position'],
-        'hourlyPayRate1': json['hourlyPayRate1'] == null ? undefined : json['hourlyPayRate1'],
-        'hourlyPayRate2': json['hourlyPayRate2'] == null ? undefined : json['hourlyPayRate2'],
-        'holidayPayRate': json['holidayPayRate'] == null ? undefined : json['holidayPayRate'],
+        'salaryAmount': json['salaryAmount'] == null ? undefined : json['salaryAmount'],
+        'activityRates': json['activityRates'] == null ? undefined : ((json['activityRates'] as Array<any>).map(EmployeeActivityRateFromJSON)),
         'email': json['email'] == null ? undefined : json['email'],
         'status': json['status'] == null ? undefined : json['status'],
         'timesheetFileId': json['timesheetFileId'] == null ? undefined : json['timesheetFileId'],
@@ -137,9 +138,8 @@ export function EmployeeToJSONTyped(value?: Employee | null, ignoreDiscriminator
         'firstName': value['firstName'],
         'lastName': value['lastName'],
         'position': value['position'],
-        'hourlyPayRate1': value['hourlyPayRate1'],
-        'hourlyPayRate2': value['hourlyPayRate2'],
-        'holidayPayRate': value['holidayPayRate'],
+        'salaryAmount': value['salaryAmount'],
+        'activityRates': value['activityRates'] == null ? undefined : ((value['activityRates'] as Array<any>).map(EmployeeActivityRateToJSON)),
         'email': value['email'],
         'status': value['status'],
         'timesheetFileId': value['timesheetFileId'],

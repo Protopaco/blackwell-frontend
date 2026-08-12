@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { employeeApi } from '@/api/client';
+import { activityApi, employeeApi } from '@/api/client';
+import { EmployeeActivityRatePayRateTypeEnum } from '@/api/generated/models/EmployeeActivityRate';
 import type { Employee } from '@/api/generated/models/Employee';
+import type { EmployeeActivityRateFormRow } from '../../CreateEmployeeDialog/EmployeeActivityRatesFields/EmployeeActivityRateFormRow';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
 import { useToast } from '@/state/toast/toast.context';
+import useFetchByKey from '@/hooks/useFetchByKey';
 import currencyToString from '@/utils/currencyToString';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 
@@ -22,14 +25,47 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
   const [position, setPosition] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<EmployeeStatusValueType>(EmployeeStatusValue.Active);
-  const [hourlyPayRate1, setHourlyPayRate1] = useState('');
-  const [hourlyPayRate2, setHourlyPayRate2] = useState('');
-  const [holidayPayRate, setHolidayPayRate] = useState('');
+  const [salaried, setSalaried] = useState(false);
+  const [salaryAmount, setSalaryAmount] = useState('');
+  const [activityRates, setActivityRates] = useState<EmployeeActivityRateFormRow[]>([]);
   const [timesheetFileId, setTimesheetFileId] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { showToast } = useToast();
+
+  const { data: activities } = useFetchByKey(
+    open ? clientId : undefined,
+    (clientId) => activityApi.v1GetActivities({ clientId }),
+    'Failed to load activities.',
+  );
+
+  const addActivityRate = () => {
+    setActivityRates((currentActivityRates) => {
+      const currentActivityIds = currentActivityRates.map((activityRate) => activityRate.activityId).filter(Boolean);
+      const availableActivity = (activities ?? []).find((activity) => !currentActivityIds.includes(activity.activityId ?? ''));
+
+      return [
+        ...currentActivityRates,
+        {
+          activityId: availableActivity?.activityId ?? '',
+          payRateType: EmployeeActivityRatePayRateTypeEnum.Hourly,
+          payRate: '',
+          holidayPayRate: '',
+        },
+      ];
+    });
+  };
+
+  const updateActivityRate = (index: number, nextActivityRate: EmployeeActivityRateFormRow) => {
+    setActivityRates((currentActivityRates) =>
+      currentActivityRates.map((activityRate, activityRateIndex) => (activityRateIndex === index ? nextActivityRate : activityRate)),
+    );
+  };
+
+  const removeActivityRate = (index: number) => {
+    setActivityRates((currentActivityRates) => currentActivityRates.filter((_, activityRateIndex) => activityRateIndex !== index));
+  };
 
   useEffect(() => {
     if (!open || !employee) return;
@@ -39,9 +75,17 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
     setPosition(employee.position ?? '');
     setEmail(employee.email ?? '');
     setStatus(employee.status ?? EmployeeStatusValue.Active);
-    setHourlyPayRate1(currencyToString(employee.hourlyPayRate1));
-    setHourlyPayRate2(currencyToString(employee.hourlyPayRate2));
-    setHolidayPayRate(currencyToString(employee.holidayPayRate));
+    setSalaried((employee.salaryAmount ?? 0) > 0);
+    setSalaryAmount(employee.salaryAmount ? currencyToString(employee.salaryAmount) : '');
+    setActivityRates(
+      (employee.activityRates ?? []).map((activityRate) => ({
+        id: activityRate.id,
+        activityId: activityRate.activityId,
+        payRateType: activityRate.payRateType,
+        payRate: currencyToString(activityRate.payRate),
+        holidayPayRate: currencyToString(activityRate.holidayPayRate),
+      })),
+    );
     setTimesheetFileId(employee.timesheetFileId ?? '');
     setSubmitted(false);
     setErrorMessage(null);
@@ -53,9 +97,9 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
     setPosition('');
     setEmail('');
     setStatus(EmployeeStatusValue.Active);
-    setHourlyPayRate1('');
-    setHourlyPayRate2('');
-    setHolidayPayRate('');
+    setSalaried(false);
+    setSalaryAmount('');
+    setActivityRates([]);
     setTimesheetFileId('');
     setSubmitted(false);
     setErrorMessage(null);
@@ -78,21 +122,29 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
     const trimmedLastName = lastName.trim();
     const trimmedPosition = position.trim();
     const trimmedEmail = email.trim();
-    const parsedHourlyPayRate1 = Number(hourlyPayRate1);
-    const parsedHourlyPayRate2 = Number(hourlyPayRate2);
-    const parsedHolidayPayRate = Number(holidayPayRate);
+    const parsedSalaryAmount = Number(salaryAmount);
+    const selectedActivityIds = activityRates.map((activityRate) => activityRate.activityId).filter(Boolean);
+    const hasMissingActivity = activityRates.some((activityRate) => !activityRate.activityId);
+    const hasDuplicateActivity = new Set(selectedActivityIds).size !== selectedActivityIds.length;
+    const hasInvalidPayRate = activityRates.some((activityRate) => {
+      if (activityRate.payRateType === EmployeeActivityRatePayRateTypeEnum.Salary) return false;
+      return activityRate.payRate === '' || Number.isNaN(Number(activityRate.payRate));
+    });
+    const hasInvalidHolidayPayRate = activityRates.some((activityRate) => {
+      if (activityRate.payRateType === EmployeeActivityRatePayRateTypeEnum.Salary) return false;
+      return activityRate.holidayPayRate === '' || Number.isNaN(Number(activityRate.holidayPayRate));
+    });
 
     if (
       !trimmedFirstName ||
       !trimmedLastName ||
       !trimmedPosition ||
       !trimmedEmail ||
-      !hourlyPayRate1 ||
-      !hourlyPayRate2 ||
-      !holidayPayRate ||
-      Number.isNaN(parsedHourlyPayRate1) ||
-      Number.isNaN(parsedHourlyPayRate2) ||
-      Number.isNaN(parsedHolidayPayRate)
+      (salaried && (!salaryAmount || Number.isNaN(parsedSalaryAmount))) ||
+      hasMissingActivity ||
+      hasDuplicateActivity ||
+      hasInvalidPayRate ||
+      hasInvalidHolidayPayRate
     ) {
       return;
     }
@@ -110,9 +162,14 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
           position: trimmedPosition,
           email: trimmedEmail,
           status,
-          hourlyPayRate1: parsedHourlyPayRate1,
-          hourlyPayRate2: parsedHourlyPayRate2,
-          holidayPayRate: parsedHolidayPayRate,
+          salaryAmount: salaried ? parsedSalaryAmount : 0,
+          activityRates: activityRates.map((activityRate) => ({
+            id: activityRate.id,
+            activityId: activityRate.activityId,
+            payRateType: activityRate.payRateType,
+            payRate: activityRate.payRateType === EmployeeActivityRatePayRateTypeEnum.Salary ? 0 : Number(activityRate.payRate),
+            holidayPayRate: activityRate.payRateType === EmployeeActivityRatePayRateTypeEnum.Salary ? 0 : Number(activityRate.holidayPayRate),
+          })),
           timesheetFileId,
         },
       });
@@ -130,35 +187,41 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
     }
   };
 
+  const selectedActivityIds = activityRates.map((activityRate) => activityRate.activityId).filter(Boolean);
+
   return {
+    activities: activities ?? [],
+    activityRates,
+    addActivityRate,
     closeDialog,
+    duplicateActivity: submitted && new Set(selectedActivityIds).size !== selectedActivityIds.length,
     email,
     emailRequired: submitted && !email.trim(),
     errorMessage,
     firstName,
     firstNameRequired: submitted && !firstName.trim(),
-    holidayPayRate,
-    holidayPayRateInvalid: submitted && (!holidayPayRate || Number.isNaN(Number(holidayPayRate))),
-    hourlyPayRate1,
-    hourlyPayRate1Invalid: submitted && (!hourlyPayRate1 || Number.isNaN(Number(hourlyPayRate1))),
-    hourlyPayRate2,
-    hourlyPayRate2Invalid: submitted && (!hourlyPayRate2 || Number.isNaN(Number(hourlyPayRate2))),
     lastName,
     lastNameRequired: submitted && !lastName.trim(),
     position,
     positionRequired: submitted && !position.trim(),
+    removeActivityRate,
+    salaried,
+    salaryAmount,
+    salaryAmountInvalid: submitted && salaried && (!salaryAmount || Number.isNaN(Number(salaryAmount))),
     saveEmployee,
     saving,
+    selectedActivityIds,
     setEmail,
     setFirstName,
-    setHolidayPayRate,
-    setHourlyPayRate1,
-    setHourlyPayRate2,
     setLastName,
     setPosition,
+    setSalaried,
+    setSalaryAmount,
     setStatus,
     status,
+    submitted,
     timesheetFileId,
+    updateActivityRate,
   };
 };
 

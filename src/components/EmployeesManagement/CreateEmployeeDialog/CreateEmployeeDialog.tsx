@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import ManagementDialog from '@/components/Shared/ManagementDialog/ManagementDialog';
+import EmployeeActivityRatesFields from './EmployeeActivityRatesFields/EmployeeActivityRatesFields';
 import EmployeeIdentityFields from './EmployeeIdentityFields/EmployeeIdentityFields';
-import EmployeePayRateFields from './EmployeePayRateFields/EmployeePayRateFields';
 import EmployeeTimesheetSetupFields from './EmployeeTimesheetSetupFields/EmployeeTimesheetSetupFields';
 import useCreateEmployeeForm from './useCreateEmployeeForm/useCreateEmployeeForm';
 
@@ -19,6 +19,7 @@ const CreateEmployeeDialog = ({ clientId, open, onClose, onCreated }: Props) => 
     <ManagementDialog
       errorMessage={form.errorMessage}
       formId="create-employee-form"
+      maxWidth="md"
       onClose={form.closeDialog}
       open={open}
       saving={form.saving}
@@ -38,22 +39,26 @@ const CreateEmployeeDialog = ({ clientId, open, onClose, onCreated }: Props) => 
           onFirstNameChange={form.setFirstName}
           onLastNameChange={form.setLastName}
           onPositionChange={form.setPosition}
+          onSalariedChange={form.setSalaried}
+          onSalaryAmountChange={form.setSalaryAmount}
           onStatusChange={form.setStatus}
           position={form.position}
           positionRequired={form.positionRequired}
+          salaried={form.salaried}
+          salaryAmount={form.salaryAmount}
+          salaryAmountInvalid={form.salaryAmountInvalid}
           status={form.status}
         />
-        <EmployeePayRateFields
+        <EmployeeActivityRatesFields
+          activities={form.activities}
+          activityRates={form.activityRates}
           disabled={form.saving}
-          holidayPayRate={form.holidayPayRate}
-          holidayPayRateInvalid={form.holidayPayRateInvalid}
-          hourlyPayRate1={form.hourlyPayRate1}
-          hourlyPayRate1Invalid={form.hourlyPayRate1Invalid}
-          hourlyPayRate2={form.hourlyPayRate2}
-          hourlyPayRate2Invalid={form.hourlyPayRate2Invalid}
-          onHolidayPayRateChange={form.setHolidayPayRate}
-          onHourlyPayRate1Change={form.setHourlyPayRate1}
-          onHourlyPayRate2Change={form.setHourlyPayRate2}
+          duplicateActivity={form.duplicateActivity}
+          onAddActivityRate={form.addActivityRate}
+          onRemoveActivityRate={form.removeActivityRate}
+          onUpdateActivityRate={form.updateActivityRate}
+          selectedActivityIds={form.selectedActivityIds}
+          submitted={form.submitted}
         />
         <EmployeeTimesheetSetupFields
           disabled={form.saving}

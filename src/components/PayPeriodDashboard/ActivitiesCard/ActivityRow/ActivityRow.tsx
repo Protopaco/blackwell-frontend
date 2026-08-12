@@ -7,8 +7,6 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { isFlatPayRate, payRateLabels } from '@/components/ActivitiesManagement/activityDisplay';
-import currencyToString from '@/utils/currencyToString';
 import type { Activity } from '@/api/generated/models/Activity';
 
 type Props = {
@@ -37,8 +35,6 @@ const ActivityRow = ({ activity, canEdit, canRemove, onEdit, onRemove, removing 
     <TableRow>
       <TableCell>{activity.activityName}</TableCell>
       <TableCell>{activity.payrollCategory}</TableCell>
-      <TableCell>{activity.payRate ? payRateLabels[activity.payRate] : ''}</TableCell>
-      <TableCell>{isFlatPayRate(activity.payRate) ? currencyToString(activity.flatRateAmount, { decorated: true }) : ''}</TableCell>
       <TableCell>
         <Stack spacing={0.5}>
           {formatFundingAllocations(activity).map((fundingAllocation) => (

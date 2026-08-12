@@ -10,9 +10,8 @@ Name | Type
 `firstName` | string
 `lastName` | string
 `position` | string
-`hourlyPayRate1` | number
-`hourlyPayRate2` | number
-`holidayPayRate` | number
+`salaryAmount` | number
+`activityRates` | [Array&lt;EmployeeActivityRate&gt;](EmployeeActivityRate.md)
 `email` | string
 `status` | string
 `timesheetFileId` | string
@@ -28,9 +27,8 @@ const example = {
   "firstName": Jane,
   "lastName": Smith,
   "position": Program Director,
-  "hourlyPayRate1": 25.96,
-  "hourlyPayRate2": 36,
-  "holidayPayRate": 38.94,
+  "salaryAmount": 0,
+  "activityRates": null,
   "email": jane.smith@example.org,
   "status": null,
   "timesheetFileId": 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms,

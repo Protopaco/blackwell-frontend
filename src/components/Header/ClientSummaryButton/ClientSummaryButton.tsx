@@ -10,7 +10,7 @@ const ClientSummaryButton = () => {
   if (!selectedClient) return null;
 
   return (
-    <Button color="inherit" id="client-summary-button" onClick={() => navigate(`/client/${selectedClient.clientId}`)}>
+    <Button color="inherit" variant="outlined" id="client-summary-button" onClick={() => navigate(`/client/${selectedClient.clientId}`)}>
       Client Summary
     </Button>
   );

@@ -57,18 +57,6 @@ export interface Activity {
      * @memberof Activity
      */
     fundingSources?: Array<ActivityFundingSourcesInner>;
-    /**
-     * 
-     * @type {ActivityPayRateEnum}
-     * @memberof Activity
-     */
-    payRate?: ActivityPayRateEnum;
-    /**
-     * 
-     * @type {number}
-     * @memberof Activity
-     */
-    flatRateAmount?: number;
 }
 
 
@@ -82,17 +70,6 @@ export const ActivityPayrollCategoryEnum = {
     Sto: 'STO'
 } as const;
 export type ActivityPayrollCategoryEnum = typeof ActivityPayrollCategoryEnum[keyof typeof ActivityPayrollCategoryEnum];
-
-/**
- * @export
- */
-export const ActivityPayRateEnum = {
-    HourlyPayRate1: 'HourlyPayRate1',
-    HourlyPayRate2: 'HourlyPayRate2',
-    FlatPayRate1: 'FlatPayRate1',
-    FlatPayRate2: 'FlatPayRate2'
-} as const;
-export type ActivityPayRateEnum = typeof ActivityPayRateEnum[keyof typeof ActivityPayRateEnum];
 
 
 /**
@@ -117,8 +94,6 @@ export function ActivityFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'trackSeparately': json['trackSeparately'] == null ? undefined : json['trackSeparately'],
         'payrollCategory': json['payrollCategory'] == null ? undefined : json['payrollCategory'],
         'fundingSources': json['fundingSources'] == null ? undefined : ((json['fundingSources'] as Array<any>).map(ActivityFundingSourcesInnerFromJSON)),
-        'payRate': json['payRate'] == null ? undefined : json['payRate'],
-        'flatRateAmount': json['flatRateAmount'] == null ? undefined : json['flatRateAmount'],
     };
 }
 
@@ -138,8 +113,6 @@ export function ActivityToJSONTyped(value?: Activity | null, ignoreDiscriminator
         'trackSeparately': value['trackSeparately'],
         'payrollCategory': value['payrollCategory'],
         'fundingSources': value['fundingSources'] == null ? undefined : ((value['fundingSources'] as Array<any>).map(ActivityFundingSourcesInnerToJSON)),
-        'payRate': value['payRate'],
-        'flatRateAmount': value['flatRateAmount'],
     };
 }
 

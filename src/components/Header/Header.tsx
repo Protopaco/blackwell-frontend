@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import ClientSelector from '@/components/Header/ClientSelector/ClientSelector';
 import ClientSummaryButton from '@/components/Header/ClientSummaryButton/ClientSummaryButton';
+import NewClientButton from '@/components/Header/NewClientButton/NewClientButton';
 import SignInButton from '@/components/Header/SignInButton/SignInButton';
 import '@/components/Header/Header.css';
 
@@ -10,6 +11,7 @@ const Header = () => {
     <AppBar position="static" id="header">
       <Toolbar>
         <ClientSelector />
+        <NewClientButton />
         <ClientSummaryButton />
         <SignInButton />
       </Toolbar>

@@ -41,6 +41,8 @@
 
 ---
 
+- [082] - Split EmployeeExpenses "totalExpense" into "wageExpense" and "taxExpense"
+
 # DONE
 
 ---

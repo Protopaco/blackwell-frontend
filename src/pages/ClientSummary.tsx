@@ -72,7 +72,7 @@ const ClientSummary = () => {
             />
           </Grid>
           <Grid size={{ xs: 12 }}>
-            <ClientSettingsCard clientId={selectedClient.clientId ?? ''} settings={summary.settings ?? {}} />
+            <ClientSettingsCard clientId={selectedClient.clientId ?? ''} settings={summary.settings} />
           </Grid>
           <Grid size={{ xs: 12 }}>
             <ClientTimesheetFoldersCard clientId={selectedClient.clientId ?? ''} timesheetFolders={summary.timesheetFolders ?? []} />

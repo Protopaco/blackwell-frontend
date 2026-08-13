@@ -36,7 +36,13 @@ export interface EmployeeExpense {
      * @type {number}
      * @memberof EmployeeExpense
      */
-    totalExpense?: number | null;
+    wageExpense?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof EmployeeExpense
+     */
+    taxExpense?: number | null;
 }
 
 /**
@@ -58,7 +64,8 @@ export function EmployeeExpenseFromJSONTyped(json: any, ignoreDiscriminator: boo
         
         'employeeId': json['employeeId'] == null ? undefined : json['employeeId'],
         'employeeName': json['employeeName'] == null ? undefined : json['employeeName'],
-        'totalExpense': json['totalExpense'] == null ? undefined : json['totalExpense'],
+        'wageExpense': json['wageExpense'] == null ? undefined : json['wageExpense'],
+        'taxExpense': json['taxExpense'] == null ? undefined : json['taxExpense'],
     };
 }
 
@@ -75,7 +82,8 @@ export function EmployeeExpenseToJSONTyped(value?: EmployeeExpense | null, ignor
         
         'employeeId': value['employeeId'],
         'employeeName': value['employeeName'],
-        'totalExpense': value['totalExpense'],
+        'wageExpense': value['wageExpense'],
+        'taxExpense': value['taxExpense'],
     };
 }
 

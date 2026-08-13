@@ -9,7 +9,8 @@ Name | Type
 `employeeName` | string
 `totalHours` | number
 `totalFlatRate` | number
-`totalExpense` | number
+`wageExpense` | number
+`taxExpense` | number
 `hourly` | [Array&lt;V1GetPayrollReport200ResponseValueHourlyInner&gt;](V1GetPayrollReport200ResponseValueHourlyInner.md)
 `flatRate` | [Array&lt;V1GetPayrollReport200ResponseValueFlatRateInner&gt;](V1GetPayrollReport200ResponseValueFlatRateInner.md)
 
@@ -23,7 +24,8 @@ const example = {
   "employeeName": null,
   "totalHours": null,
   "totalFlatRate": null,
-  "totalExpense": null,
+  "wageExpense": null,
+  "taxExpense": null,
   "hourly": null,
   "flatRate": null,
 } satisfies V1GetPayrollReport200ResponseValue

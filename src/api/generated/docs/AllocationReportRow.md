@@ -8,6 +8,7 @@ Name | Type
 ------------ | -------------
 `fundingSourceName` | string
 `wagesAllocation` | number
+`taxesAllocation` | number
 `additionalExpenses` | number
 `total` | number
 
@@ -20,8 +21,9 @@ import type { AllocationReportRow } from ''
 const example = {
   "fundingSourceName": Federal Grant,
   "wagesAllocation": 14250,
+  "taxesAllocation": 1156.5,
   "additionalExpenses": 1843.75,
-  "total": 16093.75,
+  "total": 17250.25,
 } satisfies AllocationReportRow
 
 console.log(example)

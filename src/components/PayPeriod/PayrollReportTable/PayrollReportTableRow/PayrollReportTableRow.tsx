@@ -17,14 +17,27 @@ type Props = {
   row: PayrollReportRow;
   expanded: boolean;
   onToggleExpand: (employeeId: string) => void;
-  editedValues: Record<string, string>;
-  onEditValue: (employeeId: string, value: string) => void;
-  onBlurValue: (employeeId: string) => void;
+  editedWageValues: Record<string, string>;
+  editedTaxValues: Record<string, string>;
+  onEditWageValue: (employeeId: string, value: string) => void;
+  onEditTaxValue: (employeeId: string, value: string) => void;
+  onBlurWageValue: (employeeId: string) => void;
+  onBlurTaxValue: (employeeId: string) => void;
 };
 
 const formatNumber = (value: number | undefined | null): string => (value ?? 0).toFixed(2);
 
-const PayrollReportTableRow = ({ row, expanded, onToggleExpand, editedValues, onEditValue, onBlurValue }: Props) => {
+const PayrollReportTableRow = ({
+  row,
+  expanded,
+  onToggleExpand,
+  editedWageValues,
+  editedTaxValues,
+  onEditWageValue,
+  onEditTaxValue,
+  onBlurWageValue,
+  onBlurTaxValue,
+}: Props) => {
   const hasDetail = row.hourly.some((entry) => (entry.totalHours ?? 0) !== 0) || row.flatRate.some((entry) => (entry.quantity ?? 0) !== 0);
 
   return (
@@ -43,16 +56,25 @@ const PayrollReportTableRow = ({ row, expanded, onToggleExpand, editedValues, on
         <TableCell>
           <TextField
             size="small"
-            value={editedValues[row.employeeId] ?? currencyToString(row.totalExpense ?? undefined)}
-            onChange={(event) => onEditValue(row.employeeId, event.target.value)}
-            onBlur={() => onBlurValue(row.employeeId)}
-            slotProps={{ htmlInput: { inputMode: 'decimal', 'aria-label': `Total expense for ${row.employeeName}` } }}
+            value={editedWageValues[row.employeeId] ?? currencyToString(row.wageExpense ?? undefined)}
+            onChange={(event) => onEditWageValue(row.employeeId, event.target.value)}
+            onBlur={() => onBlurWageValue(row.employeeId)}
+            slotProps={{ htmlInput: { inputMode: 'decimal', 'aria-label': `Wage expense for ${row.employeeName}` } }}
+          />
+        </TableCell>
+        <TableCell>
+          <TextField
+            size="small"
+            value={editedTaxValues[row.employeeId] ?? currencyToString(row.taxExpense ?? undefined)}
+            onChange={(event) => onEditTaxValue(row.employeeId, event.target.value)}
+            onBlur={() => onBlurTaxValue(row.employeeId)}
+            slotProps={{ htmlInput: { inputMode: 'decimal', 'aria-label': `Tax expense for ${row.employeeName}` } }}
           />
         </TableCell>
       </TableRow>
       {hasDetail && (
         <TableRow>
-          <TableCell sx={{ py: 0 }} colSpan={5}>
+          <TableCell sx={{ py: 0 }} colSpan={6}>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Box sx={{ py: 2 }}>
                 <Stack spacing={2}>

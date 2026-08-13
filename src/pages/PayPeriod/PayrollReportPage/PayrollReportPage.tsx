@@ -38,7 +38,8 @@ const PayrollReportPage = () => {
 
   const allocationReportExists = allocationReportGenerated(payPeriod.status);
 
-  const [editedValues, setEditedValues] = useState<Record<string, string>>({});
+  const [editedWageValues, setEditedWageValues] = useState<Record<string, string>>({});
+  const [editedTaxValues, setEditedTaxValues] = useState<Record<string, string>>({});
 
   const rows = useMemo((): PayrollReportRow[] => {
     if (!payrollReport) return [];
@@ -49,31 +50,51 @@ const PayrollReportPage = () => {
         employeeName: report.employeeName ?? '',
         totalHours: report.totalHours ?? 0,
         totalFlatRate: report.totalFlatRate ?? 0,
-        totalExpense: report.totalExpense ?? null,
+        wageExpense: report.wageExpense ?? null,
+        taxExpense: report.taxExpense ?? null,
         hourly: report.hourly ?? [],
         flatRate: report.flatRate ?? [],
       }))
       .sort((left, right) => left.employeeName.localeCompare(right.employeeName, undefined, { sensitivity: 'base' }));
   }, [payrollReport]);
 
+  // Parses a raw text-field value into a currency number, or null when the field was cleared.
+  const parseEditedValue = (rawValue: string): number | null => {
+    const trimmedValue = rawValue.trim();
+    return trimmedValue === '' ? null : Number(trimmedValue);
+  };
+
+  const dirtyEmployeeIds = useMemo(
+    () => new Set([...Object.keys(editedWageValues), ...Object.keys(editedTaxValues)]),
+    [editedWageValues, editedTaxValues],
+  );
+
   const dirtyEntries = useMemo(() => {
-    return Object.entries(editedValues).flatMap(([employeeId, rawValue]) => {
+    return [...dirtyEmployeeIds].flatMap((employeeId) => {
       const row = rows.find((candidate) => candidate.employeeId === employeeId);
       if (!row) return [];
 
-      const trimmedValue = rawValue.trim();
-      const parsedValue = trimmedValue === '' ? null : Number(trimmedValue);
-      const invalid = trimmedValue !== '' && Number.isNaN(parsedValue);
-      const changed = !invalid && parsedValue !== (row.totalExpense ?? null);
+      const rawWageValue = editedWageValues[employeeId];
+      const rawTaxValue = editedTaxValues[employeeId];
 
-      return [{ employeeId, parsedValue, invalid, changed }];
+      const wageInvalid = rawWageValue !== undefined && rawWageValue.trim() !== '' && Number.isNaN(parseEditedValue(rawWageValue));
+      const taxInvalid = rawTaxValue !== undefined && rawTaxValue.trim() !== '' && Number.isNaN(parseEditedValue(rawTaxValue));
+      const invalid = wageInvalid || taxInvalid;
+
+      const wageExpense = rawWageValue !== undefined ? parseEditedValue(rawWageValue) : row.wageExpense;
+      const taxExpense = rawTaxValue !== undefined ? parseEditedValue(rawTaxValue) : row.taxExpense;
+      const changed = !invalid && (wageExpense !== row.wageExpense || taxExpense !== row.taxExpense);
+
+      return [{ employeeId, wageExpense, taxExpense, invalid, changed }];
     });
-  }, [editedValues, rows]);
+  }, [dirtyEmployeeIds, editedWageValues, editedTaxValues, rows]);
 
   const hasInvalidEdit = dirtyEntries.some((entry) => entry.invalid);
   const changedEntries = dirtyEntries.filter((entry) => entry.changed);
 
-  const allExpensesComplete = rows.every((row) => row.totalExpense !== null && row.totalExpense !== undefined);
+  const allExpensesComplete = rows.every(
+    (row) => row.wageExpense !== null && row.wageExpense !== undefined && row.taxExpense !== null && row.taxExpense !== undefined,
+  );
 
   const handleRefresh = () => {
     refetchPayPeriod();
@@ -87,7 +108,8 @@ const PayrollReportPage = () => {
   } = useAsyncAction(async () => {
     const employeeExpenseUpdate: EmployeeExpenseUpdate[] = changedEntries.map((entry) => ({
       employeeId: entry.employeeId,
-      totalExpense: entry.parsedValue,
+      wageExpense: entry.wageExpense,
+      taxExpense: entry.taxExpense,
     }));
 
     await payrollReportApi.v1UpdateEmployeeExpensesBatch({
@@ -97,7 +119,8 @@ const PayrollReportPage = () => {
     });
 
     refetchPayrollReport();
-    setEditedValues({});
+    setEditedWageValues({});
+    setEditedTaxValues({});
 
     if (allocationReportExists) {
       try {
@@ -119,23 +142,35 @@ const PayrollReportPage = () => {
     navigate(`/client/${clientId}/payPeriod/${payPeriodId}/allocationReport`);
   }, 'Failed to generate allocation report.', 'Allocation report generated.');
 
-  const handleEditValue = (employeeId: string, value: string) => {
-    setEditedValues((previous) => ({ ...previous, [employeeId]: value }));
+  const handleEditWageValue = (employeeId: string, value: string) => {
+    setEditedWageValues((previous) => ({ ...previous, [employeeId]: value }));
   };
 
-  const handleBlurValue = (employeeId: string) => {
-    setEditedValues((previous) => {
-      const rawValue = previous[employeeId];
-      if (rawValue === undefined) return previous;
+  const handleEditTaxValue = (employeeId: string, value: string) => {
+    setEditedTaxValues((previous) => ({ ...previous, [employeeId]: value }));
+  };
 
-      const trimmedValue = rawValue.trim();
-      if (trimmedValue === '') return previous;
+  // Reformats a text field's raw value to a fixed two-decimal string on blur, leaving it untouched
+  // if it's empty or not a parseable number.
+  const normalizeOnBlur = (previous: Record<string, string>, employeeId: string): Record<string, string> => {
+    const rawValue = previous[employeeId];
+    if (rawValue === undefined) return previous;
 
-      const parsedValue = Number(trimmedValue);
-      if (Number.isNaN(parsedValue)) return previous;
+    const trimmedValue = rawValue.trim();
+    if (trimmedValue === '') return previous;
 
-      return { ...previous, [employeeId]: parsedValue.toFixed(2) };
-    });
+    const parsedValue = Number(trimmedValue);
+    if (Number.isNaN(parsedValue)) return previous;
+
+    return { ...previous, [employeeId]: parsedValue.toFixed(2) };
+  };
+
+  const handleBlurWageValue = (employeeId: string) => {
+    setEditedWageValues((previous) => normalizeOnBlur(previous, employeeId));
+  };
+
+  const handleBlurTaxValue = (employeeId: string) => {
+    setEditedTaxValues((previous) => normalizeOnBlur(previous, employeeId));
   };
 
   const renderBody = () => {
@@ -159,7 +194,15 @@ const PayrollReportPage = () => {
       <Stack spacing={2}>
         {saveErrorMessage && <Typography color="error">{saveErrorMessage}</Typography>}
         {generateAllocationReportErrorMessage && <Typography color="error">{generateAllocationReportErrorMessage}</Typography>}
-        <PayrollReportTable rows={rows} editedValues={editedValues} onEditValue={handleEditValue} onBlurValue={handleBlurValue} />
+        <PayrollReportTable
+          rows={rows}
+          editedWageValues={editedWageValues}
+          editedTaxValues={editedTaxValues}
+          onEditWageValue={handleEditWageValue}
+          onEditTaxValue={handleEditTaxValue}
+          onBlurWageValue={handleBlurWageValue}
+          onBlurTaxValue={handleBlurTaxValue}
+        />
       </Stack>
     );
   };
@@ -177,7 +220,7 @@ const PayrollReportPage = () => {
             <Button
               variant="outlined"
               onClick={generateAllocationReport}
-              disabled={saving || generatingAllocationReport || Object.keys(editedValues).length > 0 || !allExpensesComplete}
+              disabled={saving || generatingAllocationReport || dirtyEmployeeIds.size > 0 || !allExpensesComplete}
               loading={generatingAllocationReport}
             >
               Generate Allocation Report

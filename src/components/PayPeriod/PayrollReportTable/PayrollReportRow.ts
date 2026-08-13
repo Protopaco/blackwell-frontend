@@ -6,7 +6,8 @@ interface PayrollReportRow {
   employeeName: string;
   totalHours: number;
   totalFlatRate: number;
-  totalExpense: number | null;
+  wageExpense: number | null;
+  taxExpense: number | null;
   hourly: V1GetPayrollReport200ResponseValueHourlyInner[];
   flatRate: V1GetPayrollReport200ResponseValueFlatRateInner[];
 }

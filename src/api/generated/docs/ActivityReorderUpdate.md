@@ -1,5 +1,5 @@
 
-# Activity
+# ActivityReorderUpdate
 
 
 ## Properties
@@ -7,26 +7,20 @@
 Name | Type
 ------------ | -------------
 `activityId` | string
-`activityName` | string
-`payrollCategory` | string
 `groupLabel` | string
 `sortOrder` | number
-`fundingSources` | [Array&lt;ActivityFundingSourcesInner&gt;](ActivityFundingSourcesInner.md)
 
 ## Example
 
 ```typescript
-import type { Activity } from ''
+import type { ActivityReorderUpdate } from ''
 
 // TODO: Update the object below with actual values
 const example = {
   "activityId": null,
-  "activityName": Job Coaching,
-  "payrollCategory": null,
   "groupLabel": VT Grows,
   "sortOrder": 0,
-  "fundingSources": null,
-} satisfies Activity
+} satisfies ActivityReorderUpdate
 
 console.log(example)
 
@@ -35,7 +29,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as Activity
+const exampleParsed = JSON.parse(exampleJSON) as ActivityReorderUpdate
 console.log(exampleParsed)
 ```
 

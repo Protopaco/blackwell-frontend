@@ -41,16 +41,22 @@ export interface Activity {
     activityName?: string;
     /**
      * 
-     * @type {boolean}
-     * @memberof Activity
-     */
-    trackSeparately?: boolean;
-    /**
-     * 
      * @type {ActivityPayrollCategoryEnum}
      * @memberof Activity
      */
     payrollCategory?: ActivityPayrollCategoryEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof Activity
+     */
+    groupLabel?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Activity
+     */
+    sortOrder?: number;
     /**
      * 
      * @type {Array<ActivityFundingSourcesInner>}
@@ -91,8 +97,9 @@ export function ActivityFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         
         'activityId': json['activityId'] == null ? undefined : json['activityId'],
         'activityName': json['activityName'] == null ? undefined : json['activityName'],
-        'trackSeparately': json['trackSeparately'] == null ? undefined : json['trackSeparately'],
         'payrollCategory': json['payrollCategory'] == null ? undefined : json['payrollCategory'],
+        'groupLabel': json['groupLabel'] == null ? undefined : json['groupLabel'],
+        'sortOrder': json['sortOrder'] == null ? undefined : json['sortOrder'],
         'fundingSources': json['fundingSources'] == null ? undefined : ((json['fundingSources'] as Array<any>).map(ActivityFundingSourcesInnerFromJSON)),
     };
 }
@@ -110,8 +117,9 @@ export function ActivityToJSONTyped(value?: Activity | null, ignoreDiscriminator
         
         'activityId': value['activityId'],
         'activityName': value['activityName'],
-        'trackSeparately': value['trackSeparately'],
         'payrollCategory': value['payrollCategory'],
+        'groupLabel': value['groupLabel'],
+        'sortOrder': value['sortOrder'],
         'fundingSources': value['fundingSources'] == null ? undefined : ((value['fundingSources'] as Array<any>).map(ActivityFundingSourcesInnerToJSON)),
     };
 }

@@ -1,7 +1,5 @@
-import FormControlLabel from '@mui/material/FormControlLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { ActivityPayrollCategoryEnum } from '@/api/generated/models/Activity';
@@ -14,10 +12,8 @@ type Props = {
   nameRequired: boolean;
   onActivityNameChange: (value: string) => void;
   onPayrollCategoryChange: (value: ActivityPayrollCategory) => void;
-  onTrackSeparatelyChange: (value: boolean) => void;
   payrollCategory: ActivityPayrollCategory;
   saving: boolean;
-  trackSeparately: boolean;
 };
 
 const payrollCategoryLabels: Record<ActivityPayrollCategory, string> = {
@@ -34,10 +30,8 @@ const ActivityDetailsFields = ({
   nameRequired,
   onActivityNameChange,
   onPayrollCategoryChange,
-  onTrackSeparatelyChange,
   payrollCategory,
   saving,
-  trackSeparately,
 }: Props) => {
   const disabled = saving || locked;
 
@@ -53,10 +47,6 @@ const ActivityDetailsFields = ({
         onChange={(event) => onActivityNameChange(event.target.value)}
         required
         value={activityName}
-      />
-      <FormControlLabel
-        control={<Switch checked={trackSeparately} disabled={disabled} onChange={(event) => onTrackSeparatelyChange(event.target.checked)} />}
-        label="Track separately"
       />
       <TextField
         disabled={disabled}

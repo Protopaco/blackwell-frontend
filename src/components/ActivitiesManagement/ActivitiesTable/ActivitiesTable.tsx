@@ -46,7 +46,6 @@ const ActivitiesTable = ({ activities, onDelete, onEdit }: Props) => {
         sortableHeader('name', 'Activity'),
         sortableHeader('payrollCategory', 'Payroll Category'),
         { label: 'Funding Allocation' },
-        { label: 'Track Separately' },
         { label: 'Actions', align: 'right' },
       ]}
     >
@@ -63,7 +62,6 @@ const ActivitiesTable = ({ activities, onDelete, onEdit }: Props) => {
               ))}
             </Stack>
           </TableCell>
-          <TableCell>{activity.trackSeparately ? 'Yes' : 'No'}</TableCell>
           <TableCell align="right">
             <IconButton aria-label={`Edit ${activity.activityName ?? 'activity'}`} onClick={() => onEdit(activity)} size="small">
               <EditIcon fontSize="small" />

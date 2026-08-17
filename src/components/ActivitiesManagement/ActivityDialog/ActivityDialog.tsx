@@ -54,7 +54,6 @@ const ActivityDialog = ({
   title,
 }: Props) => {
   const [activityName, setActivityName] = useState(activity?.activityName ?? '');
-  const [trackSeparately, setTrackSeparately] = useState(activity?.trackSeparately ?? false);
   const [payrollCategory, setPayrollCategory] = useState<ActivityPayrollCategory>(activity?.payrollCategory ?? ActivityPayrollCategoryEnum.Regular);
   const [allocations, setAllocations] = useState<AllocationFormRow[]>(
     activity?.fundingSources?.length
@@ -122,7 +121,6 @@ const ActivityDialog = ({
     onSave({
       activityId: activity?.activityId,
       activityName: trimmedActivityName,
-      trackSeparately,
       payrollCategory,
       fundingSources: allocations.map((allocation) => ({
         fundingSourceName: allocation.fundingSourceName,
@@ -162,10 +160,8 @@ const ActivityDialog = ({
           nameRequired={nameRequired}
           onActivityNameChange={setActivityName}
           onPayrollCategoryChange={setPayrollCategory}
-          onTrackSeparatelyChange={setTrackSeparately}
           payrollCategory={payrollCategory}
           saving={saving}
-          trackSeparately={trackSeparately}
         />
         <FundingAllocationFields
           allocationRequired={allocationRequired}

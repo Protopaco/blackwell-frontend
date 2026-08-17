@@ -32,6 +32,8 @@
 - [073] - Manage active/inactive clients (Clients list page)
 - [075] - BUG - Redundant fetch calls during timesheet generation polling
 - [076] - Tooltips on status chips explaining what each status means
+- [083] - Remove `Activity.trackSeparately` — no discoverable purpose
+- [085] - Frontend — grouped/reordered activities management UI
 
 # READY
 
@@ -41,12 +43,13 @@
 
 ---
 
-- [082] - Split EmployeeExpenses "totalExpense" into "wageExpense" and "taxExpense"
+- [084] - Backend — grouped/reordered activities on generated timesheets
 
 # DONE
 
 ---
 
+- [082] - Split EmployeeExpenses "totalExpense" into "wageExpense" and "taxExpense"
 - [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
 - [008] - Settings Management
 - [074] - Timesheet formatting redesign — RowStyle layer + section labeling

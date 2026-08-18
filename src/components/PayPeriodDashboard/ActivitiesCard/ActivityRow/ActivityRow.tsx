@@ -44,7 +44,6 @@ const ActivityRow = ({ activity, canEdit, canRemove, onEdit, onRemove, removing 
           ))}
         </Stack>
       </TableCell>
-      <TableCell>{activity.trackSeparately ? 'Yes' : 'No'}</TableCell>
       <TableCell align="center">
         <Tooltip title={canEdit ? 'Edit' : 'Nothing left to edit — this pay period has been allocated.'}>
           <span>

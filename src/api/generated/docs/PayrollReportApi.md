@@ -12,7 +12,7 @@ All URIs are relative to *http://localhost:3000*
 | [**v1GetPayrollReport**](PayrollReportApi.md#v1getpayrollreport) | **GET** /api/v1/payrollReport/{clientId}/{payPeriodId} | Get the current payroll summary for a pay period grouped by employee |
 | [**v1UpdateAdditionalExpenses**](PayrollReportApi.md#v1updateadditionalexpenses) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/additionalExpenses | Save additional expense records for a pay period |
 | [**v1UpdateEmployeeExpenses**](PayrollReportApi.md#v1updateemployeeexpenses) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses | Update a single employee expense record for a pay period |
-| [**v1UpdateEmployeeExpensesBatch**](PayrollReportApi.md#v1updateemployeeexpensesbatch) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses/batch | Upsert totalExpense for multiple employees in a pay period at once |
+| [**v1UpdateEmployeeExpensesBatch**](PayrollReportApi.md#v1updateemployeeexpensesbatch) | **PUT** /api/v1/payrollReport/{clientId}/{payPeriodId}/employeeExpenses/batch | Upsert wageExpense/taxExpense for multiple employees in a pay period at once |
 
 
 
@@ -584,9 +584,9 @@ No authorization required
 
 > v1UpdateEmployeeExpensesBatch(clientId, payPeriodId, employeeExpenseUpdate)
 
-Upsert totalExpense for multiple employees in a pay period at once
+Upsert wageExpense/taxExpense for multiple employees in a pay period at once
 
-For each employeeId with an existing EmployeeExpense record, overlays totalExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\&#39;t match a known employee in the client\&#39;s PayrollConfig, the entire batch is rejected and nothing is written. 
+For each employeeId with an existing EmployeeExpense record, overlays wageExpense/taxExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\&#39;t match a known employee in the client\&#39;s PayrollConfig, the entire batch is rejected and nothing is written. 
 
 ### Example
 

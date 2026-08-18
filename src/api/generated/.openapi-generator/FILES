@@ -15,6 +15,7 @@ apis/index.ts
 docs/Activity.md
 docs/ActivityApi.md
 docs/ActivityFundingSourcesInner.md
+docs/ActivityReorderUpdate.md
 docs/AdditionalExpense.md
 docs/AdminApi.md
 docs/AllocationReportRow.md
@@ -57,6 +58,7 @@ docs/V1GetPayrollReport200ResponseValueHourlyInner.md
 index.ts
 models/Activity.ts
 models/ActivityFundingSourcesInner.ts
+models/ActivityReorderUpdate.ts
 models/AdditionalExpense.ts
 models/AllocationReportRow.ts
 models/Client.ts

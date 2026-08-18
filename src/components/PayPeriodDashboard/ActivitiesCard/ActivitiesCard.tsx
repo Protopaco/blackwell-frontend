@@ -100,7 +100,6 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
           sortableHeader('name', 'Activity'),
           sortableHeader('payrollCategory', 'Payroll Category'),
           { label: 'Funding Allocation' },
-          { label: 'Track Separately' },
           { label: 'Edit', align: 'center' },
           { label: 'Remove', align: 'center' },
         ]}
@@ -119,6 +118,7 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
       </ManagementTable>
       {editingActivity && (
         <ActivityDialog
+          activities={activities}
           activity={editingActivity}
           errorMessage={saveErrorMessage}
           fundingSources={fundingSources}

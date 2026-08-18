@@ -2,6 +2,7 @@
 /* eslint-disable */
 export * from './Activity';
 export * from './ActivityFundingSourcesInner';
+export * from './ActivityReorderUpdate';
 export * from './AdditionalExpense';
 export * from './AllocationReportRow';
 export * from './Client';

@@ -16,10 +16,13 @@
 import * as runtime from '../runtime';
 import type {
   Activity,
+  ActivityReorderUpdate,
 } from '../models/index';
 import {
     ActivityFromJSON,
     ActivityToJSON,
+    ActivityReorderUpdateFromJSON,
+    ActivityReorderUpdateToJSON,
 } from '../models/index';
 
 export interface V1CreateActivityRequest {
@@ -34,6 +37,11 @@ export interface V1DeleteActivityRequest {
 
 export interface V1GetActivitiesRequest {
     clientId: string;
+}
+
+export interface V1UpdateActivitiesBatchRequest {
+    clientId: string;
+    activityReorderUpdate: Array<ActivityReorderUpdate>;
 }
 
 export interface V1UpdateActivityRequest {
@@ -198,6 +206,62 @@ export class ActivityApi extends runtime.BaseAPI {
     async v1GetActivities(requestParameters: V1GetActivitiesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Activity>> {
         const response = await this.v1GetActivitiesRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     * Creates request options for v1UpdateActivitiesBatch without sending the request
+     */
+    async v1UpdateActivitiesBatchRequestOpts(requestParameters: V1UpdateActivitiesBatchRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['clientId'] == null) {
+            throw new runtime.RequiredError(
+                'clientId',
+                'Required parameter "clientId" was null or undefined when calling v1UpdateActivitiesBatch().'
+            );
+        }
+
+        if (requestParameters['activityReorderUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'activityReorderUpdate',
+                'Required parameter "activityReorderUpdate" was null or undefined when calling v1UpdateActivitiesBatch().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/v1/activity/{clientId}/batch`;
+        urlPath = urlPath.replace(`{${"clientId"}}`, encodeURIComponent(String(requestParameters['clientId'])));
+
+        return {
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['activityReorderUpdate']!.map(ActivityReorderUpdateToJSON),
+        };
+    }
+
+    /**
+     * Reads the client\'s PayrollConfig once, overlays groupLabel/sortOrder onto each matching activity, and writes once. If any activityId doesn\'t match a known activity in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
+     * Overlay groupLabel/sortOrder onto multiple activities at once
+     */
+    async v1UpdateActivitiesBatchRaw(requestParameters: V1UpdateActivitiesBatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.v1UpdateActivitiesBatchRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Reads the client\'s PayrollConfig once, overlays groupLabel/sortOrder onto each matching activity, and writes once. If any activityId doesn\'t match a known activity in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
+     * Overlay groupLabel/sortOrder onto multiple activities at once
+     */
+    async v1UpdateActivitiesBatch(requestParameters: V1UpdateActivitiesBatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.v1UpdateActivitiesBatchRaw(requestParameters, initOverrides);
     }
 
     /**

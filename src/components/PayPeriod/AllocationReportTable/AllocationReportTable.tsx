@@ -12,11 +12,20 @@ const formatCurrency = (value: number | undefined): string => (value === undefin
 
 const AllocationReportTable = ({ rows }: Props) => {
   return (
-    <ManagementTable headers={[{ label: 'Funding Source' }, { label: 'Wages Allocation' }, { label: 'Additional Expenses' }, { label: 'Total' }]}>
+    <ManagementTable
+      headers={[
+        { label: 'Funding Source' },
+        { label: 'Wages Allocation' },
+        { label: 'Taxes Allocation' },
+        { label: 'Additional Expenses' },
+        { label: 'Total' },
+      ]}
+    >
       {rows.map((row, index) => (
         <TableRow key={`${row.fundingSourceName ?? 'unknown'}-${index}`}>
           <TableCell>{row.fundingSourceName}</TableCell>
           <TableCell>{formatCurrency(row.wagesAllocation)}</TableCell>
+          <TableCell>{formatCurrency(row.taxesAllocation)}</TableCell>
           <TableCell>{formatCurrency(row.additionalExpenses)}</TableCell>
           <TableCell>{formatCurrency(row.total)}</TableCell>
         </TableRow>

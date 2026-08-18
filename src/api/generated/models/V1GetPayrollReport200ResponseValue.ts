@@ -57,7 +57,13 @@ export interface V1GetPayrollReport200ResponseValue {
      * @type {number}
      * @memberof V1GetPayrollReport200ResponseValue
      */
-    totalExpense?: number | null;
+    wageExpense?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof V1GetPayrollReport200ResponseValue
+     */
+    taxExpense?: number | null;
     /**
      * 
      * @type {Array<V1GetPayrollReport200ResponseValueHourlyInner>}
@@ -92,7 +98,8 @@ export function V1GetPayrollReport200ResponseValueFromJSONTyped(json: any, ignor
         'employeeName': json['employeeName'] == null ? undefined : json['employeeName'],
         'totalHours': json['totalHours'] == null ? undefined : json['totalHours'],
         'totalFlatRate': json['totalFlatRate'] == null ? undefined : json['totalFlatRate'],
-        'totalExpense': json['totalExpense'] == null ? undefined : json['totalExpense'],
+        'wageExpense': json['wageExpense'] == null ? undefined : json['wageExpense'],
+        'taxExpense': json['taxExpense'] == null ? undefined : json['taxExpense'],
         'hourly': json['hourly'] == null ? undefined : ((json['hourly'] as Array<any>).map(V1GetPayrollReport200ResponseValueHourlyInnerFromJSON)),
         'flatRate': json['flatRate'] == null ? undefined : ((json['flatRate'] as Array<any>).map(V1GetPayrollReport200ResponseValueFlatRateInnerFromJSON)),
     };
@@ -112,7 +119,8 @@ export function V1GetPayrollReport200ResponseValueToJSONTyped(value?: V1GetPayro
         'employeeName': value['employeeName'],
         'totalHours': value['totalHours'],
         'totalFlatRate': value['totalFlatRate'],
-        'totalExpense': value['totalExpense'],
+        'wageExpense': value['wageExpense'],
+        'taxExpense': value['taxExpense'],
         'hourly': value['hourly'] == null ? undefined : ((value['hourly'] as Array<any>).map(V1GetPayrollReport200ResponseValueHourlyInnerToJSON)),
         'flatRate': value['flatRate'] == null ? undefined : ((value['flatRate'] as Array<any>).map(V1GetPayrollReport200ResponseValueFlatRateInnerToJSON)),
     };

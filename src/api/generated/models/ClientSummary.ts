@@ -117,7 +117,7 @@ export interface ClientSummary {
      * @type {Settings}
      * @memberof ClientSummary
      */
-    settings?: Settings;
+    settings: Settings;
     /**
      * 
      * @type {Array<PayPeriod>}
@@ -130,6 +130,7 @@ export interface ClientSummary {
  * Check if a given object implements the ClientSummary interface.
  */
 export function instanceOfClientSummary(value: object): value is ClientSummary {
+    if (!('settings' in value) || value['settings'] === undefined) return false;
     return true;
 }
 
@@ -149,7 +150,7 @@ export function ClientSummaryFromJSONTyped(json: any, ignoreDiscriminator: boole
         'fundingSources': json['fundingSources'] == null ? undefined : ((json['fundingSources'] as Array<any>).map(FundingSourceFromJSON)),
         'holidays': json['holidays'] == null ? undefined : ((json['holidays'] as Array<any>).map(HolidayFromJSON)),
         'timesheetFolders': json['timesheetFolders'] == null ? undefined : ((json['timesheetFolders'] as Array<any>).map(TimesheetFolderFromJSON)),
-        'settings': json['settings'] == null ? undefined : SettingsFromJSON(json['settings']),
+        'settings': SettingsFromJSON(json['settings']),
         'payPeriods': json['payPeriods'] == null ? undefined : ((json['payPeriods'] as Array<any>).map(PayPeriodFromJSON)),
     };
 }

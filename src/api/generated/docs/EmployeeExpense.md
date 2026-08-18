@@ -8,7 +8,8 @@ Name | Type
 ------------ | -------------
 `employeeId` | string
 `employeeName` | string
-`totalExpense` | number
+`wageExpense` | number
+`taxExpense` | number
 
 ## Example
 
@@ -19,7 +20,8 @@ import type { EmployeeExpense } from ''
 const example = {
   "employeeId": null,
   "employeeName": Jane Smith,
-  "totalExpense": 2326.92,
+  "wageExpense": 2326.92,
+  "taxExpense": 189.45,
 } satisfies EmployeeExpense
 
 console.log(example)

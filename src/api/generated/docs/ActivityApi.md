@@ -7,6 +7,7 @@ All URIs are relative to *http://localhost:3000*
 | [**v1CreateActivity**](ActivityApi.md#v1createactivity) | **POST** /api/v1/activity/{clientId} | Create a new activity |
 | [**v1DeleteActivity**](ActivityApi.md#v1deleteactivity) | **DELETE** /api/v1/activity/{clientId}/{activityId} | Delete an activity |
 | [**v1GetActivities**](ActivityApi.md#v1getactivities) | **GET** /api/v1/activity/{clientId} | Get all activities for a client |
+| [**v1UpdateActivitiesBatch**](ActivityApi.md#v1updateactivitiesbatch) | **PUT** /api/v1/activity/{clientId}/batch | Overlay groupLabel/sortOrder onto multiple activities at once |
 | [**v1UpdateActivity**](ActivityApi.md#v1updateactivity) | **PUT** /api/v1/activity/{clientId}/{activityId} | Update an existing activity |
 
 
@@ -214,6 +215,78 @@ No authorization required
 |-------------|-------------|------------------|
 | **200** | List of activities |  -  |
 | **404** | Client not found |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## v1UpdateActivitiesBatch
+
+> v1UpdateActivitiesBatch(clientId, activityReorderUpdate)
+
+Overlay groupLabel/sortOrder onto multiple activities at once
+
+Reads the client\&#39;s PayrollConfig once, overlays groupLabel/sortOrder onto each matching activity, and writes once. If any activityId doesn\&#39;t match a known activity in the client\&#39;s PayrollConfig, the entire batch is rejected and nothing is written. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  ActivityApi,
+} from '';
+import type { V1UpdateActivitiesBatchRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new ActivityApi();
+
+  const body = {
+    // string
+    clientId: clientId_example,
+    // Array<ActivityReorderUpdate>
+    activityReorderUpdate: ...,
+  } satisfies V1UpdateActivitiesBatchRequest;
+
+  try {
+    const data = await api.v1UpdateActivitiesBatch(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **clientId** | `string` |  | [Defaults to `undefined`] |
+| **activityReorderUpdate** | `Array<ActivityReorderUpdate>` |  | |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Activities updated |  -  |
+| **404** | Client not found |  -  |
+| **422** | One or more activityId values do not match a known activity in the client\&#39;s PayrollConfig |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

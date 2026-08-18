@@ -24,19 +24,19 @@ export interface Settings {
      * @type {SettingsTimeInputMethodEnum}
      * @memberof Settings
      */
-    timeInputMethod?: SettingsTimeInputMethodEnum;
+    timeInputMethod: SettingsTimeInputMethodEnum;
     /**
      * 
      * @type {SettingsPayPeriodIntervalEnum}
      * @memberof Settings
      */
-    payPeriodInterval?: SettingsPayPeriodIntervalEnum;
+    payPeriodInterval: SettingsPayPeriodIntervalEnum;
     /**
      * 
      * @type {Date}
      * @memberof Settings
      */
-    payPeriodStartDate?: Date;
+    payPeriodStartDate: Date;
 }
 
 
@@ -64,6 +64,9 @@ export type SettingsPayPeriodIntervalEnum = typeof SettingsPayPeriodIntervalEnum
  * Check if a given object implements the Settings interface.
  */
 export function instanceOfSettings(value: object): value is Settings {
+    if (!('timeInputMethod' in value) || value['timeInputMethod'] === undefined) return false;
+    if (!('payPeriodInterval' in value) || value['payPeriodInterval'] === undefined) return false;
+    if (!('payPeriodStartDate' in value) || value['payPeriodStartDate'] === undefined) return false;
     return true;
 }
 
@@ -77,9 +80,9 @@ export function SettingsFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     }
     return {
         
-        'timeInputMethod': json['timeInputMethod'] == null ? undefined : json['timeInputMethod'],
-        'payPeriodInterval': json['payPeriodInterval'] == null ? undefined : json['payPeriodInterval'],
-        'payPeriodStartDate': json['payPeriodStartDate'] == null ? undefined : (new Date(json['payPeriodStartDate'])),
+        'timeInputMethod': json['timeInputMethod'],
+        'payPeriodInterval': json['payPeriodInterval'],
+        'payPeriodStartDate': (new Date(json['payPeriodStartDate'])),
     };
 }
 
@@ -96,7 +99,7 @@ export function SettingsToJSONTyped(value?: Settings | null, ignoreDiscriminator
         
         'timeInputMethod': value['timeInputMethod'],
         'payPeriodInterval': value['payPeriodInterval'],
-        'payPeriodStartDate': value['payPeriodStartDate'] == null ? value['payPeriodStartDate'] : value['payPeriodStartDate'].toISOString().substring(0,10),
+        'payPeriodStartDate': value['payPeriodStartDate'].toISOString().substring(0,10),
     };
 }
 

@@ -7,7 +7,8 @@
 Name | Type
 ------------ | -------------
 `employeeId` | string
-`totalExpense` | number
+`wageExpense` | number
+`taxExpense` | number
 
 ## Example
 
@@ -17,7 +18,8 @@ import type { EmployeeExpenseUpdate } from ''
 // TODO: Update the object below with actual values
 const example = {
   "employeeId": null,
-  "totalExpense": 2326.92,
+  "wageExpense": 2326.92,
+  "taxExpense": 189.45,
 } satisfies EmployeeExpenseUpdate
 
 console.log(example)

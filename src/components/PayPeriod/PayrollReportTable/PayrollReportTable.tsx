@@ -7,12 +7,23 @@ import type { PayrollReportRow } from '@/components/PayPeriod/PayrollReportTable
 
 type Props = {
   rows: PayrollReportRow[];
-  editedValues: Record<string, string>;
-  onEditValue: (employeeId: string, value: string) => void;
-  onBlurValue: (employeeId: string) => void;
+  editedWageValues: Record<string, string>;
+  editedTaxValues: Record<string, string>;
+  onEditWageValue: (employeeId: string, value: string) => void;
+  onEditTaxValue: (employeeId: string, value: string) => void;
+  onBlurWageValue: (employeeId: string) => void;
+  onBlurTaxValue: (employeeId: string) => void;
 };
 
-const PayrollReportTable = ({ rows, editedValues, onEditValue, onBlurValue }: Props) => {
+const PayrollReportTable = ({
+  rows,
+  editedWageValues,
+  editedTaxValues,
+  onEditWageValue,
+  onEditTaxValue,
+  onBlurWageValue,
+  onBlurTaxValue,
+}: Props) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   const toggleExpand = (employeeId: string) => {
@@ -41,7 +52,14 @@ const PayrollReportTable = ({ rows, editedValues, onEditValue, onBlurValue }: Pr
         </Button>
       </Stack>
       <ManagementTable
-        headers={[{ label: '' }, { label: 'Employee' }, { label: 'Total Hours' }, { label: 'Flat Rate Quantity' }, { label: 'Total Expense' }]}
+        headers={[
+          { label: '' },
+          { label: 'Employee' },
+          { label: 'Total Hours' },
+          { label: 'Flat Rate Quantity' },
+          { label: 'Wage Expense' },
+          { label: 'Tax Expense' },
+        ]}
       >
         {rows.map((row) => (
           <PayrollReportTableRow
@@ -49,9 +67,12 @@ const PayrollReportTable = ({ rows, editedValues, onEditValue, onBlurValue }: Pr
             row={row}
             expanded={expandedIds.has(row.employeeId)}
             onToggleExpand={toggleExpand}
-            editedValues={editedValues}
-            onEditValue={onEditValue}
-            onBlurValue={onBlurValue}
+            editedWageValues={editedWageValues}
+            editedTaxValues={editedTaxValues}
+            onEditWageValue={onEditWageValue}
+            onEditTaxValue={onEditTaxValue}
+            onBlurWageValue={onBlurWageValue}
+            onBlurTaxValue={onBlurTaxValue}
           />
         ))}
       </ManagementTable>

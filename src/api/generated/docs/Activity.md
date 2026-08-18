@@ -8,8 +8,9 @@ Name | Type
 ------------ | -------------
 `activityId` | string
 `activityName` | string
-`trackSeparately` | boolean
 `payrollCategory` | string
+`groupLabel` | string
+`sortOrder` | number
 `fundingSources` | [Array&lt;ActivityFundingSourcesInner&gt;](ActivityFundingSourcesInner.md)
 
 ## Example
@@ -21,8 +22,9 @@ import type { Activity } from ''
 const example = {
   "activityId": null,
   "activityName": Job Coaching,
-  "trackSeparately": null,
   "payrollCategory": null,
+  "groupLabel": VT Grows,
+  "sortOrder": 0,
   "fundingSources": null,
 } satisfies Activity
 

@@ -1,30 +1,26 @@
 
-# AllocationReportRow
+# ActivityReorderUpdate
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`fundingSourceName` | string
-`wagesAllocation` | number
-`taxesAllocation` | number
-`additionalExpenses` | number
-`total` | number
+`activityId` | string
+`groupLabel` | string
+`sortOrder` | number
 
 ## Example
 
 ```typescript
-import type { AllocationReportRow } from ''
+import type { ActivityReorderUpdate } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "fundingSourceName": Federal Grant,
-  "wagesAllocation": 14250,
-  "taxesAllocation": 1156.5,
-  "additionalExpenses": 1843.75,
-  "total": 17250.25,
-} satisfies AllocationReportRow
+  "activityId": null,
+  "groupLabel": VT Grows,
+  "sortOrder": 0,
+} satisfies ActivityReorderUpdate
 
 console.log(example)
 
@@ -33,7 +29,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as AllocationReportRow
+const exampleParsed = JSON.parse(exampleJSON) as ActivityReorderUpdate
 console.log(exampleParsed)
 ```
 

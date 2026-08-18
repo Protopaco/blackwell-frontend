@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
@@ -7,15 +8,15 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import type { Activity } from '@/api/generated/models/Activity';
 import ManagementTable from '@/components/Shared/ManagementTable/ManagementTable';
-import useTableSort from '@/hooks/useTableSort';
-
-type SortKey = 'name' | 'payrollCategory';
+import groupActivitiesForDisplay from './groupActivitiesForDisplay';
 
 type Props = {
   activities: Activity[];
   onDelete: (activity: Activity) => void;
   onEdit: (activity: Activity) => void;
 };
+
+const ACTIVITIES_TABLE_COLUMN_COUNT = 4;
 
 const formatFundingAllocations = (activity: Activity) => {
   return (
@@ -31,46 +32,50 @@ const formatFundingAllocations = (activity: Activity) => {
 };
 
 const ActivitiesTable = ({ activities, onDelete, onEdit }: Props) => {
-  const { sortedItems: sortedActivities, sortableHeader } = useTableSort<Activity, SortKey>(
-    activities,
-    {
-      name: (left, right) => (left.activityName ?? '').localeCompare(right.activityName ?? '', undefined, { sensitivity: 'base' }),
-      payrollCategory: (left, right) => (left.payrollCategory ?? '').localeCompare(right.payrollCategory ?? '', undefined, { sensitivity: 'base' }),
-    },
-    'name',
-  );
+  const activityGroups = groupActivitiesForDisplay(activities);
 
   return (
     <ManagementTable
       headers={[
-        sortableHeader('name', 'Activity'),
-        sortableHeader('payrollCategory', 'Payroll Category'),
+        { label: 'Activity' },
+        { label: 'Payroll Category' },
         { label: 'Funding Allocation' },
         { label: 'Actions', align: 'right' },
       ]}
     >
-      {sortedActivities.map((activity) => (
-        <TableRow key={activity.activityId ?? activity.activityName ?? ''}>
-          <TableCell>{activity.activityName}</TableCell>
-          <TableCell>{activity.payrollCategory}</TableCell>
-          <TableCell>
-            <Stack spacing={0.5}>
-              {formatFundingAllocations(activity).map((fundingAllocation) => (
-                <Typography key={fundingAllocation} variant="body2">
-                  {fundingAllocation}
-                </Typography>
-              ))}
-            </Stack>
-          </TableCell>
-          <TableCell align="right">
-            <IconButton aria-label={`Edit ${activity.activityName ?? 'activity'}`} onClick={() => onEdit(activity)} size="small">
-              <EditIcon fontSize="small" />
-            </IconButton>
-            <IconButton aria-label={`Delete ${activity.activityName ?? 'activity'}`} onClick={() => onDelete(activity)} size="small">
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </TableCell>
-        </TableRow>
+      {activityGroups.map((activityGroup) => (
+        <Fragment key={activityGroup.groupLabel ?? 'ungrouped'}>
+          {activityGroup.groupLabel && (
+            <TableRow key={`group-${activityGroup.groupLabel}`}>
+              <TableCell colSpan={ACTIVITIES_TABLE_COLUMN_COUNT} sx={{ backgroundColor: 'action.hover', fontWeight: 'bold' }}>
+                {activityGroup.groupLabel}
+              </TableCell>
+            </TableRow>
+          )}
+          {activityGroup.activities.map((activity) => (
+            <TableRow key={activity.activityId ?? activity.activityName ?? ''}>
+              <TableCell>{activity.activityName}</TableCell>
+              <TableCell>{activity.payrollCategory}</TableCell>
+              <TableCell>
+                <Stack spacing={0.5}>
+                  {formatFundingAllocations(activity).map((fundingAllocation) => (
+                    <Typography key={fundingAllocation} variant="body2">
+                      {fundingAllocation}
+                    </Typography>
+                  ))}
+                </Stack>
+              </TableCell>
+              <TableCell align="right">
+                <IconButton aria-label={`Edit ${activity.activityName ?? 'activity'}`} onClick={() => onEdit(activity)} size="small">
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                <IconButton aria-label={`Delete ${activity.activityName ?? 'activity'}`} onClick={() => onDelete(activity)} size="small">
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </Fragment>
       ))}
     </ManagementTable>
   );

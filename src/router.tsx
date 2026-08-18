@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import AppLayout from '@/AppLayout';
 import ActivitiesManagement from '@/pages/ActivitiesManagement/ActivitiesManagement';
 import ClientCreate from '@/pages/ClientCreate/ClientCreate';
@@ -43,6 +43,7 @@ const router = createBrowserRouter([
           { path: 'allocationReport', element: <AllocationReportPage /> },
         ],
       },
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
 ]);

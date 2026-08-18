@@ -17,7 +17,7 @@ type Props = {
   onReorder: (updatedActivities: Activity[]) => void;
 };
 
-const ACTIVITIES_TABLE_COLUMN_COUNT = 5;
+const ACTIVITIES_TABLE_COLUMN_COUNT = 6;
 
 const formatFundingAllocations = (activity: Activity) => {
   return (
@@ -27,8 +27,7 @@ const formatFundingAllocations = (activity: Activity) => {
         if (fundingSource.percentage === undefined) return fundingSource.fundingSourceName;
         return `${fundingSource.fundingSourceName} ${fundingSource.percentage}%`;
       })
-      .filter(Boolean)
-      ?? []
+      .filter(Boolean) ?? []
   );
 };
 
@@ -36,13 +35,10 @@ const ActivitiesTable = ({ activities, dragDisabled = false, onDelete, onEdit, o
   const activityGroups = groupActivitiesForDisplay(activities);
 
   const groupLabelByActivityId = new Map(
-    activityGroups.flatMap((activityGroup) => activityGroup.activities.map((activity) => [activity.activityId as string, activityGroup.groupLabel])),
+    activityGroups.flatMap((activityGroup) => activityGroup.activities.map((activity) => [activity.activityId as string, activityGroup.groupLabel]))
   );
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }));
 
   // Reorders activities within whichever single group (or the ungrouped block) the drag stayed inside —
   // a drop into a different group is ignored, since group membership is only changed via the edit dialog.
@@ -79,6 +75,7 @@ const ActivitiesTable = ({ activities, dragDisabled = false, onDelete, onEdit, o
           { label: 'Activity' },
           { label: 'Payroll Category' },
           { label: 'Funding Allocation' },
+          { label: 'Group' },
           { label: 'Actions', align: 'right' },
         ]}
       >

@@ -35,7 +35,7 @@ const ActivityDraggableRow = ({ activity, disabled, formatFundingAllocations, on
         opacity: isDragging ? 0.5 : 1,
       }}
     >
-      <TableCell sx={{ width: 1, px: 1 }}>
+      <TableCell sx={{ width: '1%', px: 1, whiteSpace: 'nowrap' }}>
         <IconButton aria-label={`Reorder ${activity.activityName ?? 'activity'}`} disabled={disabled} size="small" {...attributes} {...listeners}>
           <DragIndicatorIcon fontSize="small" />
         </IconButton>
@@ -51,6 +51,7 @@ const ActivityDraggableRow = ({ activity, disabled, formatFundingAllocations, on
           ))}
         </Stack>
       </TableCell>
+      <TableCell>{activity.groupLabel}</TableCell>
       <TableCell align="right">
         <IconButton aria-label={`Edit ${activity.activityName ?? 'activity'}`} onClick={() => onEdit(activity)} size="small">
           <EditIcon fontSize="small" />

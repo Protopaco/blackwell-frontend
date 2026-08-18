@@ -85,7 +85,6 @@ const CreateHolidayDialog = ({ clientId, open, onClose, onCreated }: Props) => {
     >
       <Stack component="form" id="create-holiday-form" spacing={2} onSubmit={createHoliday} noValidate>
         <TextField
-          autoFocus
           disabled={saving}
           error={nameRequired}
           fullWidth

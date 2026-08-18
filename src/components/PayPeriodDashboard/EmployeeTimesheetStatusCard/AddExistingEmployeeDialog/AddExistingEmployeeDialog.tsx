@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -17,6 +17,7 @@ import { EmployeeStatusEnum } from '@/api/generated/models/Employee';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useTextSearch from '@/hooks/useTextSearch';
 import { useToast } from '@/state/toast/toast.context';
+import focusFirstField from '@/utils/focusFirstField';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 import type { Employee } from '@/api/generated/models/Employee';
 
@@ -34,6 +35,7 @@ const employeeName = (employee: Employee) => `${employee.lastName ?? ''}, ${empl
 const AddExistingEmployeeDialog = ({ clientId, payPeriodId, open, onClose, currentEmployeeIds, onAdded }: Props) => {
   const { showToast } = useToast();
   const [addingEmployeeId, setAddingEmployeeId] = useState<string | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const {
     data: clientEmployees,
@@ -68,9 +70,15 @@ const AddExistingEmployeeDialog = ({ clientId, payPeriodId, open, onClose, curre
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      slotProps={{ transition: { onEntered: () => focusFirstField(contentRef.current) } }}
+    >
       <DialogTitle>Add Employee to Pay Period</DialogTitle>
-      <DialogContent>
+      <DialogContent ref={contentRef}>
         <TextField
           size="small"
           label="Search by name"

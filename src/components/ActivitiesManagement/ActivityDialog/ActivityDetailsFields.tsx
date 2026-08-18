@@ -45,7 +45,6 @@ const ActivityDetailsFields = ({
   const fields = (
     <Stack spacing={2}>
       <TextField
-        autoFocus
         disabled={disabled}
         error={nameRequired}
         fullWidth

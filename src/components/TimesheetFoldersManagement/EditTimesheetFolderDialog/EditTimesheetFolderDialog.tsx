@@ -102,7 +102,6 @@ const EditTimesheetFolderDialog = ({ clientId, open, timesheetFolder, onClose, o
     >
       <Stack component="form" id="edit-timesheet-folder-form" spacing={2} onSubmit={updateTimesheetFolder} noValidate>
         <TextField
-          autoFocus
           disabled={saving}
           error={nameRequired}
           fullWidth

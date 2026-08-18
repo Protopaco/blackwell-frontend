@@ -97,7 +97,6 @@ const EditFundingSourceDialog = ({ clientId, fundingSource, open, onClose, onSav
     >
       <Stack component="form" id="edit-funding-source-form" spacing={2} onSubmit={saveFundingSource} noValidate>
         <TextField
-          autoFocus
           disabled={saving}
           error={nameRequired}
           fullWidth

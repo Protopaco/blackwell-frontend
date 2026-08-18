@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -16,6 +16,7 @@ import { activityApi, payPeriodApi } from '@/api/client';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useTextSearch from '@/hooks/useTextSearch';
 import { useToast } from '@/state/toast/toast.context';
+import focusFirstField from '@/utils/focusFirstField';
 import resolveErrorMessage from '@/utils/resolveErrorMessage';
 import type { Activity } from '@/api/generated/models/Activity';
 
@@ -31,6 +32,7 @@ type Props = {
 const AddExistingActivityDialog = ({ clientId, payPeriodId, open, onClose, currentActivityIds, onAdded }: Props) => {
   const { showToast } = useToast();
   const [addingActivityId, setAddingActivityId] = useState<string | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const {
     data: clientActivities,
@@ -65,9 +67,15 @@ const AddExistingActivityDialog = ({ clientId, payPeriodId, open, onClose, curre
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      slotProps={{ transition: { onEntered: () => focusFirstField(contentRef.current) } }}
+    >
       <DialogTitle>Add Activity to Pay Period</DialogTitle>
-      <DialogContent>
+      <DialogContent ref={contentRef}>
         <TextField
           size="small"
           label="Search by name"

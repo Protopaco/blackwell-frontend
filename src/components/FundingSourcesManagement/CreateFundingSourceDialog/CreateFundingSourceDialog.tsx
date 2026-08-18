@@ -85,7 +85,6 @@ const CreateFundingSourceDialog = ({ clientId, open, onClose, onCreated }: Props
     >
       <Stack component="form" id="create-funding-source-form" spacing={2} onSubmit={createFundingSource} noValidate>
         <TextField
-          autoFocus
           disabled={saving}
           error={nameRequired}
           fullWidth

@@ -86,7 +86,6 @@ const CreateTimesheetFolderDialog = ({ clientId, open, onClose, onCreated }: Pro
     >
       <Stack component="form" id="create-timesheet-folder-form" spacing={2} onSubmit={createTimesheetFolder} noValidate>
         <TextField
-          autoFocus
           disabled={saving}
           error={nameRequired}
           fullWidth

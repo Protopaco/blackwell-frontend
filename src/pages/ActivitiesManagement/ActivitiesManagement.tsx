@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import Button from '@mui/material/Button';
 import { activityApi, fundingSourceApi } from '@/api/client';
 import type { Activity } from '@/api/generated/models/Activity';
+import type { ActivityReorderUpdate } from '@/api/generated/models/ActivityReorderUpdate';
 import ActivityDialog from '@/components/ActivitiesManagement/ActivityDialog/ActivityDialog';
 import ActivitiesTable from '@/components/ActivitiesManagement/ActivitiesTable/ActivitiesTable';
 import ClientManagementPage from '@/components/Shared/ClientManagementPage/ClientManagementPage';
 import DeleteConfirmationDialog from '@/components/Shared/DeleteConfirmationDialog/DeleteConfirmationDialog';
 import ManagementListPanel from '@/components/Shared/ManagementListPanel/ManagementListPanel';
 import ManagementToolbar from '@/components/Shared/ManagementToolbar/ManagementToolbar';
+import useAsyncAction from '@/hooks/useAsyncAction';
 import useFetchByKey from '@/hooks/useFetchByKey';
 import useSelectedClient from '@/state/client/useSelectedClient';
 import { useToast } from '@/state/toast/toast.context';
@@ -20,6 +23,10 @@ const ActivitiesManagement = () => {
   const [saveErrorMessage, setSaveErrorMessage] = useState<string | null>(null);
   const [deleteSaving, setDeleteSaving] = useState(false);
   const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
+  // Local working copy of the reordered activity list — null means there's no unsaved reorder in
+  // progress, so the table just shows what was fetched. Set by ActivitiesTable's onReorder, cleared on
+  // Save All or whenever the underlying list changes structurally (create/edit/delete).
+  const [pendingActivities, setPendingActivities] = useState<Activity[] | null>(null);
   const { selectedClient } = useSelectedClient();
   const clientId = selectedClient?.clientId;
   const { showToast } = useToast();
@@ -37,9 +44,34 @@ const ActivitiesManagement = () => {
   } = useFetchByKey(clientId, (clientId) => fundingSourceApi.v1GetFundingSources({ clientId }), 'Failed to load funding sources.');
 
   const visibleActivities = activities ?? [];
+  const displayedActivities = pendingActivities ?? visibleActivities;
   const availableFundingSources = fundingSources ?? [];
-  const pageErrorMessage = errorMessage ?? fundingSourcesErrorMessage;
   const pageLoading = loading || fundingSourcesLoading;
+
+  const changedActivities = pendingActivities
+    ? pendingActivities.filter((pendingActivity) => {
+        const originalActivity = visibleActivities.find((activity) => activity.activityId === pendingActivity.activityId);
+        return originalActivity && (originalActivity.sortOrder !== pendingActivity.sortOrder || originalActivity.groupLabel !== pendingActivity.groupLabel);
+      })
+    : [];
+
+  const {
+    run: saveReorder,
+    loading: reorderSaving,
+    errorMessage: reorderErrorMessage,
+  } = useAsyncAction(async () => {
+    const activityReorderUpdate: ActivityReorderUpdate[] = changedActivities.map((activity) => ({
+      activityId: activity.activityId!,
+      groupLabel: activity.groupLabel ?? null,
+      sortOrder: activity.sortOrder!,
+    }));
+
+    await activityApi.v1UpdateActivitiesBatch({ clientId: clientId!, activityReorderUpdate });
+    setPendingActivities(null);
+    refetch();
+  }, 'Failed to save activity order.', 'Activity order saved.');
+
+  const pageErrorMessage = errorMessage ?? fundingSourcesErrorMessage ?? reorderErrorMessage;
 
   const closeCreateDialog = () => {
     if (saving) return;
@@ -71,6 +103,7 @@ const ActivitiesManagement = () => {
     try {
       await activityApi.v1CreateActivity({ clientId, activity });
       setCreateDialogOpen(false);
+      setPendingActivities(null);
       refetch();
       showToast('Activity created.', 'success');
     } catch (error) {
@@ -92,6 +125,7 @@ const ActivitiesManagement = () => {
     try {
       await activityApi.v1UpdateActivity({ clientId, activityId: editingActivity.activityId, activity });
       setEditingActivity(null);
+      setPendingActivities(null);
       refetch();
       showToast('Activity updated.', 'success');
     } catch (error) {
@@ -113,6 +147,7 @@ const ActivitiesManagement = () => {
     try {
       await activityApi.v1DeleteActivity({ clientId, activityId: deletingActivity.activityId });
       setDeletingActivity(null);
+      setPendingActivities(null);
       refetch();
       showToast('Activity deleted.', 'success');
     } catch (error) {
@@ -128,13 +163,25 @@ const ActivitiesManagement = () => {
   return (
     <ClientManagementPage title="Activities">
       <ManagementListPanel
-        controls={<ManagementToolbar primaryActionLabel="Create" onPrimaryAction={() => setCreateDialogOpen(true)} primaryActionDisabled={fundingSourcesLoading} />}
+        controls={
+          <ManagementToolbar primaryActionLabel="Create" onPrimaryAction={() => setCreateDialogOpen(true)} primaryActionDisabled={fundingSourcesLoading}>
+            <Button variant="outlined" onClick={saveReorder} disabled={changedActivities.length === 0 || reorderSaving} loading={reorderSaving}>
+              Save All
+            </Button>
+          </ManagementToolbar>
+        }
         empty={visibleActivities.length === 0}
         emptyMessage="No activities."
         errorMessage={pageErrorMessage}
         loading={pageLoading}
       >
-        <ActivitiesTable activities={visibleActivities} onDelete={setDeletingActivity} onEdit={setEditingActivity} />
+        <ActivitiesTable
+          activities={displayedActivities}
+          dragDisabled={reorderSaving}
+          onDelete={setDeletingActivity}
+          onEdit={setEditingActivity}
+          onReorder={setPendingActivities}
+        />
       </ManagementListPanel>
       {createDialogOpen && (
         <ActivityDialog

@@ -1,3 +1,4 @@
+import Autocomplete from '@mui/material/Autocomplete';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
@@ -7,10 +8,13 @@ import type { ActivityPayrollCategoryEnum as ActivityPayrollCategory } from '@/a
 
 type Props = {
   activityName: string;
+  groupLabel: string | null;
+  groupLabelOptions: string[];
   locked?: boolean;
   lockedMessage?: string;
   nameRequired: boolean;
   onActivityNameChange: (value: string) => void;
+  onGroupLabelChange: (value: string | null) => void;
   onPayrollCategoryChange: (value: ActivityPayrollCategory) => void;
   payrollCategory: ActivityPayrollCategory;
   saving: boolean;
@@ -25,10 +29,13 @@ const payrollCategoryLabels: Record<ActivityPayrollCategory, string> = {
 
 const ActivityDetailsFields = ({
   activityName,
+  groupLabel,
+  groupLabelOptions,
   locked = false,
   lockedMessage,
   nameRequired,
   onActivityNameChange,
+  onGroupLabelChange,
   onPayrollCategoryChange,
   payrollCategory,
   saving,
@@ -47,6 +54,15 @@ const ActivityDetailsFields = ({
         onChange={(event) => onActivityNameChange(event.target.value)}
         required
         value={activityName}
+      />
+      <Autocomplete
+        disabled={disabled}
+        freeSolo
+        fullWidth
+        inputValue={groupLabel ?? ''}
+        onInputChange={(_event, newInputValue) => onGroupLabelChange(newInputValue || null)}
+        options={groupLabelOptions}
+        renderInput={(params) => <TextField {...params} label="Group" />}
       />
       <TextField
         disabled={disabled}

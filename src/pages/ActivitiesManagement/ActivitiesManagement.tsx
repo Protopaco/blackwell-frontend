@@ -138,6 +138,7 @@ const ActivitiesManagement = () => {
       </ManagementListPanel>
       {createDialogOpen && (
         <ActivityDialog
+          activities={visibleActivities}
           activity={null}
           errorMessage={saveErrorMessage}
           fundingSources={availableFundingSources}
@@ -151,6 +152,7 @@ const ActivitiesManagement = () => {
       )}
       {editingActivity && (
         <ActivityDialog
+          activities={visibleActivities}
           activity={editingActivity}
           errorMessage={saveErrorMessage}
           fundingSources={availableFundingSources}

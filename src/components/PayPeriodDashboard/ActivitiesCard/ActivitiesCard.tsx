@@ -118,6 +118,7 @@ const ActivitiesCard = ({ clientId, payPeriodId, activities, fundingSources, pay
       </ManagementTable>
       {editingActivity && (
         <ActivityDialog
+          activities={activities}
           activity={editingActivity}
           errorMessage={saveErrorMessage}
           fundingSources={fundingSources}

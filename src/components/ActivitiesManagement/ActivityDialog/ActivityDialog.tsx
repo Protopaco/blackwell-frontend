@@ -14,6 +14,7 @@ import FundingAllocationFields from './FundingAllocationFields';
 import type { AllocationFormRow } from './AllocationFormRow';
 
 type Props = {
+  activities: Activity[];
   activity: Activity | null;
   errorMessage: string | null;
   fundingSources: FundingSource[];
@@ -39,6 +40,7 @@ const calculateAllocationTotal = (allocations: AllocationFormRow[]) => {
 };
 
 const ActivityDialog = ({
+  activities,
   activity,
   errorMessage,
   fundingSources,
@@ -54,6 +56,7 @@ const ActivityDialog = ({
   title,
 }: Props) => {
   const [activityName, setActivityName] = useState(activity?.activityName ?? '');
+  const [groupLabel, setGroupLabel] = useState<string | null>(activity?.groupLabel ?? null);
   const [payrollCategory, setPayrollCategory] = useState<ActivityPayrollCategory>(activity?.payrollCategory ?? ActivityPayrollCategoryEnum.Regular);
   const [allocations, setAllocations] = useState<AllocationFormRow[]>(
     activity?.fundingSources?.length
@@ -66,6 +69,22 @@ const ActivityDialog = ({
   const [submitted, setSubmitted] = useState(false);
 
   const allocationTotal = useMemo(() => calculateAllocationTotal(allocations), [allocations]);
+
+  const groupLabelOptions = useMemo(() => {
+    const distinctGroupLabels = new Set(
+      activities.map((candidate) => candidate.groupLabel).filter((candidate): candidate is string => Boolean(candidate)),
+    );
+    return [...distinctGroupLabels].sort((left, right) => left.localeCompare(right, undefined, { sensitivity: 'base' }));
+  }, [activities]);
+
+  // On create, places the new activity at the end of its chosen group (or the end of the ungrouped
+  // activities, if no group is chosen). On edit, the activity's existing position is preserved.
+  const nextSortOrderForGroup = (nextGroupLabel: string | null): number => {
+    const sortOrdersInGroup = activities
+      .filter((candidate) => candidate.groupLabel === nextGroupLabel)
+      .map((candidate) => candidate.sortOrder ?? 0);
+    return sortOrdersInGroup.length > 0 ? Math.max(...sortOrdersInGroup) + 1 : 0;
+  };
 
   const selectedFundingSourceNames = allocations.map((allocation) => allocation.fundingSourceName).filter(Boolean);
 
@@ -121,7 +140,9 @@ const ActivityDialog = ({
     onSave({
       activityId: activity?.activityId,
       activityName: trimmedActivityName,
+      groupLabel,
       payrollCategory,
+      sortOrder: activity ? activity.sortOrder : nextSortOrderForGroup(groupLabel),
       fundingSources: allocations.map((allocation) => ({
         fundingSourceName: allocation.fundingSourceName,
         percentage: Number(allocation.percentage),
@@ -155,10 +176,13 @@ const ActivityDialog = ({
       <Stack component="form" id={formId} spacing={2} onSubmit={saveActivity} noValidate>
         <ActivityDetailsFields
           activityName={activityName}
+          groupLabel={groupLabel}
+          groupLabelOptions={groupLabelOptions}
           locked={structuralFieldsLocked}
           lockedMessage={structuralFieldsLockedMessage}
           nameRequired={nameRequired}
           onActivityNameChange={setActivityName}
+          onGroupLabelChange={setGroupLabel}
           onPayrollCategoryChange={setPayrollCategory}
           payrollCategory={payrollCategory}
           saving={saving}

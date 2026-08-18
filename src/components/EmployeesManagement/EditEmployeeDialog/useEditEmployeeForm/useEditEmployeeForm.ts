@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { activityApi, employeeApi } from '@/api/client';
 import { EmployeeActivityRatePayRateTypeEnum } from '@/api/generated/models/EmployeeActivityRate';
 import type { Employee } from '@/api/generated/models/Employee';
+import buildNewActivityRate from '../../CreateEmployeeDialog/EmployeeActivityRatesFields/buildNewActivityRate';
 import type { EmployeeActivityRateFormRow } from '../../CreateEmployeeDialog/EmployeeActivityRatesFields/EmployeeActivityRateFormRow';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
@@ -41,20 +42,10 @@ const useEditEmployeeForm = ({ clientId, employee, open, onClose, onSaved }: Inp
   );
 
   const addActivityRate = () => {
-    setActivityRates((currentActivityRates) => {
-      const currentActivityIds = currentActivityRates.map((activityRate) => activityRate.activityId).filter(Boolean);
-      const availableActivity = (activities ?? []).find((activity) => !currentActivityIds.includes(activity.activityId ?? ''));
-
-      return [
-        ...currentActivityRates,
-        {
-          activityId: availableActivity?.activityId ?? '',
-          payRateType: EmployeeActivityRatePayRateTypeEnum.Hourly,
-          payRate: '',
-          holidayPayRate: '',
-        },
-      ];
-    });
+    setActivityRates((currentActivityRates) => [
+      ...currentActivityRates,
+      buildNewActivityRate(currentActivityRates, activities ?? []),
+    ]);
   };
 
   const updateActivityRate = (index: number, nextActivityRate: EmployeeActivityRateFormRow) => {

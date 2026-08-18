@@ -42,7 +42,6 @@
 - [091] - BUG - PayPeriodRegistry tab year should come from the pay period, not the current date
 - [092] - BUG - No way to edit an employee's activities on the Pay Period page (add edit icon on EmployeeTimesheetStatusRow, pre-generation only, dialog to add/remove EmployeeActivityRate on the pay-period snapshot, mirrors addActivityToPayPeriod.ts/removeActivityFromPayPeriod.ts + assertPayPeriodNotLocked)
 - [093] - Add a "Date" line to the Employee Signature and Supervisor Signature rows on generated timesheets (display only, not read back into the app)
-- [094] - Update app display title / package name — still "react-frontend-template" (index.html <title>, package.json "name")
 
 # READY
 
@@ -52,12 +51,12 @@
 
 ---
 
-- [084] - Backend — grouped/reordered activities on generated timesheets
-
 # DONE
 
 ---
 
+- [094] - Update app display title / package name — still "react-frontend-template" (index.html <title>, package.json "name")
+- [084] - Backend — grouped/reordered activities on generated timesheets
 - [082] - Split EmployeeExpenses "totalExpense" into "wageExpense" and "taxExpense"
 - [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
 - [008] - Settings Management

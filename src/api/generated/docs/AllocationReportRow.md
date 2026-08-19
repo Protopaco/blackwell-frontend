@@ -7,6 +7,7 @@
 Name | Type
 ------------ | -------------
 `fundingSourceName` | string
+`hoursAllocation` | number
 `wagesAllocation` | number
 `taxesAllocation` | number
 `additionalExpenses` | number
@@ -20,6 +21,7 @@ import type { AllocationReportRow } from ''
 // TODO: Update the object below with actual values
 const example = {
   "fundingSourceName": Federal Grant,
+  "hoursAllocation": 320.5,
   "wagesAllocation": 14250,
   "taxesAllocation": 1156.5,
   "additionalExpenses": 1843.75,

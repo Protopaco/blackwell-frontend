@@ -30,6 +30,12 @@ export interface AllocationReportRow {
      * @type {number}
      * @memberof AllocationReportRow
      */
+    hoursAllocation?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AllocationReportRow
+     */
     wagesAllocation?: number;
     /**
      * 
@@ -69,6 +75,7 @@ export function AllocationReportRowFromJSONTyped(json: any, ignoreDiscriminator:
     return {
         
         'fundingSourceName': json['fundingSourceName'] == null ? undefined : json['fundingSourceName'],
+        'hoursAllocation': json['hoursAllocation'] == null ? undefined : json['hoursAllocation'],
         'wagesAllocation': json['wagesAllocation'] == null ? undefined : json['wagesAllocation'],
         'taxesAllocation': json['taxesAllocation'] == null ? undefined : json['taxesAllocation'],
         'additionalExpenses': json['additionalExpenses'] == null ? undefined : json['additionalExpenses'],
@@ -88,6 +95,7 @@ export function AllocationReportRowToJSONTyped(value?: AllocationReportRow | nul
     return {
         
         'fundingSourceName': value['fundingSourceName'],
+        'hoursAllocation': value['hoursAllocation'],
         'wagesAllocation': value['wagesAllocation'],
         'taxesAllocation': value['taxesAllocation'],
         'additionalExpenses': value['additionalExpenses'],

@@ -10,11 +10,14 @@ type Props = {
 
 const formatCurrency = (value: number | undefined): string => (value === undefined || value === null ? '-' : currencyToString(value, { decorated: true }));
 
+const formatHours = (value: number | undefined): string => (value === undefined || value === null ? '-' : value.toLocaleString());
+
 const AllocationReportTable = ({ rows }: Props) => {
   return (
     <ManagementTable
       headers={[
         { label: 'Funding Source' },
+        { label: 'Hours' },
         { label: 'Wages Allocation' },
         { label: 'Taxes Allocation' },
         { label: 'Additional Expenses' },
@@ -24,6 +27,7 @@ const AllocationReportTable = ({ rows }: Props) => {
       {rows.map((row, index) => (
         <TableRow key={`${row.fundingSourceName ?? 'unknown'}-${index}`}>
           <TableCell>{row.fundingSourceName}</TableCell>
+          <TableCell>{formatHours(row.hoursAllocation)}</TableCell>
           <TableCell>{formatCurrency(row.wagesAllocation)}</TableCell>
           <TableCell>{formatCurrency(row.taxesAllocation)}</TableCell>
           <TableCell>{formatCurrency(row.additionalExpenses)}</TableCell>

@@ -59,7 +59,6 @@ const EmployeeIdentityFields = ({
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
-            autoFocus
             disabled={disabled}
             error={firstNameRequired}
             fullWidth

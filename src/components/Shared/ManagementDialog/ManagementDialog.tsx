@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import type { ReactNode } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -7,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { Breakpoint } from '@mui/material/styles';
+import focusFirstField from '@/utils/focusFirstField';
 
 type Props = {
   children: ReactNode;
@@ -33,10 +35,18 @@ const ManagementDialog = ({
   submitLabel,
   title,
 }: Props) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth={maxWidth}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth={maxWidth}
+      slotProps={{ transition: { onEntered: () => focusFirstField(contentRef.current) } }}
+    >
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
+      <DialogContent ref={contentRef}>
         <Stack spacing={2} sx={{ pt: 1 }}>
           {children}
           {errorMessage ? (

@@ -35,14 +35,9 @@
 - [083] - Remove `Activity.trackSeparately` — no discoverable purpose
 - [085] - Frontend — grouped/reordered activities management UI
 - [086] - Add a "Home" button that returns to the base screen
-- [087] - BUG - Invalid/unmatched paths (e.g. /client/) 404 instead of redirecting home
 - [088] - BUG - Creating a new client should redirect to that client's Client Summary page
-- [089] - BUG - Dialogs should auto-focus their first field on open
-- [090] - Auto-populate pay rate fields (pay rate type, pay rate, holiday pay rate) from the last entry when adding activities
 - [091] - BUG - PayPeriodRegistry tab year should come from the pay period, not the current date
 - [092] - BUG - No way to edit an employee's activities on the Pay Period page (add edit icon on EmployeeTimesheetStatusRow, pre-generation only, dialog to add/remove EmployeeActivityRate on the pay-period snapshot, mirrors addActivityToPayPeriod.ts/removeActivityFromPayPeriod.ts + assertPayPeriodNotLocked)
-- [093] - Add a "Date" line to the Employee Signature and Supervisor Signature rows on generated timesheets (display only, not read back into the app)
-- [094] - Update app display title / package name — still "react-frontend-template" (index.html <title>, package.json "name")
 
 # READY
 
@@ -52,12 +47,16 @@
 
 ---
 
-- [084] - Backend — grouped/reordered activities on generated timesheets
-
 # DONE
 
 ---
 
+- [087] - BUG - Invalid/unmatched paths (e.g. /client/) 404 instead of redirecting home
+- [089] - BUG - Dialogs should auto-focus their first field on open
+- [090] - Auto-populate pay rate fields (pay rate type, pay rate, holiday pay rate) from the last entry when adding activities
+- [093] - Add a "Date" line to the Employee Signature and Supervisor Signature rows on generated timesheets (display only, not read back into the app)
+- [094] - Update app display title / package name — still "react-frontend-template" (index.html <title>, package.json "name")
+- [084] - Backend — grouped/reordered activities on generated timesheets
 - [082] - Split EmployeeExpenses "totalExpense" into "wageExpense" and "taxExpense"
 - [047] - BUG - Employee timesheet generated after pay period closed doesn't show up in pay period summary
 - [008] - Settings Management

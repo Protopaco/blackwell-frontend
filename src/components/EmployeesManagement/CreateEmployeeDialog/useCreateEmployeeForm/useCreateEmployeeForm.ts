@@ -4,6 +4,7 @@ import { activityApi, employeeApi, timesheetFolderApi } from '@/api/client';
 import { EmployeeActivityRatePayRateTypeEnum } from '@/api/generated/models/EmployeeActivityRate';
 import { TimesheetFolderStatusEnum } from '@/api/generated/models/TimesheetFolder';
 import type { TimesheetFolder } from '@/api/generated/models/TimesheetFolder';
+import buildNewActivityRate from '../EmployeeActivityRatesFields/buildNewActivityRate';
 import type { EmployeeActivityRateFormRow } from '../EmployeeActivityRatesFields/EmployeeActivityRateFormRow';
 import EmployeeStatusValue from '@/models/EmployeeStatusValue';
 import type { EmployeeStatusValue as EmployeeStatusValueType } from '@/models/EmployeeStatusValue';
@@ -47,20 +48,10 @@ const useCreateEmployeeForm = ({ clientId, open, onClose, onCreated }: Input) =>
   );
 
   const addActivityRate = () => {
-    setActivityRates((currentActivityRates) => {
-      const currentActivityIds = currentActivityRates.map((activityRate) => activityRate.activityId).filter(Boolean);
-      const availableActivity = (activities ?? []).find((activity) => !currentActivityIds.includes(activity.activityId ?? ''));
-
-      return [
-        ...currentActivityRates,
-        {
-          activityId: availableActivity?.activityId ?? '',
-          payRateType: EmployeeActivityRatePayRateTypeEnum.Hourly,
-          payRate: '',
-          holidayPayRate: '',
-        },
-      ];
-    });
+    setActivityRates((currentActivityRates) => [
+      ...currentActivityRates,
+      buildNewActivityRate(currentActivityRates, activities ?? []),
+    ]);
   };
 
   const updateActivityRate = (index: number, nextActivityRate: EmployeeActivityRateFormRow) => {

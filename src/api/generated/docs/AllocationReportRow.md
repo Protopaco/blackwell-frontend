@@ -9,7 +9,6 @@ Name | Type
 `fundingSourceName` | string
 `hoursAllocation` | number
 `wagesAllocation` | number
-`taxesAllocation` | number
 `additionalExpenses` | number
 `total` | number
 
@@ -23,7 +22,6 @@ const example = {
   "fundingSourceName": Federal Grant,
   "hoursAllocation": 320.5,
   "wagesAllocation": 14250,
-  "taxesAllocation": 1156.5,
   "additionalExpenses": 1843.75,
   "total": 17250.25,
 } satisfies AllocationReportRow

@@ -38,6 +38,8 @@
 - [088] - BUG - Creating a new client should redirect to that client's Client Summary page
 - [091] - BUG - PayPeriodRegistry tab year should come from the pay period, not the current date
 - [092] - BUG - No way to edit an employee's activities on the Pay Period page (add edit icon on EmployeeTimesheetStatusRow, pre-generation only, dialog to add/remove EmployeeActivityRate on the pay-period snapshot, mirrors addActivityToPayPeriod.ts/removeActivityFromPayPeriod.ts + assertPayPeriodNotLocked)
+- [095] - Remove "Taxes Allocation" from the Allocation Report (frontend + backend) — grants don't cover taxes this way; taxExpense entry on the Payroll Report page stays, only the Allocation Report's derived taxesAllocation column/calc goes. total becomes wages + additionalExpenses.
+- [096] - Add optional "Fringe Rate" to Funding Source, applied as a flat rate on wages in the Allocation Report: Fringe = wagesAllocation × fringeRate (Option A — applied to the same wagesAllocation dollars already in the report, not a separate Hours×Rate calc). fringeAllocation is included in total. Rough draft to show client, exact grant fringe mechanics still TBD.
 
 # READY
 

@@ -13,7 +13,9 @@ type Props = {
   onEdit: (fundingSource: FundingSource) => void;
 };
 
-type SortKey = 'name' | 'code';
+type SortKey = 'name' | 'code' | 'fringeRate';
+
+const formatFringeRate = (fringeRate: number | null | undefined): string => (fringeRate == null ? '-' : `${fringeRate}%`);
 
 const FundingSourcesTable = ({ fundingSources, onDelete, onEdit }: Props) => {
   const { sortedItems: sortedFundingSources, sortableHeader } = useTableSort<FundingSource, SortKey>(
@@ -21,16 +23,25 @@ const FundingSourcesTable = ({ fundingSources, onDelete, onEdit }: Props) => {
     {
       name: (left, right) => (left.fundingSourceName ?? '').localeCompare(right.fundingSourceName ?? '', undefined, { sensitivity: 'base' }),
       code: (left, right) => (left.fundingSourceCode ?? '').localeCompare(right.fundingSourceCode ?? '', undefined, { sensitivity: 'base' }),
+      fringeRate: (left, right) => (left.fringeRate ?? -1) - (right.fringeRate ?? -1),
     },
     'name',
   );
 
   return (
-    <ManagementTable headers={[sortableHeader('name', 'Funding Source'), sortableHeader('code', 'Code'), { label: 'Actions', align: 'right' }]}>
+    <ManagementTable
+      headers={[
+        sortableHeader('name', 'Funding Source'),
+        sortableHeader('code', 'Code'),
+        sortableHeader('fringeRate', 'Fringe Rate'),
+        { label: 'Actions', align: 'right' },
+      ]}
+    >
       {sortedFundingSources.map((fundingSource) => (
         <TableRow key={fundingSource.fundingSourceId ?? fundingSource.fundingSourceName ?? ''}>
           <TableCell>{fundingSource.fundingSourceName}</TableCell>
           <TableCell>{fundingSource.fundingSourceCode}</TableCell>
+          <TableCell>{formatFringeRate(fundingSource.fringeRate)}</TableCell>
           <TableCell align="right">
             <IconButton aria-label={`Edit ${fundingSource.fundingSourceName ?? 'funding source'}`} onClick={() => onEdit(fundingSource)} size="small">
               <EditIcon fontSize="small" />

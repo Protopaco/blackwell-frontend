@@ -42,6 +42,12 @@ export interface AllocationReportRow {
      * @type {number}
      * @memberof AllocationReportRow
      */
+    fringeAllocation?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AllocationReportRow
+     */
     additionalExpenses?: number;
     /**
      * 
@@ -71,6 +77,7 @@ export function AllocationReportRowFromJSONTyped(json: any, ignoreDiscriminator:
         'fundingSourceName': json['fundingSourceName'] == null ? undefined : json['fundingSourceName'],
         'hoursAllocation': json['hoursAllocation'] == null ? undefined : json['hoursAllocation'],
         'wagesAllocation': json['wagesAllocation'] == null ? undefined : json['wagesAllocation'],
+        'fringeAllocation': json['fringeAllocation'] == null ? undefined : json['fringeAllocation'],
         'additionalExpenses': json['additionalExpenses'] == null ? undefined : json['additionalExpenses'],
         'total': json['total'] == null ? undefined : json['total'],
     };
@@ -90,6 +97,7 @@ export function AllocationReportRowToJSONTyped(value?: AllocationReportRow | nul
         'fundingSourceName': value['fundingSourceName'],
         'hoursAllocation': value['hoursAllocation'],
         'wagesAllocation': value['wagesAllocation'],
+        'fringeAllocation': value['fringeAllocation'],
         'additionalExpenses': value['additionalExpenses'],
         'total': value['total'],
     };

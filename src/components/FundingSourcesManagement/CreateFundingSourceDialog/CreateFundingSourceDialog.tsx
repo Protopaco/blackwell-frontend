@@ -17,6 +17,7 @@ type Props = {
 const CreateFundingSourceDialog = ({ clientId, open, onClose, onCreated }: Props) => {
   const [fundingSourceName, setFundingSourceName] = useState('');
   const [fundingSourceCode, setFundingSourceCode] = useState('');
+  const [fringeRate, setFringeRate] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -25,6 +26,7 @@ const CreateFundingSourceDialog = ({ clientId, open, onClose, onCreated }: Props
   const resetForm = () => {
     setFundingSourceName('');
     setFundingSourceCode('');
+    setFringeRate('');
     setSubmitted(false);
     setErrorMessage(null);
   };
@@ -55,6 +57,7 @@ const CreateFundingSourceDialog = ({ clientId, open, onClose, onCreated }: Props
         fundingSource: {
           fundingSourceName: trimmedFundingSourceName,
           fundingSourceCode: trimmedFundingSourceCode || undefined,
+          fringeRate: fringeRate.trim() ? Number(fringeRate) : null,
         },
       });
       resetForm();
@@ -100,6 +103,15 @@ const CreateFundingSourceDialog = ({ clientId, open, onClose, onCreated }: Props
           label="Funding source code"
           onChange={(event) => setFundingSourceCode(event.target.value)}
           value={fundingSourceCode}
+        />
+        <TextField
+          disabled={saving}
+          fullWidth
+          label="Fringe rate (%)"
+          onChange={(event) => setFringeRate(event.target.value)}
+          slotProps={{ htmlInput: { min: 0, step: 'any' } }}
+          type="number"
+          value={fringeRate}
         />
       </Stack>
     </ManagementDialog>

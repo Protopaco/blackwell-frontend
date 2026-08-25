@@ -19,6 +19,7 @@ const AllocationReportTable = ({ rows }: Props) => {
         { label: 'Funding Source' },
         { label: 'Hours' },
         { label: 'Wages Allocation' },
+        { label: 'Fringe Allocation' },
         { label: 'Additional Expenses' },
         { label: 'Total' },
       ]}
@@ -28,6 +29,7 @@ const AllocationReportTable = ({ rows }: Props) => {
           <TableCell>{row.fundingSourceName}</TableCell>
           <TableCell>{formatHours(row.hoursAllocation)}</TableCell>
           <TableCell>{formatCurrency(row.wagesAllocation)}</TableCell>
+          <TableCell>{formatCurrency(row.fringeAllocation)}</TableCell>
           <TableCell>{formatCurrency(row.additionalExpenses)}</TableCell>
           <TableCell>{formatCurrency(row.total)}</TableCell>
         </TableRow>

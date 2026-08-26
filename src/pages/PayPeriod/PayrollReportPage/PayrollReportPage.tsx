@@ -39,7 +39,6 @@ const PayrollReportPage = () => {
   const allocationReportExists = allocationReportGenerated(payPeriod.status);
 
   const [editedWageValues, setEditedWageValues] = useState<Record<string, string>>({});
-  const [editedTaxValues, setEditedTaxValues] = useState<Record<string, string>>({});
 
   const rows = useMemo((): PayrollReportRow[] => {
     if (!payrollReport) return [];
@@ -51,7 +50,6 @@ const PayrollReportPage = () => {
         totalHours: report.totalHours ?? 0,
         totalFlatRate: report.totalFlatRate ?? 0,
         wageExpense: report.wageExpense ?? null,
-        taxExpense: report.taxExpense ?? null,
         hourly: report.hourly ?? [],
         flatRate: report.flatRate ?? [],
       }))
@@ -64,10 +62,7 @@ const PayrollReportPage = () => {
     return trimmedValue === '' ? null : Number(trimmedValue);
   };
 
-  const dirtyEmployeeIds = useMemo(
-    () => new Set([...Object.keys(editedWageValues), ...Object.keys(editedTaxValues)]),
-    [editedWageValues, editedTaxValues],
-  );
+  const dirtyEmployeeIds = useMemo(() => new Set(Object.keys(editedWageValues)), [editedWageValues]);
 
   const dirtyEntries = useMemo(() => {
     return [...dirtyEmployeeIds].flatMap((employeeId) => {
@@ -75,26 +70,20 @@ const PayrollReportPage = () => {
       if (!row) return [];
 
       const rawWageValue = editedWageValues[employeeId];
-      const rawTaxValue = editedTaxValues[employeeId];
 
-      const wageInvalid = rawWageValue !== undefined && rawWageValue.trim() !== '' && Number.isNaN(parseEditedValue(rawWageValue));
-      const taxInvalid = rawTaxValue !== undefined && rawTaxValue.trim() !== '' && Number.isNaN(parseEditedValue(rawTaxValue));
-      const invalid = wageInvalid || taxInvalid;
+      const invalid = rawWageValue !== undefined && rawWageValue.trim() !== '' && Number.isNaN(parseEditedValue(rawWageValue));
 
       const wageExpense = rawWageValue !== undefined ? parseEditedValue(rawWageValue) : row.wageExpense;
-      const taxExpense = rawTaxValue !== undefined ? parseEditedValue(rawTaxValue) : row.taxExpense;
-      const changed = !invalid && (wageExpense !== row.wageExpense || taxExpense !== row.taxExpense);
+      const changed = !invalid && wageExpense !== row.wageExpense;
 
-      return [{ employeeId, wageExpense, taxExpense, invalid, changed }];
+      return [{ employeeId, wageExpense, invalid, changed }];
     });
-  }, [dirtyEmployeeIds, editedWageValues, editedTaxValues, rows]);
+  }, [dirtyEmployeeIds, editedWageValues, rows]);
 
   const hasInvalidEdit = dirtyEntries.some((entry) => entry.invalid);
   const changedEntries = dirtyEntries.filter((entry) => entry.changed);
 
-  const allExpensesComplete = rows.every(
-    (row) => row.wageExpense !== null && row.wageExpense !== undefined && row.taxExpense !== null && row.taxExpense !== undefined,
-  );
+  const allExpensesComplete = rows.every((row) => row.wageExpense !== null && row.wageExpense !== undefined);
 
   const handleRefresh = () => {
     refetchPayPeriod();
@@ -109,7 +98,6 @@ const PayrollReportPage = () => {
     const employeeExpenseUpdate: EmployeeExpenseUpdate[] = changedEntries.map((entry) => ({
       employeeId: entry.employeeId,
       wageExpense: entry.wageExpense,
-      taxExpense: entry.taxExpense,
     }));
 
     await payrollReportApi.v1UpdateEmployeeExpensesBatch({
@@ -120,7 +108,6 @@ const PayrollReportPage = () => {
 
     refetchPayrollReport();
     setEditedWageValues({});
-    setEditedTaxValues({});
 
     if (allocationReportExists) {
       try {
@@ -146,10 +133,6 @@ const PayrollReportPage = () => {
     setEditedWageValues((previous) => ({ ...previous, [employeeId]: value }));
   };
 
-  const handleEditTaxValue = (employeeId: string, value: string) => {
-    setEditedTaxValues((previous) => ({ ...previous, [employeeId]: value }));
-  };
-
   // Reformats a text field's raw value to a fixed two-decimal string on blur, leaving it untouched
   // if it's empty or not a parseable number.
   const normalizeOnBlur = (previous: Record<string, string>, employeeId: string): Record<string, string> => {
@@ -167,10 +150,6 @@ const PayrollReportPage = () => {
 
   const handleBlurWageValue = (employeeId: string) => {
     setEditedWageValues((previous) => normalizeOnBlur(previous, employeeId));
-  };
-
-  const handleBlurTaxValue = (employeeId: string) => {
-    setEditedTaxValues((previous) => normalizeOnBlur(previous, employeeId));
   };
 
   const renderBody = () => {
@@ -197,11 +176,8 @@ const PayrollReportPage = () => {
         <PayrollReportTable
           rows={rows}
           editedWageValues={editedWageValues}
-          editedTaxValues={editedTaxValues}
           onEditWageValue={handleEditWageValue}
-          onEditTaxValue={handleEditTaxValue}
           onBlurWageValue={handleBlurWageValue}
-          onBlurTaxValue={handleBlurTaxValue}
         />
       </Stack>
     );

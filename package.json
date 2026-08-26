@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "api:gen": "openapi-generator-cli generate -i http://localhost:3000/openapi.json -g typescript-fetch -o src/api/generated --additional-properties=supportsES6=true"
+    "api:gen": "openapi-generator-cli generate -i http://localhost:1111/openapi.json -g typescript-fetch -o src/api/generated --additional-properties=supportsES6=true"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

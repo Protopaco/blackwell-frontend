@@ -37,6 +37,12 @@ export interface FundingSource {
      * @memberof FundingSource
      */
     fundingSourceCode?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof FundingSource
+     */
+    fringeRate?: number | null;
 }
 
 /**
@@ -59,6 +65,7 @@ export function FundingSourceFromJSONTyped(json: any, ignoreDiscriminator: boole
         'fundingSourceId': json['fundingSourceId'] == null ? undefined : json['fundingSourceId'],
         'fundingSourceName': json['fundingSourceName'] == null ? undefined : json['fundingSourceName'],
         'fundingSourceCode': json['fundingSourceCode'] == null ? undefined : json['fundingSourceCode'],
+        'fringeRate': json['fringeRate'] == null ? undefined : json['fringeRate'],
     };
 }
 
@@ -76,6 +83,7 @@ export function FundingSourceToJSONTyped(value?: FundingSource | null, ignoreDis
         'fundingSourceId': value['fundingSourceId'],
         'fundingSourceName': value['fundingSourceName'],
         'fundingSourceCode': value['fundingSourceCode'],
+        'fringeRate': value['fringeRate'],
     };
 }
 

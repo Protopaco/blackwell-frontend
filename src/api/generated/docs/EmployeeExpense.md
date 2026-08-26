@@ -9,7 +9,6 @@ Name | Type
 `employeeId` | string
 `employeeName` | string
 `wageExpense` | number
-`taxExpense` | number
 
 ## Example
 
@@ -21,7 +20,6 @@ const example = {
   "employeeId": null,
   "employeeName": Jane Smith,
   "wageExpense": 2326.92,
-  "taxExpense": 189.45,
 } satisfies EmployeeExpense
 
 console.log(example)

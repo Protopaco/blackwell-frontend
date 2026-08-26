@@ -38,6 +38,8 @@
 - [088] - BUG - Creating a new client should redirect to that client's Client Summary page
 - [091] - BUG - PayPeriodRegistry tab year should come from the pay period, not the current date
 - [092] - BUG - No way to edit an employee's activities on the Pay Period page (add edit icon on EmployeeTimesheetStatusRow, pre-generation only, dialog to add/remove EmployeeActivityRate on the pay-period snapshot, mirrors addActivityToPayPeriod.ts/removeActivityFromPayPeriod.ts + assertPayPeriodNotLocked)
+- [097] - Remove `taxExpense` from the Payroll Report (frontend + backend) — now redundant, since the existing Additional Expenses editor on the Allocation Report already covers org-level taxes/benefits/etc. as flat named amounts split proportionally across funding sources. Drop the per-employee "Tax" input/column, remove taxExpense from the allExpensesComplete gate (generating the Allocation Report should only require wageExpense), and remove taxExpense end-to-end from EmployeeExpense (model, sheet read/write, API schema).
+- [098] - Add an interactive npm-script menu for BlackwellTime Frontend, mirroring the one built for the backend: a `scripts/menu.ts` using `@clack/prompts` (devDependency) that lists every script from package.json (dev, build, preview, test, lint, format, format:check, api:gen) with a short hint, lets the user pick one, then spawns it with `stdio: 'inherit'`. Wired up via a `"menu"` script in package.json.
 
 # READY
 
@@ -51,6 +53,8 @@
 
 ---
 
+- [095] - Remove "Taxes Allocation" from the Allocation Report (frontend + backend) — grants don't cover taxes this way; taxExpense entry on the Payroll Report page stays, only the Allocation Report's derived taxesAllocation column/calc goes. total becomes wages + additionalExpenses.
+- [096] - Add optional "Fringe Rate" to Funding Source, applied as a flat rate on wages in the Allocation Report: Fringe = wagesAllocation × fringeRate (Option A — applied to the same wagesAllocation dollars already in the report, not a separate Hours×Rate calc). fringeAllocation is included in total. Rough draft to show client, exact grant fringe mechanics still TBD.
 - [087] - BUG - Invalid/unmatched paths (e.g. /client/) 404 instead of redirecting home
 - [089] - BUG - Dialogs should auto-focus their first field on open
 - [090] - Auto-populate pay rate fields (pay rate type, pay rate, holiday pay rate) from the last entry when adding activities

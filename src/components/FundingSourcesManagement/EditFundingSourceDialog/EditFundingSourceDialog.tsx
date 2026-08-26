@@ -19,6 +19,7 @@ type Props = {
 const EditFundingSourceDialog = ({ clientId, fundingSource, open, onClose, onSaved }: Props) => {
   const [fundingSourceName, setFundingSourceName] = useState('');
   const [fundingSourceCode, setFundingSourceCode] = useState('');
+  const [fringeRate, setFringeRate] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -29,6 +30,7 @@ const EditFundingSourceDialog = ({ clientId, fundingSource, open, onClose, onSav
 
     setFundingSourceName(fundingSource.fundingSourceName ?? '');
     setFundingSourceCode(fundingSource.fundingSourceCode ?? '');
+    setFringeRate(fundingSource.fringeRate == null ? '' : String(fundingSource.fringeRate));
     setSubmitted(false);
     setErrorMessage(null);
   }, [fundingSource, open]);
@@ -36,6 +38,7 @@ const EditFundingSourceDialog = ({ clientId, fundingSource, open, onClose, onSav
   const resetForm = () => {
     setFundingSourceName('');
     setFundingSourceCode('');
+    setFringeRate('');
     setSubmitted(false);
     setErrorMessage(null);
   };
@@ -67,6 +70,7 @@ const EditFundingSourceDialog = ({ clientId, fundingSource, open, onClose, onSav
         fundingSource: {
           fundingSourceName: trimmedFundingSourceName,
           fundingSourceCode: trimmedFundingSourceCode || undefined,
+          fringeRate: fringeRate.trim() ? Number(fringeRate) : null,
         },
       });
       resetForm();
@@ -112,6 +116,15 @@ const EditFundingSourceDialog = ({ clientId, fundingSource, open, onClose, onSav
           label="Funding source code"
           onChange={(event) => setFundingSourceCode(event.target.value)}
           value={fundingSourceCode}
+        />
+        <TextField
+          disabled={saving}
+          fullWidth
+          label="Fringe rate (%)"
+          onChange={(event) => setFringeRate(event.target.value)}
+          slotProps={{ htmlInput: { min: 0, step: 'any' } }}
+          type="number"
+          value={fringeRate}
         />
       </Stack>
     </ManagementDialog>

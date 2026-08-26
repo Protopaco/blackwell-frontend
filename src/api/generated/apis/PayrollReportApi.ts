@@ -578,8 +578,8 @@ export class PayrollReportApi extends runtime.BaseAPI {
     }
 
     /**
-     * For each employeeId with an existing EmployeeExpense record, overlays wageExpense/taxExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
-     * Upsert wageExpense/taxExpense for multiple employees in a pay period at once
+     * For each employeeId with an existing EmployeeExpense record, overlays wageExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
+     * Upsert wageExpense for multiple employees in a pay period at once
      */
     async v1UpdateEmployeeExpensesBatchRaw(requestParameters: V1UpdateEmployeeExpensesBatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const requestOptions = await this.v1UpdateEmployeeExpensesBatchRequestOpts(requestParameters);
@@ -589,8 +589,8 @@ export class PayrollReportApi extends runtime.BaseAPI {
     }
 
     /**
-     * For each employeeId with an existing EmployeeExpense record, overlays wageExpense/taxExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
-     * Upsert wageExpense/taxExpense for multiple employees in a pay period at once
+     * For each employeeId with an existing EmployeeExpense record, overlays wageExpense onto it. For each employeeId without one, creates a new record (employeeName resolved from PayrollConfig). If any employeeId doesn\'t match a known employee in the client\'s PayrollConfig, the entire batch is rejected and nothing is written. 
+     * Upsert wageExpense for multiple employees in a pay period at once
      */
     async v1UpdateEmployeeExpensesBatch(requestParameters: V1UpdateEmployeeExpensesBatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.v1UpdateEmployeeExpensesBatchRaw(requestParameters, initOverrides);

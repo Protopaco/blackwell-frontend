@@ -9,6 +9,7 @@ Name | Type
 `fundingSourceId` | string
 `fundingSourceName` | string
 `fundingSourceCode` | string
+`fringeRate` | number
 
 ## Example
 
@@ -20,6 +21,7 @@ const example = {
   "fundingSourceId": null,
   "fundingSourceName": Federal Grant,
   "fundingSourceCode": FG-100,
+  "fringeRate": 32,
 } satisfies FundingSource
 
 console.log(example)

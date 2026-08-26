@@ -18,11 +18,8 @@ type Props = {
   expanded: boolean;
   onToggleExpand: (employeeId: string) => void;
   editedWageValues: Record<string, string>;
-  editedTaxValues: Record<string, string>;
   onEditWageValue: (employeeId: string, value: string) => void;
-  onEditTaxValue: (employeeId: string, value: string) => void;
   onBlurWageValue: (employeeId: string) => void;
-  onBlurTaxValue: (employeeId: string) => void;
 };
 
 const formatNumber = (value: number | undefined | null): string => (value ?? 0).toFixed(2);
@@ -32,11 +29,8 @@ const PayrollReportTableRow = ({
   expanded,
   onToggleExpand,
   editedWageValues,
-  editedTaxValues,
   onEditWageValue,
-  onEditTaxValue,
   onBlurWageValue,
-  onBlurTaxValue,
 }: Props) => {
   const hasDetail = row.hourly.some((entry) => (entry.totalHours ?? 0) !== 0) || row.flatRate.some((entry) => (entry.quantity ?? 0) !== 0);
 
@@ -62,19 +56,10 @@ const PayrollReportTableRow = ({
             slotProps={{ htmlInput: { inputMode: 'decimal', 'aria-label': `Wage expense for ${row.employeeName}` } }}
           />
         </TableCell>
-        <TableCell>
-          <TextField
-            size="small"
-            value={editedTaxValues[row.employeeId] ?? currencyToString(row.taxExpense ?? undefined)}
-            onChange={(event) => onEditTaxValue(row.employeeId, event.target.value)}
-            onBlur={() => onBlurTaxValue(row.employeeId)}
-            slotProps={{ htmlInput: { inputMode: 'decimal', 'aria-label': `Tax expense for ${row.employeeName}` } }}
-          />
-        </TableCell>
       </TableRow>
       {hasDetail && (
         <TableRow>
-          <TableCell sx={{ py: 0 }} colSpan={6}>
+          <TableCell sx={{ py: 0 }} colSpan={5}>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Box sx={{ py: 2 }}>
                 <Stack spacing={2}>

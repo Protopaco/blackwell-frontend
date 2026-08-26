@@ -8,21 +8,15 @@ import type { PayrollReportRow } from '@/components/PayPeriod/PayrollReportTable
 type Props = {
   rows: PayrollReportRow[];
   editedWageValues: Record<string, string>;
-  editedTaxValues: Record<string, string>;
   onEditWageValue: (employeeId: string, value: string) => void;
-  onEditTaxValue: (employeeId: string, value: string) => void;
   onBlurWageValue: (employeeId: string) => void;
-  onBlurTaxValue: (employeeId: string) => void;
 };
 
 const PayrollReportTable = ({
   rows,
   editedWageValues,
-  editedTaxValues,
   onEditWageValue,
-  onEditTaxValue,
   onBlurWageValue,
-  onBlurTaxValue,
 }: Props) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
@@ -58,7 +52,6 @@ const PayrollReportTable = ({
           { label: 'Total Hours' },
           { label: 'Flat Rate Quantity' },
           { label: 'Wage Expense' },
-          { label: 'Tax Expense' },
         ]}
       >
         {rows.map((row) => (
@@ -68,11 +61,8 @@ const PayrollReportTable = ({
             expanded={expandedIds.has(row.employeeId)}
             onToggleExpand={toggleExpand}
             editedWageValues={editedWageValues}
-            editedTaxValues={editedTaxValues}
             onEditWageValue={onEditWageValue}
-            onEditTaxValue={onEditTaxValue}
             onBlurWageValue={onBlurWageValue}
-            onBlurTaxValue={onBlurTaxValue}
           />
         ))}
       </ManagementTable>
